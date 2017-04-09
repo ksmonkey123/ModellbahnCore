@@ -1,17 +1,26 @@
 package ch.awae.moba.core.spi;
 
+import org.eclipse.jdt.annotation.Nullable;
+
+import ch.awae.moba.core.processors.HostProcessor;
+import ch.awae.moba.core.threads.ProcessorThread;
+
 final class HostImpl implements Host, SPIHost {
 
 	private final Object LOCK = new Object();
 	private final SPIChannel channel;
+	private final @Nullable String name;
+	private final ProcessorThread processor;
 
 	private volatile short input = 0x0000;
 	private volatile short output = 0x0000;
 	private volatile byte network = 0x00;
 	private volatile boolean updateFlag = false;
 
-	HostImpl(final SPIChannel channel) {
+	HostImpl(final SPIChannel channel, final @Nullable String name, final HostProcessor processor) {
 		this.channel = channel;
+		this.name = name;
+		this.processor = new ProcessorThread(this, processor);
 	}
 
 	@Override
@@ -29,6 +38,9 @@ final class HostImpl implements Host, SPIHost {
 		synchronized (LOCK) {
 			this.output = output;
 			this.updateFlag = true;
+			synchronized (this) {
+				this.notifyAll();
+			}
 		}
 	}
 
@@ -57,6 +69,16 @@ final class HostImpl implements Host, SPIHost {
 		synchronized (LOCK) {
 			return this.updateFlag;
 		}
+	}
+
+	@Override
+	public @Nullable String getName() {
+		return this.name;
+	}
+
+	@Override
+	public ProcessorThread getProcessorThread() {
+		return this.processor;
 	}
 
 }

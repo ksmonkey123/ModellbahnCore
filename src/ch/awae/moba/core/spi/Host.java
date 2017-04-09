@@ -1,5 +1,9 @@
 package ch.awae.moba.core.spi;
 
+import org.eclipse.jdt.annotation.Nullable;
+
+import ch.awae.moba.core.threads.ProcessorThread;
+
 public interface Host {
 
 	/**
@@ -28,5 +32,10 @@ public interface Host {
 	 * @return {@code true} if a read/write cycle has occurred
 	 */
 	boolean isUpdated();
+
+	@Nullable
+	String getName();
+
+	ProcessorThread getProcessorThread();
 
 }
