@@ -17,6 +17,7 @@ import ch.awae.moba.core.threads.SPIThread;
 import ch.awae.moba.core.util.ThreadRegistry;
 
 public class Test {
+	
 	public static void main(String[] args) throws IOException, InterruptedException {
 		Model model = new Model();
 		SPIThread spi_thread = new SPIThread();
