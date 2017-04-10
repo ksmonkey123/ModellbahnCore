@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.locks.LockSupport;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.eclipse.jdt.annotation.Nullable;
@@ -23,7 +22,8 @@ import com.pi4j.io.spi.SpiMode;
 
 import ch.awae.moba.core.spi.SPIChannel;
 import ch.awae.moba.core.spi.SPIHost;
-import ch.awae.moba.core.util.ThreadRegistry;
+import ch.awae.moba.core.util.Registries;
+import ch.awae.moba.core.util.Utils;
 
 public class SPIThread implements IThreaded {
 
@@ -31,7 +31,7 @@ public class SPIThread implements IThreaded {
 	private static final int SPI_SPEED = 61000;
 	private static final byte MAGIC_NUMBER = 0b01101001;
 
-	private final Logger logger;
+	private final Logger logger = Utils.getLogger();
 	private final HashMap<SPIChannel, @Nullable GpioPinDigitalOutput> pinMap;
 	private final List<SPIHost> hosts;
 	private final SpiDevice spi;
@@ -53,10 +53,6 @@ public class SPIThread implements IThreaded {
 	}
 
 	public SPIThread() throws IOException {
-		Logger logger = Logger.getLogger("SPIThread");
-		logger.setLevel(Level.SEVERE);
-		assert logger != null;
-		this.logger = logger;
 		this.hosts = new ArrayList<>();
 		this.pinMap = new HashMap<>();
 
@@ -70,7 +66,7 @@ public class SPIThread implements IThreaded {
 		this.spi = spi;
 		this.gpio = gpio;
 
-		ThreadRegistry.register("spi", this);
+		Registries.threads.register("spi", this);
 	}
 
 	public synchronized void start() {
@@ -91,6 +87,11 @@ public class SPIThread implements IThreaded {
 		t.join();
 		this.thread = null;
 		logger.info("thread stopped");
+	}
+
+	@Override
+	public boolean isActive() {
+		return thread != null;
 	}
 
 	private class SPILoop extends Thread {

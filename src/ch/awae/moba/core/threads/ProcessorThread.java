@@ -6,11 +6,17 @@ import org.eclipse.jdt.annotation.Nullable;
 
 import ch.awae.moba.core.processors.HostProcessor;
 import ch.awae.moba.core.spi.Host;
-import ch.awae.moba.core.util.ThreadRegistry;
+import ch.awae.moba.core.util.Registries;
+import ch.awae.moba.core.util.Utils;
 
 public class ProcessorThread implements IThreaded {
 
-	private final Logger logger;
+	private final Logger logger = Utils.getLogger();
+
+	@Override
+	public boolean isActive() {
+		return thread != null;
+	}
 
 	private final Host host;
 	private final HostProcessor processor;
@@ -20,10 +26,8 @@ public class ProcessorThread implements IThreaded {
 	public ProcessorThread(final Host host, final HostProcessor processor) {
 		this.host = host;
 		this.processor = processor;
-		Logger logger = Logger.getLogger("ProcessorThread (" + host.getName() + ")");
 		assert logger != null;
-		this.logger = logger;
-		ThreadRegistry.register("processor_" + host.getName(), this);
+		Registries.threads.register("processor_" + host.getName(), this);
 	}
 
 	public synchronized void start() {

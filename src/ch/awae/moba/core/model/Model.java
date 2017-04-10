@@ -2,6 +2,7 @@ package ch.awae.moba.core.model;
 
 public class Model {
 
-	public final CenterBlock centerBlock = new CenterBlock();
+	public final PathRegistry paths = new PathRegistry();
+	public final Buttons buttons = new Buttons();
 
 }

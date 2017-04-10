@@ -14,6 +14,7 @@ public class NullProcessor extends HostProcessor {
 	@Override
 	void process(@NonNull Host host) {
 		host.read();
+		host.write((short) 0xffff, (byte) 0);
 	}
 
 }
