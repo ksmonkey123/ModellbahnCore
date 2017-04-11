@@ -1,4 +1,4 @@
-package ch.awae.moba.core.operators;
+package ch.awae.moba.core.operators.impl;
 
 import org.eclipse.jdt.annotation.NonNull;
 
@@ -7,6 +7,7 @@ import ch.awae.moba.core.model.Model;
 import ch.awae.moba.core.model.Path;
 import ch.awae.moba.core.model.logic.ButtonLogic;
 import ch.awae.moba.core.model.logic.Logic;
+import ch.awae.moba.core.operators.IOperator;
 
 public class CenterMacroOperator extends IOperator {
 

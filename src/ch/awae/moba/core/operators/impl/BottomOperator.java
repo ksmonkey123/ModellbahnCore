@@ -1,4 +1,4 @@
-package ch.awae.moba.core.operators;
+package ch.awae.moba.core.operators.impl;
 
 import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
@@ -7,6 +7,7 @@ import ch.awae.moba.core.model.ButtonMapping;
 import ch.awae.moba.core.model.Model;
 import ch.awae.moba.core.model.Path;
 import ch.awae.moba.core.model.Sector;
+import ch.awae.moba.core.operators.IOperator;
 
 public class BottomOperator extends IOperator {
 

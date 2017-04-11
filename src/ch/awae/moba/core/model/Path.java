@@ -1,17 +1,17 @@
 package ch.awae.moba.core.model;
 
+import static ch.awae.moba.core.model.Sector.BOTTOM;
 import static ch.awae.moba.core.model.Sector.CENTER;
 import static ch.awae.moba.core.model.Sector.LEFT;
-import static ch.awae.moba.core.model.Sector.BOTTOM;
 import static ch.awae.moba.core.model.Sector.RIGHT;
 
 public enum Path {
 	// ######### BOTTOM PATHS #########
 	B_01_L(BOTTOM, 1, 0x040101, "bottom.01"),
-	B_02_L(BOTTOM, 1, 0x040202, "bottom.02"),
-	B_03_L(BOTTOM, 1, 0x040403, "bottom.03"),
-	B_04_L(BOTTOM, 1, 0x040804, "bottom.04"),
-	B_05_L(BOTTOM, 1, 0x041005, "bottom.05"),
+	B_02_L(BOTTOM, 1, 0x0c0202, "bottom.02"),
+	B_03_L(BOTTOM, 1, 0x0c0403, "bottom.03"),
+	B_04_L(BOTTOM, 1, 0x0c0804, "bottom.04"),
+	B_05_L(BOTTOM, 1, 0x0c1005, "bottom.05"),
 	B_06_L(BOTTOM, 1, 0x042006, "bottom.06"),
 	B_07_L(BOTTOM, 1, 0x044007, "bottom.07"),
 	B_08_L(BOTTOM, 1, 0x048008, "bottom.08"),
@@ -32,7 +32,7 @@ public enum Path {
 	C_S_4_A(CENTER, 0x08, 0x4040, "center.4a"),
 	C_S_4_B(CENTER, 0x08, 0x8080, "center.4b"),
 	C_CLEAR(CENTER, 0x0f, 0x0000, "center.clear"),
-	// ######### LEFS ############
+	// ######### LEFT PATHS ############
 	L_CLEAR(LEFT, 0x1f, 0x000000, "left.clear"),
 	L_A_1_R(LEFT, 0x01, 0x030320, "left.A1_R"),
 	L_B_1_R(LEFT, 0x07, 0x0c0308, "left.B1_R"),
@@ -63,30 +63,51 @@ public enum Path {
 	R_A_2_O(RIGHT, 0x19, 0x010822, "right.A2_O"),
 	R_A_3_O(RIGHT, 0x3f, 0x0120a7, "right.A3_O"),
 	R_A_4_O(RIGHT, 0x3f, 0x0180ab, "right.A4_O"),
-	R_B_1_R(RIGHT, 0x26, 0x0c030d, "right.B1_R"),
-	R_B_2_R(RIGHT, 0x26, 0x0c0c0e, "right.B2_R"),
-	R_B_3_R(RIGHT, 0x3f, 0x0c3004, "right.B3_R"),
-	R_B_4_R(RIGHT, 0x3f, 0x0cc008, "right.B4_R"),
-	R_B_1_I(RIGHT, 0x26, 0x08015d, "right.B1_I"),
-	R_B_2_I(RIGHT, 0x26, 0x08045e, "right.B2_I"),
-	R_B_3_I(RIGHT, 0x3f, 0x081044, "right.B3_I"),
-	R_B_4_I(RIGHT, 0x3f, 0x084048, "right.B4_I"),
-	R_B_1_O(RIGHT, 0x26, 0x0402ad, "right.B1_O"),
-	R_B_2_O(RIGHT, 0x26, 0x0408ae, "right.B2_O"),
-	R_B_3_O(RIGHT, 0x3f, 0x042084, "right.B3_O"),
-	R_B_4_O(RIGHT, 0x3f, 0x048088, "right.B4_O"),
+	R_B_1_R(RIGHT, 0x3f, 0x0c030d, "right.B1_R"),
+	R_B_2_R(RIGHT, 0x3f, 0x0c0c0e, "right.B2_R"),
+	R_B_3_R(RIGHT, 0x26, 0x0c3004, "right.B3_R"),
+	R_B_4_R(RIGHT, 0x26, 0x0cc008, "right.B4_R"),
+	R_B_1_I(RIGHT, 0x3f, 0x08015d, "right.B1_I"),
+	R_B_2_I(RIGHT, 0x3f, 0x08045e, "right.B2_I"),
+	R_B_3_I(RIGHT, 0x26, 0x081044, "right.B3_I"),
+	R_B_4_I(RIGHT, 0x26, 0x084048, "right.B4_I"),
+	R_B_1_O(RIGHT, 0x3f, 0x0402ad, "right.B1_O"),
+	R_B_2_O(RIGHT, 0x3f, 0x0408ae, "right.B2_O"),
+	R_B_3_O(RIGHT, 0x26, 0x042084, "right.B3_O"),
+	R_B_4_O(RIGHT, 0x26, 0x048088, "right.B4_O"),
+	R_CLR_A(RIGHT, 0x19, 0x000000, "right.clear_A"),
+	R_CLR_B(RIGHT, 0x26, 0x000000, "right.clear_B"),
+	// ######## SYSTEM INTERNALS ###########
+	SYSTEM_ERROR_B(BOTTOM, 0xff, 0x00ffff00, "system.error.bottom", true),
+	SYSTEM_ERROR_C(CENTER, 0xff, 0x00ffff00, "system.error.center", true),
+	SYSTEM_ERROR_L(LEFT, 0xff, 0x00ffff00, "system.error.left", true),
+	SYSTEM_ERROR_R(RIGHT, 0xff, 0x00ffff00, "system.error.right", true),
+	SYSTEM_FATAL_B(BOTTOM, 0xff, 0x00ffff00, "system.fatal.bottom", true),
+	SYSTEM_FATAL_C(CENTER, 0xff, 0x00ffff00, "system.fatal.center", true),
+	SYSTEM_FATAL_L(LEFT, 0xff, 0x00555500, "system.fatal.left", true),
+	SYSTEM_FATAL_R(RIGHT, 0xff, 0x00555500, "system.fatal.right", true),
 	// ######## ENUM INTERNALS ########
 	;
 	public final String title;
 	public final Sector sector;
 	public final int mask;
 	public final int data;
+	public final boolean forced;
 
 	Path(Sector sector, int mask, int data, String title) {
 		this.title = title;
 		this.mask = mask;
 		this.data = data;
 		this.sector = sector;
+		this.forced = false;
+	}
+
+	Path(Sector sector, int mask, int data, String title, boolean force) {
+		this.title = title;
+		this.mask = mask;
+		this.data = data;
+		this.sector = sector;
+		this.forced = force;
 	}
 
 	public boolean collides(Path other) {

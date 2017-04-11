@@ -22,9 +22,14 @@ public class PathRegistry {
 			@SuppressWarnings("null")
 			Path p = paths.get(index);
 			if (path.collides(p)) {
-				logger.info("discarding path '" + p.title + "'");
-				paths.remove(index);
-				index--;
+				if (p.forced & !path.forced) {
+					logger.warning("cannot discard forced code '" + p.title + "'");
+					return;
+				} else {
+					logger.info("discarding path '" + p.title + "'");
+					paths.remove(index);
+					index--;
+				}
 			}
 		}
 

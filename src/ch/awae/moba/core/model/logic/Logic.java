@@ -19,4 +19,8 @@ public interface Logic {
 		return new OrLogic(this, l);
 	}
 
+	static Logic count(int target, Logic... logics) {
+		return new CounterLogic(target, logics);
+	}
+
 }

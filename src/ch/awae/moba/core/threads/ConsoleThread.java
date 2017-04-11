@@ -27,6 +27,7 @@ public class ConsoleThread extends Thread {
 
 	public ConsoleThread(Model model) {
 		this.model = model;
+		this.setDaemon(true);
 	}
 
 	@SuppressWarnings("null")
@@ -73,6 +74,8 @@ public class ConsoleThread extends Thread {
 					doRegisterPath(command.substring(7));
 				else if (command.startsWith("path - "))
 					doUnregisterPath(command.substring(7));
+				else if (command.equals("reboot"))
+					Utils.doReboot(this.model);
 				else
 					System.out.println("unknown command: " + command);
 

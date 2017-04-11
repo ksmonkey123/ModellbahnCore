@@ -1,6 +1,5 @@
 package ch.awae.moba.core.threads;
 
-import java.io.IOException;
 import java.util.logging.Logger;
 
 import org.eclipse.jdt.annotation.Nullable;
@@ -16,12 +15,12 @@ public class OperatorThread implements IThreaded {
 	private final Model model;
 	private volatile @Nullable Thread thread = null;
 
-	public OperatorThread(Model model) throws IOException {
+	public OperatorThread(Model model) {
 		assert logger != null;
 		this.model = model;
 		Registries.threads.register("operator", this);
 	}
-	
+
 	@Override
 	public boolean isActive() {
 		return thread != null;

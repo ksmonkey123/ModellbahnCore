@@ -1,9 +1,5 @@
 package ch.awae.moba.core.spi;
 
-import org.eclipse.jdt.annotation.Nullable;
-
-import ch.awae.moba.core.threads.ProcessorThread;
-
 public interface Host {
 
 	/**
@@ -33,9 +29,6 @@ public interface Host {
 	 */
 	boolean isUpdated();
 
-	@Nullable
 	String getName();
-
-	ProcessorThread getProcessorThread();
 
 }

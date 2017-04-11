@@ -1,0 +1,53 @@
+package ch.awae.moba.core.operators.impl;
+
+import static ch.awae.moba.core.model.ButtonMapping.L_CLEAR;
+import static ch.awae.moba.core.model.ButtonMapping.L_PTH_A;
+import static ch.awae.moba.core.model.ButtonMapping.L_PTH_B;
+import static ch.awae.moba.core.model.ButtonMapping.L_PTH_C;
+import static ch.awae.moba.core.model.ButtonMapping.L_TRK_1;
+import static ch.awae.moba.core.model.ButtonMapping.L_TRK_2;
+import static ch.awae.moba.core.model.ButtonMapping.L_TRK_3;
+import static ch.awae.moba.core.model.ButtonMapping.L_TRK_4;
+
+import org.eclipse.jdt.annotation.NonNull;
+
+import ch.awae.moba.core.model.Model;
+import ch.awae.moba.core.model.Path;
+import ch.awae.moba.core.model.logic.Logic;
+import ch.awae.moba.core.operators.IOperator;
+
+public class Left_AB_Operator extends IOperator {
+
+	private final Logic A_1;
+	private final Logic B_1;
+	private final Logic B_2;
+
+	public Left_AB_Operator() {
+		super("left (a,b only)");
+
+		Logic one_pth = Logic.count(1, L_PTH_A, L_PTH_B, L_PTH_C);
+		Logic one_trk = Logic.count(1, L_TRK_1, L_TRK_2, L_TRK_3, L_TRK_4);
+
+		Logic NC = L_CLEAR.not();
+		
+		Logic _A = L_PTH_A.and(one_pth).and(NC);
+		Logic _B = L_PTH_B.and(one_pth).and(NC);
+		Logic _1 = L_TRK_1.and(one_trk).and(NC);
+		Logic _2 = L_TRK_2.and(one_trk).and(NC);
+
+		A_1 = _A.and(_1);
+		B_1 = _B.and(_1);
+		B_2 = _B.and(_2);
+	}
+
+	@Override
+	public void update(@NonNull Model model) {
+		if (A_1.evaluate(model))
+			model.paths.register(Path.L_A_1_R);
+		if (B_1.evaluate(model))
+			model.paths.register(Path.L_B_1_R);
+		if (B_2.evaluate(model))
+			model.paths.register(Path.L_B_2_R);
+	}
+
+}
