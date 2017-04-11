@@ -53,8 +53,13 @@ public enum ButtonMapping implements Logic {
 	L_PTH_B("left.p_B", LEFT, 5),
 	L_PTH_C("left.p_C", LEFT, 6),
 	L_CLEAR("left.clear", LEFT, 7),
-	// ###### END OF MAPPING ######
+	// ###### GROUPINGS ######
 	;
+
+	public static final ButtonMapping[] BOTTOM_TRACKS = { B_TR_01, B_TR_02, B_TR_03, B_TR_04, B_TR_05, B_TR_06, B_TR_07,
+			B_TR_08, B_TR_09, B_TR_10 };
+
+	// ###### INTERNALS #######
 	public final String title;
 	public final Sector sector;
 	public final int index;

@@ -55,4 +55,16 @@ public final class Utils {
 		}
 	}
 
+	public static void sleep(long millis) {
+		try {
+			Thread.sleep(millis);
+		} catch (InterruptedException e) {
+			logger.warning(e.toString());
+		}
+	}
+
+	public static void async(Runnable runnable) {
+		new Thread(runnable).start();
+	}
+
 }

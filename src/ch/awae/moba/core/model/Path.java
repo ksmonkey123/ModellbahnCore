@@ -21,6 +21,7 @@ public enum Path {
 	B_03_R(BOTTOM, 1, 0x18040d, "bottom.r3"),
 	B_04_R(BOTTOM, 1, 0x18080e, "bottom.r4"),
 	B_05_R(BOTTOM, 1, 0x18100f, "bottom.r5"),
+	B_DUMMY_L(BOTTOM, 1, 0x040000, "bottom.dummy_l"),
 	B_CLEAR(BOTTOM, 1, 0x000000, "bottom.clear"),
 	// ######### CENTER PATHS #########
 	C_S_1_A(CENTER, 0x01, 0x0101, "center.1a"),
@@ -86,8 +87,11 @@ public enum Path {
 	SYSTEM_FATAL_C(CENTER, 0xff, 0x00ffff00, "system.fatal.center", true),
 	SYSTEM_FATAL_L(LEFT, 0xff, 0x00555500, "system.fatal.left", true),
 	SYSTEM_FATAL_R(RIGHT, 0xff, 0x00555500, "system.fatal.right", true),
-	// ######## ENUM INTERNALS ########
+	// ######## GROUPS ########
 	;
+	public static final Path[] BOTTOM_LEFT = { B_01_L, B_02_L, B_03_L, B_04_L, B_05_L, B_06_L, B_07_L, B_08_L, B_09_L,
+			B_10_L };
+	// ######## INTERNALS ############
 	public final String title;
 	public final Sector sector;
 	public final int mask;
