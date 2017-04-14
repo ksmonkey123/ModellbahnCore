@@ -17,10 +17,10 @@ public class CounterLogic implements Logic {
 	@Override
 	public boolean evaluate(@NonNull Model m) {
 		int acc = 0;
-		for (Logic l : backers)
+		for (Logic l : this.backers)
 			if (l.evaluate(m))
 				acc++;
-		return acc == target;
+		return acc == this.target;
 	}
 
 }

@@ -11,63 +11,71 @@ import ch.awae.moba.core.util.Utils;
 
 public class OperatorThread implements IThreaded {
 
-	private final Logger logger = Utils.getLogger();
-	private final Model model;
-	private volatile @Nullable Thread thread = null;
+    final Logger logger = Utils.getLogger();
+    final Model  model;
 
-	public OperatorThread(Model model) {
-		assert logger != null;
-		this.model = model;
-		Registries.threads.register("operator", this);
-	}
+    private volatile @Nullable Thread thread = null;
 
-	@Override
-	public boolean isActive() {
-		return thread != null;
-	}
+    public OperatorThread(Model model) {
+        assert this.logger != null;
+        this.model = model;
+        Registries.threads.register("operator", this);
+    }
 
-	public synchronized void start() {
-		if (this.thread != null)
-			throw new IllegalStateException("already running");
-		logger.info("starting thread");
-		Thread t = new Loop();
-		t.start();
-		this.thread = t;
-	}
+    @Override
+    public boolean isActive() {
+        return this.thread != null;
+    }
 
-	public synchronized void stop() throws InterruptedException {
-		Thread t = this.thread;
-		if (t == null)
-			throw new IllegalStateException("already halted");
-		logger.info("stopping thread");
-		this.thread = null;
-		t.interrupt();
-		t.join();
-		logger.info("thread stopped");
-	}
+    @Override
+    public synchronized void start() {
+        if (this.thread != null)
+            throw new IllegalStateException("already running");
+        this.logger.info("starting thread");
+        Thread t = new Loop();
+        t.start();
+        this.thread = t;
+    }
 
-	private class Loop extends Thread {
+    @Override
+    public synchronized void stop() throws InterruptedException {
+        Thread t = this.thread;
+        if (t == null)
+            throw new IllegalStateException("already halted");
+        this.logger.info("stopping thread");
+        this.thread = null;
+        t.interrupt();
+        t.join();
+        this.logger.info("thread stopped");
+    }
 
-		@Override
-		public void run() {
-			loop: while (!this.isInterrupted()) {
-				for (String name : Registries.operators.getNames()) {
-					IOperator operator = Registries.operators.get(name);
-					if (operator != null && operator.isActive())
-						operator.update(model);
-					if (this.isInterrupted())
-						break loop;
-				}
-				try {
-					synchronized (model) {
-						model.wait();
-					}
-				} catch (InterruptedException e) {
-					break loop;
-				}
-			}
-		}
+    private class Loop extends Thread {
 
-	}
+        Loop() {
+            super();
+        }
+
+        @Override
+        public void run() {
+            loop: while (!this.isInterrupted()) {
+                for (String name : Registries.operators.getNames()) {
+                    IOperator operator = Registries.operators.get(name);
+                    if (operator != null && operator.isActive())
+                        operator.update(OperatorThread.this.model);
+                    if (this.isInterrupted())
+                        break loop;
+                }
+                try {
+                    synchronized (OperatorThread.this.model) {
+                        OperatorThread.this.model.wait();
+                    }
+                } catch (InterruptedException e) {
+                    OperatorThread.this.logger.warning(e.toString());
+                    break loop;
+                }
+            }
+        }
+
+    }
 
 }

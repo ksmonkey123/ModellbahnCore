@@ -26,9 +26,9 @@ public class CenterBaseOperator extends IOperator {
 			return;
 		}
 
-		for (int i = 0; i < BUTTONS.length; i++) {
-			if (model.buttons.getState(BUTTONS[i]))
-				model.paths.register(PATHS[i]);
+		for (int i = 0; i < this.BUTTONS.length; i++) {
+			if (model.buttons.getState(this.BUTTONS[i]))
+				model.paths.register(this.PATHS[i]);
 		}
 
 	}

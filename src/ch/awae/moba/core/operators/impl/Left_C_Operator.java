@@ -39,19 +39,19 @@ public class Left_C_Operator extends IOperator {
 		Logic one_pth = Logic.count(1, L_PTH_A, L_PTH_B, L_PTH_C);
 		Logic one_trk = Logic.count(1, L_TRK_1, L_TRK_2, L_TRK_3, L_TRK_4);
 
-		_C = L_PTH_C.and(one_pth).and(NC);
-		_1 = L_TRK_1.and(one_trk).and(NC);
-		_2 = L_TRK_2.and(one_trk).and(NC);
-		_3 = L_TRK_3.and(one_trk).and(NC);
-		_4 = L_TRK_4.and(one_trk).and(NC);
+		this._C = L_PTH_C.and(one_pth).and(NC);
+		this._1 = L_TRK_1.and(one_trk).and(NC);
+		this._2 = L_TRK_2.and(one_trk).and(NC);
+		this._3 = L_TRK_3.and(one_trk).and(NC);
+		this._4 = L_TRK_4.and(one_trk).and(NC);
 
-		_C_solo = _C.and(Logic.count(0, L_TRK_1, L_TRK_2, L_TRK_3, L_TRK_4));
-		_one_trk_solo = one_trk.and(Logic.count(0, L_PTH_A, L_PTH_B, L_PTH_C, L_CLEAR));
+		this._C_solo = this._C.and(Logic.count(0, L_TRK_1, L_TRK_2, L_TRK_3, L_TRK_4));
+		this._one_trk_solo = one_trk.and(Logic.count(0, L_PTH_A, L_PTH_B, L_PTH_C, L_CLEAR));
 
-		C_1 = _C.and(_1);
-		C_2 = _C.and(_2);
-		C_3 = _C.and(_3);
-		C_4 = _C.and(_4);
+		this.C_1 = this._C.and(this._1);
+		this.C_2 = this._C.and(this._2);
+		this.C_3 = this._C.and(this._3);
+		this.C_4 = this._C.and(this._4);
 	}
 
 	@Override
@@ -59,32 +59,32 @@ public class Left_C_Operator extends IOperator {
 		Logic curr = this.current;
 		if (curr == null) {
 			// base mode
-			if (_C_solo.evaluate(model))
+			if (this._C_solo.evaluate(model))
 				// only C is pressed => inbound
 				this.inbound = true;
-			if (_one_trk_solo.evaluate(model))
+			if (this._one_trk_solo.evaluate(model))
 				// exactly one track is pressed => outbound
 				this.inbound = false;
 			// check for combo
-			if (C_1.evaluate(model)) {
+			if (this.C_1.evaluate(model)) {
 				model.paths.register(Path.L_C_1_R);
 				this.trackID = 1;
-				this.current = C_1;
+				this.current = this.C_1;
 				this.activeTime = System.currentTimeMillis();
-			} else if (C_2.evaluate(model)) {
+			} else if (this.C_2.evaluate(model)) {
 				model.paths.register(Path.L_C_2_R);
 				this.trackID = 2;
-				this.current = C_2;
+				this.current = this.C_2;
 				this.activeTime = System.currentTimeMillis();
-			} else if (C_3.evaluate(model)) {
+			} else if (this.C_3.evaluate(model)) {
 				model.paths.register(Path.L_C_3_R);
 				this.trackID = 3;
-				this.current = C_3;
+				this.current = this.C_3;
 				this.activeTime = System.currentTimeMillis();
-			} else if (C_4.evaluate(model)) {
+			} else if (this.C_4.evaluate(model)) {
 				model.paths.register(Path.L_C_4_R);
 				this.trackID = 4;
-				this.current = C_4;
+				this.current = this.C_4;
 				this.activeTime = System.currentTimeMillis();
 			}
 		} else {

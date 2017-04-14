@@ -1,4 +1,4 @@
-package ch.awae.moba.core.operators;
+package ch.awae.moba.core.operators.annotations;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

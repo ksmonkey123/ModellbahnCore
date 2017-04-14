@@ -14,7 +14,7 @@ public class NotLogic implements Logic {
 
 	@Override
 	public boolean evaluate(@NonNull Model m) {
-		return !backer.evaluate(m);
+		return !this.backer.evaluate(m);
 	}
 
 	@Override

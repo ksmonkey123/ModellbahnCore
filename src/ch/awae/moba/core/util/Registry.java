@@ -12,21 +12,21 @@ public class Registry<A> {
 	private final HashMap<String, A> map = new HashMap<>();
 
 	public void register(String name, A item) {
-		map.put(name, item);
+		this.map.put(name, item);
 	}
 
 	public @Nullable A get(String name) {
-		return map.get(name);
+		return this.map.get(name);
 	}
 
 	public List<String> getNames() {
-		ArrayList<String> list = new ArrayList<>(map.keySet());
+		ArrayList<String> list = new ArrayList<>(this.map.keySet());
 		list.sort(String.CASE_INSENSITIVE_ORDER);
 		return list;
 	}
 
 	public @Nullable A find(Predicate<A> test) {
-		for (A e : map.values()) {
+		for (A e : this.map.values()) {
 			if (test.test(e))
 				return e;
 		}

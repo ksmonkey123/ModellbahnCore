@@ -17,7 +17,7 @@ public class ButtonLogic implements Logic {
 
 	@Override
 	public boolean evaluate(@NonNull Model m) {
-		return m.buttons.getState(mapping) == state;
+		return m.buttons.getState(this.mapping) == this.state;
 	}
 
 }

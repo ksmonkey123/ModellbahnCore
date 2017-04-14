@@ -9,11 +9,11 @@ public class Buttons {
 	}
 
 	public void setState(Sector sector, short values) {
-		map[sector.ordinal()] = values;
+		this.map[sector.ordinal()] = values;
 	}
 
 	public short getState(Sector sector) {
-		return map[sector.ordinal()];
+		return this.map[sector.ordinal()];
 	}
 
 	public boolean getState(ButtonMapping mapping) {
@@ -25,8 +25,7 @@ public class Buttons {
 		ButtonMapping mapping = ButtonMapping.byTitle(button);
 		if (mapping != null)
 			return getState(mapping);
-		else
-			throw new IllegalArgumentException("unkown button: " + button);
+        throw new IllegalArgumentException("unkown button: " + button);
 	}
 
 }

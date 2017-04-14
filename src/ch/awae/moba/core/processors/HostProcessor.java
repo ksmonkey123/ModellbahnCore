@@ -13,8 +13,8 @@ public abstract class HostProcessor {
 
 	public final void performUpdate(Host host) {
 		this.process(host);
-		synchronized (model) {
-			model.notifyAll();
+		synchronized (this.model) {
+			this.model.notifyAll();
 		}
 	}
 

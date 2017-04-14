@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Properties;
 import java.util.concurrent.locks.LockSupport;
 import java.util.logging.Logger;
 
@@ -27,119 +28,141 @@ import ch.awae.moba.core.util.Utils;
 
 public class SPIThread implements IThreaded {
 
-	private static final long HOST_SELECT_DELAY = 150000;
-	private static final int SPI_SPEED = 61000;
-	private static final byte MAGIC_NUMBER = 0b01101001;
+    final long HOST_SELECT_DELAY;
+    final int  SPI_SPEED;
+    final byte MAGIC_NUMBER;
 
-	private final Logger logger = Utils.getLogger();
-	private final HashMap<SPIChannel, @Nullable GpioPinDigitalOutput> pinMap;
-	private final List<SPIHost> hosts;
-	private final SpiDevice spi;
-	private final GpioController gpio;
+    final HashMap<SPIChannel, @Nullable GpioPinDigitalOutput> pinMap;
 
-	private volatile @Nullable Thread thread = null;
+    final Logger         logger = Utils.getLogger();
+    final List<SPIHost>  hosts;
+    final SpiDevice      spi;
+    final GpioController gpio;
 
-	public synchronized void registerHost(SPIHost host) {
-		SPIChannel c = host.getChannel();
-		if (pinMap.containsKey(c)) {
-			logger.severe("already registered a device on channel " + c);
-			throw new IllegalArgumentException("occupied channel " + c);
-		}
-		GpioPinDigitalOutput pin = gpio.provisionDigitalOutputPin(c.pin, PinState.LOW);
-		logger.info("loaded device " + host.getName() + " on channel " + host.getChannel());
-		pinMap.put(c, pin);
-		hosts.add(host);
-		pin.setShutdownOptions(true, PinState.LOW, PinPullResistance.OFF, PinMode.DIGITAL_INPUT);
-	}
+    private volatile @Nullable Thread thread = null;
 
-	public SPIThread() throws IOException {
-		this.hosts = new ArrayList<>();
-		this.pinMap = new HashMap<>();
+    public synchronized void registerHost(SPIHost host) {
+        SPIChannel c = host.getChannel();
+        if (this.pinMap.containsKey(c)) {
+            this.logger.severe("already registered a device on channel " + c);
+            throw new IllegalArgumentException("occupied channel " + c);
+        }
+        GpioPinDigitalOutput pin = this.gpio.provisionDigitalOutputPin(c.pin,
+                PinState.LOW);
+        this.logger.info(
+                "loaded device " + host.getName() + " on channel " + host.getChannel());
+        this.pinMap.put(c, pin);
+        this.hosts.add(host);
+        pin.setShutdownOptions(Boolean.TRUE, PinState.LOW, PinPullResistance.OFF,
+                PinMode.DIGITAL_INPUT);
+    }
 
-		GpioController gpio = GpioFactory.getInstance();
+    public SPIThread() throws IOException {
+        this.hosts = new ArrayList<>();
+        this.pinMap = new HashMap<>();
 
-		SpiDevice spi = SpiFactory.getInstance(SpiChannel.CS0, SPI_SPEED, SpiMode.MODE_0);
+        Properties props = Utils.getProperties("spi.properties");
 
-		assert spi != null;
-		assert gpio != null;
+        this.SPI_SPEED = Integer.parseInt(props.getProperty("spi.speed"), 10);
+        this.HOST_SELECT_DELAY = Long.parseLong(props.getProperty("spi.hostSelectDelay"),
+                10);
+        this.MAGIC_NUMBER = Byte.parseByte(props.getProperty("spi.magicNumber"), 10);
 
-		this.spi = spi;
-		this.gpio = gpio;
+        GpioController controller = GpioFactory.getInstance();
+        SpiDevice device = SpiFactory.getInstance(SpiChannel.CS0, this.SPI_SPEED,
+                SpiMode.MODE_0);
 
-		Registries.threads.register("spi", this);
-	}
+        assert device != null;
+        assert controller != null;
 
-	public synchronized void start() {
-		if (this.thread != null)
-			throw new IllegalStateException("already running");
-		logger.info("starting thread");
-		Thread t = new SPILoop();
-		t.start();
-		this.thread = t;
-	}
+        this.spi = device;
+        this.gpio = controller;
 
-	public synchronized void stop() throws InterruptedException {
-		Thread t = this.thread;
-		if (t == null)
-			throw new IllegalStateException("already halted");
-		logger.info("stopping thread");
-		t.interrupt();
-		t.join();
-		this.thread = null;
-		logger.info("thread stopped");
-	}
+        Registries.threads.register("spi", this);
+    }
 
-	@Override
-	public boolean isActive() {
-		return thread != null;
-	}
+    @Override
+    public synchronized void start() {
+        if (this.thread != null)
+            throw new IllegalStateException("already running");
+        this.logger.info("starting thread");
+        Thread t = new SPILoop();
+        t.start();
+        this.thread = t;
+    }
 
-	private class SPILoop extends Thread {
+    @Override
+    public synchronized void stop() throws InterruptedException {
+        Thread t = this.thread;
+        if (t == null)
+            throw new IllegalStateException("already halted");
+        this.logger.info("stopping thread");
+        t.interrupt();
+        t.join();
+        this.thread = null;
+        this.logger.info("thread stopped");
+    }
 
-		@Override
-		public void run() {
-			loop: while (!this.isInterrupted()) {
-				list: for (int i = 0; i < hosts.size(); i++) {
-					@SuppressWarnings("null")
-					SPIHost host = hosts.get(i);
-					GpioPinDigitalOutput pin = pinMap.get(host.getChannel());
-					assert pin != null;
-					pin.setState(PinState.HIGH);
-					if (HOST_SELECT_DELAY > 0)
-						LockSupport.parkNanos(HOST_SELECT_DELAY);
+    @Override
+    public boolean isActive() {
+        return this.thread != null;
+    }
 
-					short input = host.getInput();
-					byte[] array = { MAGIC_NUMBER, (byte) (input & 0x00ff), (byte) ((input >> 8) & 0x00ff),
-							host.getNetwork() };
-					byte[] response;
-					try {
-						response = spi.write(array);
-					} catch (IOException e) {
-						throw new RuntimeException(e);
-					}
-					pin.setState(PinState.LOW);
-					assert response != null;
-					if (response[0] != MAGIC_NUMBER) {
-						if (response[0] != -1)
-							logger.warning("Invalid response from device " + host.getName() + " on channel "
-									+ host.getChannel() + "\n > magic number was wrong: " + response[0]);
-						continue list;
-					}
-					byte check = (byte) ((array[1] ^ array[2]) & 0x000000ff);
-					if (response[3] != check) {
-						logger.warning("Invalid response from device " + host.getName() + " on channel "
-								+ host.getChannel() + "\n > invalid readback: " + response[3] + " instead of " + check);
-						continue list;
-					}
-					short output = (short) (((response[2] << 8) & 0x0000ff00) | (response[1] & 0x000000ff));
-					host.setOutput(output);
+    private class SPILoop extends Thread {
 
-					if (this.isInterrupted())
-						break loop;
-				}
-			}
-		}
+        SPILoop() {
+            super();
+        }
 
-	}
+        @Override
+        public void run() {
+            loop: while (!this.isInterrupted()) {
+                list: for (int i = 0; i < SPIThread.this.hosts.size(); i++) {
+                    @SuppressWarnings("null")
+                    SPIHost host = SPIThread.this.hosts.get(i);
+                    GpioPinDigitalOutput pin = SPIThread.this.pinMap
+                            .get(host.getChannel());
+                    assert pin != null;
+                    pin.setState(PinState.HIGH);
+                    if (SPIThread.this.HOST_SELECT_DELAY > 0)
+                        LockSupport.parkNanos(SPIThread.this.HOST_SELECT_DELAY);
+
+                    short input = host.getInput();
+                    byte[] array = { SPIThread.this.MAGIC_NUMBER, (byte) (input & 0x00ff),
+                            (byte) ((input >> 8) & 0x00ff), host.getNetwork() };
+                    byte[] response;
+                    try {
+                        response = SPIThread.this.spi.write(array);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                    pin.setState(PinState.LOW);
+                    assert response != null;
+                    if (response[0] != SPIThread.this.MAGIC_NUMBER) {
+                        if (response[0] != -1)
+                            SPIThread.this.logger.warning("Invalid response from device "
+                                    + host.getName() + " on channel " + host.getChannel()
+                                    + "\n > magic number was wrong: " + response[0]);
+                        continue list;
+                    }
+                    byte check = (byte) ((array[1] ^ array[2]) & 0x000000ff);
+                    if (response[3] != check) {
+                        SPIThread.this.logger.warning("Invalid response from device "
+                                + host.getName() + " on channel " + host.getChannel()
+                                + "\n > invalid readback: " + response[3] + " instead of "
+                                + check);
+                        continue list;
+                    }
+                    short output = (short) (((response[2] << 8) & 0x0000ff00)
+                            | (response[1] & 0x000000ff));
+                    host.setOutput(output);
+
+                    if (this.isInterrupted())
+                        break loop;
+                }
+            }
+        }
+
+    }
 
 }

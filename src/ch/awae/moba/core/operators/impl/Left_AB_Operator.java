@@ -35,18 +35,18 @@ public class Left_AB_Operator extends IOperator {
 		Logic _1 = L_TRK_1.and(one_trk).and(NC);
 		Logic _2 = L_TRK_2.and(one_trk).and(NC);
 
-		A_1 = _A.and(_1);
-		B_1 = _B.and(_1);
-		B_2 = _B.and(_2);
+		this.A_1 = _A.and(_1);
+		this.B_1 = _B.and(_1);
+		this.B_2 = _B.and(_2);
 	}
 
 	@Override
 	public void update(@NonNull Model model) {
-		if (A_1.evaluate(model))
+		if (this.A_1.evaluate(model))
 			model.paths.register(Path.L_A_1_R);
-		if (B_1.evaluate(model))
+		if (this.B_1.evaluate(model))
 			model.paths.register(Path.L_B_1_R);
-		if (B_2.evaluate(model))
+		if (this.B_2.evaluate(model))
 			model.paths.register(Path.L_B_2_R);
 	}
 

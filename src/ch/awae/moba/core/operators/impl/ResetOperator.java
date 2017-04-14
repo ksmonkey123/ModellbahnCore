@@ -22,25 +22,25 @@ public class ResetOperator extends IOperator {
 	public ResetOperator() {
 		super("system reset");
 
-		trigger = Logic.count(3, B_CLEAR, L_CLEAR, C_CLEAR, R_CLR_A, R_CLR_B);
+		this.trigger = Logic.count(3, B_CLEAR, L_CLEAR, C_CLEAR, R_CLR_A, R_CLR_B);
 	}
 
 	@Override
 	public void update(Model model) {
-		boolean signal = trigger.evaluate(model);
+		boolean signal = this.trigger.evaluate(model);
 
 		if (signal) {
-			if (armed) {
-				long deltaT = System.currentTimeMillis() - armTime;
+			if (this.armed) {
+				long deltaT = System.currentTimeMillis() - this.armTime;
 				if (deltaT > ARM_TIME) {
 					Utils.doReboot(model);
 				}
 			} else {
-				armed = true;
-				armTime = System.currentTimeMillis();
+				this.armed = true;
+				this.armTime = System.currentTimeMillis();
 			}
 		} else {
-			armed = false;
+			this.armed = false;
 		}
 
 	}

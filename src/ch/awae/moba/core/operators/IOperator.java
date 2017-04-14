@@ -3,6 +3,7 @@ package ch.awae.moba.core.operators;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.awae.moba.core.model.Model;
+import ch.awae.moba.core.operators.annotations.Enabled;
 import ch.awae.moba.core.util.Controllable;
 import ch.awae.moba.core.util.Registries;
 
@@ -23,22 +24,23 @@ public abstract class IOperator implements Controllable {
 		this.state = state;
 	}
 
-	public boolean isActive() {
+	@Override
+    public boolean isActive() {
 		return this.state;
 	}
 
 	@Override
 	public void start() {
-		if (state)
+		if (this.state)
 			throw new IllegalStateException("already running");
-		state = true;
+		this.state = true;
 	}
 
 	@Override
 	public void halt() {
-		if (!state)
+		if (!this.state)
 			throw new IllegalStateException("already halted");
-		state = false;
+		this.state = false;
 	}
 
 	public boolean isEnabled() {

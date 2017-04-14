@@ -1,7 +1,5 @@
 package ch.awae.moba.core.spi;
 
-import org.eclipse.jdt.annotation.Nullable;
-
 public interface SPIHost {
 
 	/**
@@ -33,5 +31,5 @@ public interface SPIHost {
 	 */
 	SPIChannel getChannel();
 	
-	@Nullable String getName();
+	String getName();
 }

@@ -24,60 +24,62 @@ import ch.awae.moba.core.util.Registries;
  */
 public final class Core {
 
-	public static Core init() throws IOException {
-		return new Core();
-	}
+    public static Core init() throws IOException {
+        return new Core();
+    }
 
-	private final SPIThread spi;
-	private final Model model;
+    private final SPIThread spi;
+    private final Model     model;
 
-	private Core() throws IOException {
-		this.spi = new SPIThread();
-		this.model = new Model();
-	}
+    private Core() throws IOException {
+        this.spi = new SPIThread();
+        this.model = new Model();
+    }
 
-	public Model getModel() {
-		return this.model;
-	}
+    public Model getModel() {
+        return this.model;
+    }
 
-	public void registerHost(SPIChannel channel, Sector sector, String title) {
-		Pair<SPIHost, Host> host = HostFactory.createHost(channel, title);
-		new ProcessorThread(host._2, new AdditiveProcessor(model, sector));
-		this.spi.registerHost(host._1);
-	}
+    @SuppressWarnings("unused")
+    public void registerHost(SPIChannel channel, Sector sector, String title) {
+        Pair<SPIHost, Host> host = HostFactory.createHost(channel, title);
+        new ProcessorThread(host._2, new AdditiveProcessor(this.model, sector));
+        this.spi.registerHost(host._1);
+    }
 
-	public void loadOperators(String pkg) throws IOException, InterruptedException {
-		String jar = System.getProperty("path");
-		if (jar == null)
-			throw new IllegalArgumentException("System Property 'path' required!");
-		JarScanner.loadOperators(jar, pkg);
-	}
+    public void loadOperators(String pkg) throws IOException {
+        String jar = System.getProperty("path");
+        if (jar == null)
+            throw new IllegalArgumentException("System Property 'path' required!");
+        JarScanner.loadOperators(jar, pkg);
+    }
 
-	public void startConsole() {
-		new ConsoleThread(this.model).start();
-	}
+    public void startConsole() {
+        new ConsoleThread(this.model).start();
+    }
 
-	public void start() throws InterruptedException {
-		new OperatorThread(this.model);
-		this.spi.start();
-		Thread.sleep(2000);
-		for (String name : Registries.threads.getNames()) {
-			try {
-				IThreaded thread = Registries.threads.get(name);
-				if (thread != null && !thread.isActive())
-					thread.start();
-			} catch (RuntimeException e) {
-				System.out.println(e);
-			}
-		}
-	}
+    @SuppressWarnings("unused")
+    public void start() throws InterruptedException {
+        new OperatorThread(this.model);
+        this.spi.start();
+        Thread.sleep(2000);
+        for (String name : Registries.threads.getNames()) {
+            try {
+                IThreaded thread = Registries.threads.get(name);
+                if (thread != null && !thread.isActive())
+                    thread.start();
+            } catch (RuntimeException e) {
+                System.out.println(e);
+            }
+        }
+    }
 
-	public void startOperators() {
-		for (String name : Registries.operators.getNames()) {
-			IOperator op = Registries.operators.get(name);
-			if (op != null && op.isEnabled())
-				op.start();
-		}
-	}
+    public void startOperators() {
+        for (String name : Registries.operators.getNames()) {
+            IOperator op = Registries.operators.get(name);
+            if (op != null && op.isEnabled())
+                op.start();
+        }
+    }
 
 }

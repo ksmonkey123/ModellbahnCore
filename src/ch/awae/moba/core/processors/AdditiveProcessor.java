@@ -16,10 +16,10 @@ public class AdditiveProcessor extends HostProcessor {
 
 	@Override
 	public void process(Host host) {
-		model.buttons.setState(sector, host.read());
+		this.model.buttons.setState(this.sector, host.read());
 
 		int data = 0;
-		for (Path p : model.paths.getPaths(sector)) {
+		for (Path p : this.model.paths.getPaths(this.sector)) {
 			data += p.data;
 		}
 

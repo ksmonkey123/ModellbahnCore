@@ -4,7 +4,8 @@ import ch.awae.moba.core.util.Controllable;
 
 public interface IThreaded extends Controllable {
 
-	void start();
+	@Override
+    void start();
 
 	void stop() throws InterruptedException;
 

@@ -15,7 +15,7 @@ public class AndLogic implements Logic {
 
 	@Override
 	public boolean evaluate(@NonNull Model m) {
-		return a.evaluate(m) && b.evaluate(m);
+		return this.a.evaluate(m) && this.b.evaluate(m);
 	}
 
 }
