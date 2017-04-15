@@ -8,6 +8,7 @@ final class HostImpl implements Host, SPIHost {
 
     private volatile short   input      = (short) 0xffff;
     private volatile short   output     = (short) 0x0000;
+    private volatile short   output_raw = (short) 0x0000;
     private volatile byte    network    = (byte) 0x00;
     private volatile boolean updateFlag = false;
 
@@ -29,8 +30,11 @@ final class HostImpl implements Host, SPIHost {
     @Override
     public void setOutput(short output) {
         synchronized (this.LOCK) {
-            this.output = output;
-            this.updateFlag = true;
+            if ((this.output_raw ^ output) == 0) {
+                this.output = output;
+                this.updateFlag = true;
+            }
+            this.output_raw = output;
             synchronized (this) {
                 this.notifyAll();
             }

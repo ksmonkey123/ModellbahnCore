@@ -8,7 +8,7 @@ import static ch.awae.moba.core.model.Sector.RIGHT;
 import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
 
-import ch.awae.moba.core.model.logic.Logic;
+import ch.awae.moba.core.logic.Logic;
 
 public enum ButtonMapping implements Logic {
 	// ###### BOTTOM BUTTONS ######

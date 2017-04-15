@@ -19,7 +19,6 @@ public class PathRegistry {
         if (this.paths.contains(path))
             this.logger.info("path '" + path + "' already registered");
         for (int index = 0; index < this.paths.size(); index++) {
-            @SuppressWarnings("null")
             Path p = this.paths.get(index);
             if (path.collides(p)) {
                 if (p.forced & !path.forced) {

@@ -12,12 +12,12 @@ import static ch.awae.moba.core.model.ButtonMapping.R_TRK_4;
 import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
 
+import ch.awae.moba.core.logic.Logic;
 import ch.awae.moba.core.model.Model;
 import ch.awae.moba.core.model.Path;
-import ch.awae.moba.core.model.logic.Logic;
-import ch.awae.moba.core.operators.IOperator;
+import ch.awae.moba.core.operators.AOperator;
 
-public class Right_A_Operator extends IOperator {
+public class Right_A_Operator extends AOperator {
 
 	private final static long DECORATOR_DELAY = 700;
 

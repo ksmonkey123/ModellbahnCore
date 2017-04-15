@@ -47,10 +47,8 @@ public class SPIThread implements IThreaded {
             this.logger.severe("already registered a device on channel " + c);
             throw new IllegalArgumentException("occupied channel " + c);
         }
-        GpioPinDigitalOutput pin = this.gpio.provisionDigitalOutputPin(c.pin,
-                PinState.LOW);
-        this.logger.info(
-                "loaded device " + host.getName() + " on channel " + host.getChannel());
+        GpioPinDigitalOutput pin = this.gpio.provisionDigitalOutputPin(c.pin, PinState.LOW);
+        this.logger.info("loaded device " + host.getName() + " on channel " + host.getChannel());
         this.pinMap.put(c, pin);
         this.hosts.add(host);
         pin.setShutdownOptions(Boolean.TRUE, PinState.LOW, PinPullResistance.OFF,
@@ -64,13 +62,11 @@ public class SPIThread implements IThreaded {
         Properties props = Utils.getProperties("spi.properties");
 
         this.SPI_SPEED = Integer.parseInt(props.getProperty("spi.speed"), 10);
-        this.HOST_SELECT_DELAY = Long.parseLong(props.getProperty("spi.hostSelectDelay"),
-                10);
+        this.HOST_SELECT_DELAY = Long.parseLong(props.getProperty("spi.hostSelectDelay"), 10);
         this.MAGIC_NUMBER = Byte.parseByte(props.getProperty("spi.magicNumber"), 10);
 
         GpioController controller = GpioFactory.getInstance();
-        SpiDevice device = SpiFactory.getInstance(SpiChannel.CS0, this.SPI_SPEED,
-                SpiMode.MODE_0);
+        SpiDevice device = SpiFactory.getInstance(SpiChannel.CS0, this.SPI_SPEED, SpiMode.MODE_0);
 
         assert device != null;
         assert controller != null;
@@ -118,10 +114,8 @@ public class SPIThread implements IThreaded {
         public void run() {
             loop: while (!this.isInterrupted()) {
                 list: for (int i = 0; i < SPIThread.this.hosts.size(); i++) {
-                    @SuppressWarnings("null")
                     SPIHost host = SPIThread.this.hosts.get(i);
-                    GpioPinDigitalOutput pin = SPIThread.this.pinMap
-                            .get(host.getChannel());
+                    GpioPinDigitalOutput pin = SPIThread.this.pinMap.get(host.getChannel());
                     assert pin != null;
                     pin.setState(PinState.HIGH);
                     if (SPIThread.this.HOST_SELECT_DELAY > 0)
@@ -149,8 +143,7 @@ public class SPIThread implements IThreaded {
                     if (response[3] != check) {
                         SPIThread.this.logger.warning("Invalid response from device "
                                 + host.getName() + " on channel " + host.getChannel()
-                                + "\n > invalid readback: " + response[3] + " instead of "
-                                + check);
+                                + "\n > invalid readback: " + response[3] + " instead of " + check);
                         continue list;
                     }
                     short output = (short) (((response[2] << 8) & 0x0000ff00)

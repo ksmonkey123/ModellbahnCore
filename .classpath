@@ -5,5 +5,6 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
 	<classpathentry kind="lib" path="lib/pi4j-core.jar" sourcepath="lib/pi4j-core-sources.jar"/>
 	<classpathentry kind="lib" path="lib/org.eclipse.jdt.annotation_2.1.0.v20160418-1457.jar"/>
+	<classpathentry kind="lib" path="lib/fast-classpath-scanner-2.0.19.jar" sourcepath="lib/fast-classpath-scanner-2.0.19-sources.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

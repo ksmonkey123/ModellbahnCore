@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
-import ch.awae.moba.core.operators.IOperator;
+import ch.awae.moba.core.operators.AOperator;
 
 public class JarScanner {
 
@@ -54,7 +54,7 @@ public class JarScanner {
     public static void loadOperators(String path, String pkg) throws IOException {
         List<Class<?>> raw = scanJarForClasses(path, pkg);
         for (Class<?> c : raw) {
-            if (IOperator.class.isAssignableFrom(c)) {
+            if (AOperator.class.isAssignableFrom(c)) {
                 try {
                     c.getConstructor().newInstance();
                     logger.info("loaded operator " + c.getName());

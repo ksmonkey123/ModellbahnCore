@@ -8,9 +8,11 @@ import ch.awae.moba.core.model.ButtonMapping;
 import ch.awae.moba.core.model.Model;
 import ch.awae.moba.core.model.Path;
 import ch.awae.moba.core.model.Sector;
-import ch.awae.moba.core.operators.IOperator;
+import ch.awae.moba.core.operators.AOperator;
+import ch.awae.moba.core.operators.annotations.Enabled;
 
-public class BottomQuickMode extends IOperator {
+@Enabled(false)
+public class BottomQuickMode extends AOperator {
 
     private static final long BLINK_TIME = 500;
 

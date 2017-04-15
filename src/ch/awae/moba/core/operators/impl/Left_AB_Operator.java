@@ -11,12 +11,12 @@ import static ch.awae.moba.core.model.ButtonMapping.L_TRK_4;
 
 import org.eclipse.jdt.annotation.NonNull;
 
+import ch.awae.moba.core.logic.Logic;
 import ch.awae.moba.core.model.Model;
 import ch.awae.moba.core.model.Path;
-import ch.awae.moba.core.model.logic.Logic;
-import ch.awae.moba.core.operators.IOperator;
+import ch.awae.moba.core.operators.AOperator;
 
-public class Left_AB_Operator extends IOperator {
+public class Left_AB_Operator extends AOperator {
 
 	private final Logic A_1;
 	private final Logic B_1;

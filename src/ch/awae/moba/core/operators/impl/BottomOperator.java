@@ -7,9 +7,9 @@ import ch.awae.moba.core.model.ButtonMapping;
 import ch.awae.moba.core.model.Model;
 import ch.awae.moba.core.model.Path;
 import ch.awae.moba.core.model.Sector;
-import ch.awae.moba.core.operators.IOperator;
+import ch.awae.moba.core.operators.AOperator;
 
-public class BottomOperator extends IOperator {
+public class BottomOperator extends AOperator {
 
     public BottomOperator() {
         super("bottom");

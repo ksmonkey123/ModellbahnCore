@@ -3,9 +3,9 @@ package ch.awae.moba.core.operators.impl;
 import ch.awae.moba.core.model.ButtonMapping;
 import ch.awae.moba.core.model.Model;
 import ch.awae.moba.core.model.Path;
-import ch.awae.moba.core.operators.IOperator;
+import ch.awae.moba.core.operators.AOperator;
 
-public class CenterBaseOperator extends IOperator {
+public class CenterBaseOperator extends AOperator {
 
 	public CenterBaseOperator() {
 		super("center base");

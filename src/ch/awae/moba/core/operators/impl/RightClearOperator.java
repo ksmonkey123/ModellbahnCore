@@ -5,9 +5,9 @@ import org.eclipse.jdt.annotation.NonNull;
 import ch.awae.moba.core.model.ButtonMapping;
 import ch.awae.moba.core.model.Model;
 import ch.awae.moba.core.model.Path;
-import ch.awae.moba.core.operators.IOperator;
+import ch.awae.moba.core.operators.AOperator;
 
-public class RightClearOperator extends IOperator {
+public class RightClearOperator extends AOperator {
 
 	public RightClearOperator() {
 		super("right (clear)");

@@ -1,4 +1,4 @@
-package ch.awae.moba.core.model.logic;
+package ch.awae.moba.core.logic;
 
 import org.eclipse.jdt.annotation.NonNull;
 

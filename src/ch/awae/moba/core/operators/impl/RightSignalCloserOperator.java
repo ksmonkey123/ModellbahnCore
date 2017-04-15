@@ -13,15 +13,15 @@ import java.util.List;
 
 import org.eclipse.jdt.annotation.NonNull;
 
+import ch.awae.moba.core.logic.Logic;
 import ch.awae.moba.core.model.Model;
 import ch.awae.moba.core.model.Path;
 import ch.awae.moba.core.model.Sector;
-import ch.awae.moba.core.model.logic.Logic;
-import ch.awae.moba.core.operators.IOperator;
+import ch.awae.moba.core.operators.AOperator;
 import ch.awae.moba.core.operators.annotations.Enabled;
 
 @Enabled(false)
-public class RightSignalCloserOperator extends IOperator {
+public class RightSignalCloserOperator extends AOperator {
 
 	private static final long ARMING_DELAY = 100;
 

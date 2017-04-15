@@ -5,7 +5,7 @@ import java.util.logging.Logger;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.awae.moba.core.model.Model;
-import ch.awae.moba.core.operators.IOperator;
+import ch.awae.moba.core.operators.AOperator;
 import ch.awae.moba.core.util.Registries;
 import ch.awae.moba.core.util.Utils;
 
@@ -59,7 +59,7 @@ public class OperatorThread implements IThreaded {
         public void run() {
             loop: while (!this.isInterrupted()) {
                 for (String name : Registries.operators.getNames()) {
-                    IOperator operator = Registries.operators.get(name);
+                    AOperator operator = Registries.operators.get(name);
                     if (operator != null && operator.isActive())
                         operator.update(OperatorThread.this.model);
                     if (this.isInterrupted())

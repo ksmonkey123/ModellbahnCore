@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import ch.awae.moba.core.model.Model;
 import ch.awae.moba.core.model.Sector;
-import ch.awae.moba.core.operators.IOperator;
+import ch.awae.moba.core.operators.AOperator;
 import ch.awae.moba.core.processors.AdditiveProcessor;
 import ch.awae.moba.core.spi.Host;
 import ch.awae.moba.core.spi.HostFactory;
@@ -76,7 +76,7 @@ public final class Core {
 
     public void startOperators() {
         for (String name : Registries.operators.getNames()) {
-            IOperator op = Registries.operators.get(name);
+            AOperator op = Registries.operators.get(name);
             if (op != null && op.isEnabled())
                 op.start();
         }

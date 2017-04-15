@@ -53,8 +53,7 @@ public class ConsoleThread extends Thread {
                 else if (command.startsWith("start operator "))
                     doStart("operator", command.substring(15), Registries.operators);
                 else if (command.equals("loglevel"))
-                    System.out.println(
-                            "current log level: " + this.logger.getLevel().getName());
+                    System.out.println("current log level: " + this.logger.getLevel().getName());
                 else if (command.equals("list loglevels"))
                     doLevelList();
                 else if (command.startsWith("set loglevel "))
@@ -129,22 +128,16 @@ public class ConsoleThread extends Thread {
             Path p2 = (i + 1) < paths.length ? paths[i + 1] : null;
             Path p3 = (i + 2) < paths.length ? paths[i + 2] : null;
             String line = strech(p1 == null ? ""
-                    : ((this.model.paths.isRegistered(p1) ? " * " : "   ") + p1.title),
-                    20)
+                    : ((this.model.paths.isRegistered(p1) ? " * " : "   ") + p1.title), 20)
                     + strech(p2 == null ? ""
-                            : ((this.model.paths.isRegistered(p2) ? " * " : "   ")
-                                    + p2.title),
-                            20)
+                            : ((this.model.paths.isRegistered(p2) ? " * " : "   ") + p2.title), 20)
                     + strech(p3 == null ? ""
-                            : ((this.model.paths.isRegistered(p3) ? " * " : "   ")
-                                    + p3.title),
-                            20);
+                            : ((this.model.paths.isRegistered(p3) ? " * " : "   ") + p3.title), 20);
             System.out.println(line);
         }
         System.out.println("==============");
     }
 
-    @SuppressWarnings("null")
     private void listActivePaths() {
         System.out.println("Active Path Listing");
         System.out.println("=================");
@@ -213,9 +206,9 @@ public class ConsoleThread extends Thread {
         System.out.println("Supported Log Levels");
         System.out.println("====================");
         for (int i = 0; i < this.levels.length; i++)
-            System.out.println(" #" + i + ": "
-                    + (this.levels[i].equals(this.logger.getLevel()) ? ">" : " ") + " "
-                    + this.levels[i].getName());
+            System.out.println(
+                    " #" + i + ": " + (this.levels[i].equals(this.logger.getLevel()) ? ">" : " ")
+                            + " " + this.levels[i].getName());
         System.out.println("====================");
     }
 
@@ -225,15 +218,13 @@ public class ConsoleThread extends Thread {
         System.out.println("===================");
         List<String> names = reg.getNames();
         for (int i = 0; i < names.size(); i++) {
-            System.out.println(
-                    " #" + i + ": " + (reg.get(names.get(i)).isActive() ? ">" : " ") + " "
-                            + names.get(i));
+            System.out.println(" #" + i + ": " + (reg.get(names.get(i)).isActive() ? ">" : " ")
+                    + " " + names.get(i));
         }
         System.out.println("===================");
     }
 
-    private void doStart(String title, String name,
-            Registry<? extends Controllable> reg) {
+    private void doStart(String title, String name, Registry<? extends Controllable> reg) {
         @Nullable
         String n = null;
         if (name.startsWith("#")) {

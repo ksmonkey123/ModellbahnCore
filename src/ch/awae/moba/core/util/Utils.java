@@ -30,7 +30,7 @@ public final class Utils {
         Handler systemOut = new ConsoleHandler();
         systemOut.setLevel(Level.ALL);
         logger.addHandler(systemOut);
-        logger.setLevel(Level.SEVERE);
+        logger.setLevel(Level.ALL);
         logger.setUseParentHandlers(false);
     }
 

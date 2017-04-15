@@ -5,16 +5,16 @@ import java.util.logging.Logger;
 
 import org.eclipse.jdt.annotation.Nullable;
 
+import ch.awae.moba.core.logic.Logic;
 import ch.awae.moba.core.model.ButtonMapping;
 import ch.awae.moba.core.model.Model;
 import ch.awae.moba.core.model.Path;
 import ch.awae.moba.core.model.Sector;
-import ch.awae.moba.core.model.logic.Logic;
-import ch.awae.moba.core.operators.IOperator;
+import ch.awae.moba.core.operators.AOperator;
 import ch.awae.moba.core.util.Registries;
 import ch.awae.moba.core.util.Utils;
 
-public class BottomQuickActivator extends IOperator {
+public class BottomQuickActivator extends AOperator {
 
     private static final long TRIGGER_ON_DELAY       = 2000;
     private static final long TRIGGER_OFF_DELAY      = 1000;
@@ -85,9 +85,9 @@ public class BottomQuickActivator extends IOperator {
     // TRANSITION METHODS
 
     private void enableQM(Model model) {
-        IOperator base_op = Registries.operators
+        AOperator base_op = Registries.operators
                 .find(o -> o.getClass().equals(BottomOperator.class));
-        IOperator quic_op = Registries.operators
+        AOperator quic_op = Registries.operators
                 .find(o -> o.getClass().equals(BottomQuickMode.class));
         if (quic_op == null) {
             this.logger.warning(
@@ -128,9 +128,9 @@ public class BottomQuickActivator extends IOperator {
     }
 
     private void disableQM(Model model, boolean quick) {
-        IOperator base_op = Registries.operators
+        AOperator base_op = Registries.operators
                 .find(o -> o.getClass().equals(BottomOperator.class));
-        IOperator quic_op = Registries.operators
+        AOperator quic_op = Registries.operators
                 .find(o -> o.getClass().equals(BottomQuickMode.class));
         if (quic_op == null) {
             this.logger.severe(

@@ -6,12 +6,12 @@ import static ch.awae.moba.core.model.ButtonMapping.L_CLEAR;
 import static ch.awae.moba.core.model.ButtonMapping.R_CLR_A;
 import static ch.awae.moba.core.model.ButtonMapping.R_CLR_B;
 
+import ch.awae.moba.core.logic.Logic;
 import ch.awae.moba.core.model.Model;
-import ch.awae.moba.core.model.logic.Logic;
-import ch.awae.moba.core.operators.IOperator;
+import ch.awae.moba.core.operators.AOperator;
 import ch.awae.moba.core.util.Utils;
 
-public class ResetOperator extends IOperator {
+public class ResetOperator extends AOperator {
 
 	private final static long ARM_TIME = 5000;
 
