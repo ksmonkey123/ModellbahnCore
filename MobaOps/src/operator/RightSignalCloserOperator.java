@@ -51,7 +51,6 @@ public class RightSignalCloserOperator implements IOperation {
         this._B = R_PTH_B.and(one);
     }
 
-    @SuppressWarnings("null")
     @Override
     public void update() {
         List<Path> paths = this.model.paths.getPaths(Sector.RIGHT);

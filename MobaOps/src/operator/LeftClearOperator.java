@@ -17,7 +17,6 @@ public class LeftClearOperator implements IOperation {
     @External
     private Model model;
 
-    @SuppressWarnings("null")
     @Override
     public void update() {
         if (ButtonMapping.L_CLEAR.evaluate(this.model))

@@ -8,8 +8,6 @@ import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.eclipse.jdt.annotation.Nullable;
-
 import ch.awae.moba.core.model.Model;
 import ch.awae.moba.core.model.Path;
 
@@ -110,7 +108,7 @@ public final class Utils {
      * @param name
      *            an optional name listed in the logs
      */
-    public static void async(Runnable runnable, @Nullable String name) {
+    public static void async(Runnable runnable, String name) {
         new SafeRunner(runnable, name).start();
     }
 

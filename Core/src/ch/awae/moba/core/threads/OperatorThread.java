@@ -2,8 +2,6 @@ package ch.awae.moba.core.threads;
 
 import java.util.logging.Logger;
 
-import org.eclipse.jdt.annotation.Nullable;
-
 import ch.awae.moba.core.model.Model;
 import ch.awae.moba.core.operators.IOperator;
 import ch.awae.moba.core.util.Registries;
@@ -14,7 +12,7 @@ public class OperatorThread implements IThreaded {
     final Logger logger = Utils.getLogger();
     final Model  model;
 
-    private volatile @Nullable Thread thread = null;
+    private volatile Thread thread = null;
 
     public OperatorThread(Model model) {
         assert this.logger != null;

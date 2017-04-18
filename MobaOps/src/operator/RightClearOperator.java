@@ -17,7 +17,6 @@ public class RightClearOperator implements IOperation {
     @External
     private Model model;
 
-    @SuppressWarnings("null")
     @Override
     public void update() {
         if (ButtonMapping.R_CLR_A.evaluate(this.model))

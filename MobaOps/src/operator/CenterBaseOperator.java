@@ -23,7 +23,6 @@ public class CenterBaseOperator implements IOperation {
     private final Path[]          PATHS   = { Path.C_S_1_A, Path.C_S_1_B, Path.C_S_2_A,
             Path.C_S_2_B, Path.C_S_3_A, Path.C_S_3_B, Path.C_S_4_A, Path.C_S_4_B };
 
-    @SuppressWarnings("null")
     @Override
     public void update() {
         if (this.model.buttons.getState(ButtonMapping.C_CLEAR)) {

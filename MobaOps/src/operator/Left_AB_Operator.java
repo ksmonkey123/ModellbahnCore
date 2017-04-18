@@ -46,7 +46,6 @@ public class Left_AB_Operator implements IOperation {
         this.B_2 = _B.and(_2);
     }
 
-    @SuppressWarnings("null")
     @Override
     public void update() {
         if (this.A_1.evaluate(this.model))

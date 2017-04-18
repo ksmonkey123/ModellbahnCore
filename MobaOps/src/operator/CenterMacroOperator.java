@@ -33,7 +33,6 @@ public class CenterMacroOperator implements IOperation {
         this.logic_2 = L2a.or(L2b).and(L4a.or(L4b));
     }
 
-    @SuppressWarnings("null")
     @Override
     public void update() {
         if (this.logic_1.evaluate(this.model)) {

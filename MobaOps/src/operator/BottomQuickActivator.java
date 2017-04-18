@@ -3,8 +3,6 @@ package operator;
 import java.util.List;
 import java.util.logging.Logger;
 
-import org.eclipse.jdt.annotation.Nullable;
-
 import ch.awae.moba.core.logic.Logic;
 import ch.awae.moba.core.model.ButtonMapping;
 import ch.awae.moba.core.model.Model;
@@ -54,7 +52,6 @@ public class BottomQuickActivator implements IOperation {
     private State state = State.BASE;
     private long  timestamp;
 
-    @SuppressWarnings("null")
     @Override
     public void update() {
         long now = System.currentTimeMillis();
@@ -105,7 +102,7 @@ public class BottomQuickActivator implements IOperation {
     private void enableQM() {
         // CACHE POTENTIAL ACTIVE CODE (ONLY <LEFT> IS VALID)
         List<Path> paths = this.model.paths.getPaths(Sector.BOTTOM);
-        @Nullable
+
         Path cached = null;
         for (Path p : Path.BOTTOM_LEFT) {
             if (paths.contains(p)) {
@@ -131,11 +128,10 @@ public class BottomQuickActivator implements IOperation {
         this.self.start();
     }
 
-    @SuppressWarnings("null")
     private void disableQM(boolean quick) {
         // CACHE POTENTIAL ACTIVE CODE (ONLY <LEFT> IS VALID)
         List<Path> paths = this.model.paths.getPaths(Sector.BOTTOM);
-        @Nullable
+
         Path cached = null;
         if (!ButtonMapping.B_CLEAR.evaluate(this.model))
             for (Path p : Path.BOTTOM_LEFT)

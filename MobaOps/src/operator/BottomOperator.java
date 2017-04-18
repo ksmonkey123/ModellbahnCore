@@ -1,7 +1,5 @@
 package operator;
 
-import org.eclipse.jdt.annotation.Nullable;
-
 import ch.awae.moba.core.model.ButtonMapping;
 import ch.awae.moba.core.model.Model;
 import ch.awae.moba.core.model.Path;
@@ -29,7 +27,6 @@ public class BottomOperator implements IOperation {
 
         short buttons = (short) (this.model.buttons.getState(Sector.BOTTOM) & 0x00000fff);
 
-        @Nullable
         Path p = null;
         switch (buttons) {
             case 0x0401:

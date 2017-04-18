@@ -29,7 +29,6 @@ public class ResetOperator implements IOperation {
     private boolean     armed;
     private long        armTime;
 
-    @SuppressWarnings("null")
     @Override
     public void update() {
         boolean signal = this.trigger.evaluate(this.model);

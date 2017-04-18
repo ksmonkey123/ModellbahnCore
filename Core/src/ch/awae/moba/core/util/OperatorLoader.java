@@ -8,9 +8,6 @@ import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.eclipse.jdt.annotation.NonNull;
-import org.eclipse.jdt.annotation.Nullable;
-
 import ch.awae.moba.core.model.Model;
 import ch.awae.moba.core.operators.IOperation;
 import ch.awae.moba.core.operators.IOperator;
@@ -43,7 +40,7 @@ public class OperatorLoader {
         this.consumed = true;
         new FastClasspathScanner().matchClassesWithAnnotation(Operator.class, this::process).scan();
         this.bind();
-        for (Entry<String, PureOperator> entry : opMap.entrySet()) {
+        for (Entry<String, PureOperator> entry : this.opMap.entrySet()) {
             Registries.operators.register(entry.getKey(), entry.getValue());
         }
     }
@@ -51,7 +48,7 @@ public class OperatorLoader {
     private final Map<String, PureOperator> opMap      = new HashMap<>();
     private final Map<String, IOperation>   operations = new HashMap<>();
 
-    private void process(@Nullable Class<?> clazz1) {
+    private void process(Class<?> clazz1) {
         if (clazz1 == null)
             return;
         try {
@@ -60,11 +57,11 @@ public class OperatorLoader {
             if (!IOperation.class.isAssignableFrom(clazz))
                 return;
             @SuppressWarnings("unchecked")
-            Class<? extends IOperation> instClass = (Class<? extends @NonNull IOperation>) clazz;
+            Class<? extends IOperation> instClass = (Class<? extends IOperation>) clazz;
             this.logger.info("checking class " + clazz.getName());
-            @Nullable
+
             Enabled enabled = instClass.getAnnotation(Enabled.class);
-            @Nullable
+
             Loaded loaded = instClass.getAnnotation(Loaded.class);
             Operator operator = instClass.getAnnotation(Operator.class);
             String name = operator.value();

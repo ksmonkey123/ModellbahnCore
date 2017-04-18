@@ -5,8 +5,6 @@ import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.eclipse.jdt.annotation.Nullable;
-
 import ch.awae.moba.core.model.Model;
 import ch.awae.moba.core.model.Path;
 import ch.awae.moba.core.util.Controllable;
@@ -30,7 +28,6 @@ public class ConsoleThread extends Thread {
         this.setDaemon(true);
     }
 
-    @SuppressWarnings("null")
     @Override
     public void run() {
         while (true) {
@@ -154,7 +151,6 @@ public class ConsoleThread extends Thread {
         System.out.println("==============");
     }
 
-    @SuppressWarnings("null")
     private String strech(String string, int i) {
         String text = string;
         if (text.length() > i)
@@ -175,7 +171,6 @@ public class ConsoleThread extends Thread {
     }
 
     private void setLevel(String level) {
-        @Nullable
         Level n = null;
         if (level.startsWith("#")) {
             int index = Integer.parseInt(level.substring(1), 10);
@@ -212,7 +207,6 @@ public class ConsoleThread extends Thread {
         System.out.println("====================");
     }
 
-    @SuppressWarnings("null")
     private void doList(String title, Registry<? extends Controllable> reg) {
         System.out.println(title + " List");
         System.out.println("===================");
@@ -225,7 +219,6 @@ public class ConsoleThread extends Thread {
     }
 
     private void doStart(String title, String name, Registry<? extends Controllable> reg) {
-        @Nullable
         String n = null;
         if (name.startsWith("#")) {
             int index = Integer.parseInt(name.substring(1), 10);
@@ -254,7 +247,6 @@ public class ConsoleThread extends Thread {
     }
 
     private void doHalt(String title, String name, Registry<? extends Controllable> reg) {
-        @Nullable
         String n = null;
         if (name.startsWith("#")) {
             int index = Integer.parseInt(name.substring(1), 10);

@@ -5,8 +5,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.logging.Logger;
 
-import org.eclipse.jdt.annotation.Nullable;
-
 import ch.awae.moba.core.util.Utils;
 
 public class PathRegistry {
@@ -36,7 +34,6 @@ public class PathRegistry {
 
     }
 
-    @SuppressWarnings("null")
     public synchronized List<Path> getAllPaths() {
         return Collections.unmodifiableList(this.paths);
     }
@@ -56,7 +53,7 @@ public class PathRegistry {
         return result;
     }
 
-    public boolean isRegistered(@Nullable Path p) {
+    public boolean isRegistered(Path p) {
         if (p == null)
             return false;
         return this.paths.contains(p);

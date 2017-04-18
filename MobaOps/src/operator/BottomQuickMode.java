@@ -22,7 +22,6 @@ public class BottomQuickMode implements IOperation {
 
     private static final long BLINK_TIME = 500;
 
-    @SuppressWarnings("null")
     @Override
     public void update() {
         List<Path> paths = this.model.paths.getPaths(Sector.BOTTOM);

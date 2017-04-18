@@ -9,9 +9,6 @@ import static ch.awae.moba.core.model.ButtonMapping.L_TRK_2;
 import static ch.awae.moba.core.model.ButtonMapping.L_TRK_3;
 import static ch.awae.moba.core.model.ButtonMapping.L_TRK_4;
 
-import org.eclipse.jdt.annotation.NonNull;
-import org.eclipse.jdt.annotation.Nullable;
-
 import ch.awae.moba.core.logic.Logic;
 import ch.awae.moba.core.model.Model;
 import ch.awae.moba.core.model.Path;
@@ -31,16 +28,16 @@ public class Left_C_Operator implements IOperation {
 
     private final static long DECORATOR_DELAY = 700;
 
-    private final @NonNull Logic _C, _1, _2, _3, _4;
-    private final Logic          _C_solo, _one_trk_solo;
+    private final Logic _C, _1, _2, _3, _4;
+    private final Logic _C_solo, _one_trk_solo;
 
     private final Logic C_1, C_2, C_3, C_4;
 
-    private @Nullable Logic current;
-    private boolean         inbound;
-    private long            activeTime;
-    private int             trackID;
-    private boolean         processed;
+    private Logic   current;
+    private boolean inbound;
+    private long    activeTime;
+    private int     trackID;
+    private boolean processed;
 
     public Left_C_Operator() {
         Logic NC = L_CLEAR.not();
@@ -62,7 +59,6 @@ public class Left_C_Operator implements IOperation {
         this.C_4 = this._C.and(this._4);
     }
 
-    @SuppressWarnings("null")
     @Override
     public void update() {
         Logic curr = this.current;

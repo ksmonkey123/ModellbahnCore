@@ -8,8 +8,6 @@ import java.util.Properties;
 import java.util.concurrent.locks.LockSupport;
 import java.util.logging.Logger;
 
-import org.eclipse.jdt.annotation.Nullable;
-
 import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
 import com.pi4j.io.gpio.GpioPinDigitalOutput;
@@ -32,14 +30,14 @@ public class SPIThread implements IThreaded {
     final int  SPI_SPEED;
     final byte MAGIC_NUMBER;
 
-    final HashMap<SPIChannel, @Nullable GpioPinDigitalOutput> pinMap;
+    final HashMap<SPIChannel, GpioPinDigitalOutput> pinMap;
 
     final Logger         logger = Utils.getLogger();
     final List<SPIHost>  hosts;
     final SpiDevice      spi;
     final GpioController gpio;
 
-    private volatile @Nullable Thread thread = null;
+    private volatile Thread thread = null;
 
     public synchronized void registerHost(SPIHost host) {
         SPIChannel c = host.getChannel();
@@ -141,9 +139,9 @@ public class SPIThread implements IThreaded {
                     }
                     byte check = (byte) ((array[1] ^ array[2]) & 0x000000ff);
                     if (response[3] != check) {
-                        SPIThread.this.logger.fine("Invalid response from device "
-                                + host.getName() + " on channel " + host.getChannel()
-                                + "\n > invalid readback: " + response[3] + " instead of " + check);
+                        SPIThread.this.logger.fine("Invalid response from device " + host.getName()
+                                + " on channel " + host.getChannel() + "\n > invalid readback: "
+                                + response[3] + " instead of " + check);
                         continue list;
                     }
                     short output = (short) (((response[2] << 8) & 0x0000ff00)

@@ -2,8 +2,6 @@ package ch.awae.moba.core.threads;
 
 import java.util.logging.Logger;
 
-import org.eclipse.jdt.annotation.Nullable;
-
 import ch.awae.moba.core.processors.HostProcessor;
 import ch.awae.moba.core.spi.Host;
 import ch.awae.moba.core.util.Registries;
@@ -21,7 +19,7 @@ public class ProcessorThread implements IThreaded {
     final Host          host;
     final HostProcessor processor;
 
-    private @Nullable Thread thread;
+    private  Thread thread;
 
     public ProcessorThread(final Host host, final HostProcessor processor) {
         this.host = host;

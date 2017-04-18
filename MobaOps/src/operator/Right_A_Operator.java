@@ -9,9 +9,6 @@ import static ch.awae.moba.core.model.ButtonMapping.R_TRK_2;
 import static ch.awae.moba.core.model.ButtonMapping.R_TRK_3;
 import static ch.awae.moba.core.model.ButtonMapping.R_TRK_4;
 
-import org.eclipse.jdt.annotation.NonNull;
-import org.eclipse.jdt.annotation.Nullable;
-
 import ch.awae.moba.core.logic.Logic;
 import ch.awae.moba.core.model.Model;
 import ch.awae.moba.core.model.Path;
@@ -31,16 +28,16 @@ public class Right_A_Operator implements IOperation {
 
     private final static long DECORATOR_DELAY = 700;
 
-    private final @NonNull Logic _A, _1, _2, _3, _4;
-    private final Logic          _A_solo, _one_trk_solo;
+    private final Logic _A, _1, _2, _3, _4;
+    private final Logic _A_solo, _one_trk_solo;
 
     private final Logic A_1, A_2, A_3, A_4;
 
-    private @Nullable Logic current;
-    private boolean         inbound;
-    private long            activeTime;
-    private int             trackID;
-    private boolean         processed;
+    private Logic   current;
+    private boolean inbound;
+    private long    activeTime;
+    private int     trackID;
+    private boolean processed;
 
     public Right_A_Operator() {
         Logic NC = R_CLR_A.or(R_CLR_B).not();
@@ -62,7 +59,6 @@ public class Right_A_Operator implements IOperation {
         this.A_4 = this._A.and(this._4);
     }
 
-    @SuppressWarnings("null")
     @Override
     public void update() {
         Logic curr = this.current;

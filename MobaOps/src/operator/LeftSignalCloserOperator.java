@@ -50,7 +50,6 @@ public class LeftSignalCloserOperator implements IOperation {
         this._C = L_PTH_C.and(one);
     }
 
-    @SuppressWarnings("null")
     @Override
     public void update() {
         List<Path> paths = this.model.paths.getPaths(Sector.LEFT);
