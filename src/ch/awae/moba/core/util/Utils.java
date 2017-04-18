@@ -23,14 +23,14 @@ public final class Utils {
     private final static Logger logger;
 
     static {
-        Logger l = Logger.getGlobal();
+        Logger l = Logger.getLogger("core");
         assert l != null;
         l.setLevel(Level.ALL);
         logger = l;
         Handler systemOut = new ConsoleHandler();
         systemOut.setLevel(Level.ALL);
         logger.addHandler(systemOut);
-        logger.setLevel(Level.ALL);
+        logger.setLevel(Level.INFO);
         logger.setUseParentHandlers(false);
     }
 

@@ -134,14 +134,14 @@ public class SPIThread implements IThreaded {
                     assert response != null;
                     if (response[0] != SPIThread.this.MAGIC_NUMBER) {
                         if (response[0] != -1)
-                            SPIThread.this.logger.warning("Invalid response from device "
+                            SPIThread.this.logger.fine("Invalid response from device "
                                     + host.getName() + " on channel " + host.getChannel()
                                     + "\n > magic number was wrong: " + response[0]);
                         continue list;
                     }
                     byte check = (byte) ((array[1] ^ array[2]) & 0x000000ff);
                     if (response[3] != check) {
-                        SPIThread.this.logger.warning("Invalid response from device "
+                        SPIThread.this.logger.fine("Invalid response from device "
                                 + host.getName() + " on channel " + host.getChannel()
                                 + "\n > invalid readback: " + response[3] + " instead of " + check);
                         continue list;

@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -42,6 +43,9 @@ public class OperatorLoader {
         this.consumed = true;
         new FastClasspathScanner().matchClassesWithAnnotation(Operator.class, this::process).scan();
         this.bind();
+        for (Entry<String, PureOperator> entry : opMap.entrySet()) {
+            Registries.operators.register(entry.getKey(), entry.getValue());
+        }
     }
 
     private final Map<String, PureOperator> opMap      = new HashMap<>();
@@ -72,7 +76,7 @@ public class OperatorLoader {
                 IOperation inst = instClass.getConstructor().newInstance();
                 assert inst != null;
                 PureOperator op = new PureOperator(name, inst);
-                if (enabled == null || enabled.value()) {
+                if (enabled != null && enabled.value()) {
                     this.logger.info("enabling op '" + name + "'");
                     op.start();
                 }
