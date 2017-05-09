@@ -7,6 +7,14 @@ import static ch.awae.moba.core.model.Sector.RIGHT;
 
 import ch.awae.moba.core.logic.Logic;
 
+/**
+ * Set of all Button mappings. All button mappings also implement the
+ * {@code Logic} interface such that it evaluates to {@code true} if the
+ * corresponding button is currently pressed.
+ * 
+ * @author Andreas Wälchli
+ * @see Logic
+ */
 public enum ButtonMapping implements Logic {
     // ###### BOTTOM BUTTONS ######
     B_TR_01("bottom.t01", BOTTOM, 0),
@@ -53,12 +61,21 @@ public enum ButtonMapping implements Logic {
     // ###### GROUPINGS ######
     ;
 
+    /**
+     * List of all Bottom Track Buttons (B_TR_01 - B_TR_10)
+     * 
+     * @deprecated use button references directly
+     */
+    @Deprecated
     public static final ButtonMapping[] BOTTOM_TRACKS = { B_TR_01, B_TR_02, B_TR_03, B_TR_04,
             B_TR_05, B_TR_06, B_TR_07, B_TR_08, B_TR_09, B_TR_10 };
 
     // ###### INTERNALS #######
+    /** The identifier for the Button mapping */
     public final String title;
+    /** The sector where the button is located */
     public final Sector sector;
+    /** The button's bit index within the sector */
     public final int    index;
 
     ButtonMapping(String title, Sector sector, int index) {
@@ -67,6 +84,14 @@ public enum ButtonMapping implements Logic {
         this.index = index;
     }
 
+    /**
+     * finds the first ButtonMapping with a matching title
+     * 
+     * @param title
+     *            the button title
+     * @return the first ButtonMapping with the given {@code title}. If no match
+     *         is found, {@code null} is returned.
+     */
     public static ButtonMapping byTitle(String title) {
         for (ButtonMapping bm : values())
             if (bm.title.equals(title))
@@ -74,6 +99,15 @@ public enum ButtonMapping implements Logic {
         return null;
     }
 
+    /**
+     * Checks the Model for whether or not the button is currently pressed.
+     * <br/>
+     * <br/>
+     * <i>Inherited Documentation:</i><br/>
+     * {@inheritDoc}
+     * 
+     * @return {@code true} if the button is currently pressed
+     */
     @Override
     public boolean evaluate(Model m) {
         return m.buttons.getState(this);
