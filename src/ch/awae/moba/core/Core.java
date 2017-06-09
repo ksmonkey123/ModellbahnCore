@@ -70,9 +70,9 @@ public final class Core {
             }
         }
     }
-    
-    public void loadHosts() {
-        
+
+    public void loadHosts() throws IOException {
+        HostFactory.loadHosts(this);
     }
 
     public void startOperators() {

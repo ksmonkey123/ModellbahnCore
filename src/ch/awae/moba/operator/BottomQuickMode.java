@@ -1,5 +1,16 @@
 package ch.awae.moba.operator;
 
+import static ch.awae.moba.core.model.ButtonMapping.B_TR_01;
+import static ch.awae.moba.core.model.ButtonMapping.B_TR_02;
+import static ch.awae.moba.core.model.ButtonMapping.B_TR_03;
+import static ch.awae.moba.core.model.ButtonMapping.B_TR_04;
+import static ch.awae.moba.core.model.ButtonMapping.B_TR_05;
+import static ch.awae.moba.core.model.ButtonMapping.B_TR_06;
+import static ch.awae.moba.core.model.ButtonMapping.B_TR_07;
+import static ch.awae.moba.core.model.ButtonMapping.B_TR_08;
+import static ch.awae.moba.core.model.ButtonMapping.B_TR_09;
+import static ch.awae.moba.core.model.ButtonMapping.B_TR_10;
+
 import java.util.List;
 
 import ch.awae.moba.core.model.ButtonMapping;
@@ -22,6 +33,9 @@ public class BottomQuickMode implements IOperation {
 
     private static final long BLINK_TIME = 500;
 
+    public static final ButtonMapping[] BOTTOM_TRACKS = { B_TR_01, B_TR_02, B_TR_03, B_TR_04,
+            B_TR_05, B_TR_06, B_TR_07, B_TR_08, B_TR_09, B_TR_10 };
+
     @Override
     public void update() {
         List<Path> paths = this.model.paths.getPaths(Sector.BOTTOM);
@@ -42,7 +56,7 @@ public class BottomQuickMode implements IOperation {
         for (int i = 0; i < 10; i++) {
             Path path = Path.BOTTOM_LEFT[i];
             assert path != null;
-            ButtonMapping button = ButtonMapping.BOTTOM_TRACKS[i];
+            ButtonMapping button = BOTTOM_TRACKS[i];
             if (button.evaluate(this.model)) {
                 this.model.paths.register(path);
                 return;

@@ -5,6 +5,7 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import ch.awae.moba.core.Configs;
 import ch.awae.moba.core.Core;
 import ch.awae.moba.core.model.Sector;
 import ch.awae.moba.core.util.Pair;
@@ -25,10 +26,10 @@ public final class HostFactory {
 
     public static void loadHosts(Core core) throws IOException {
         logger.info("Loading Host configuration");
-        Properties props = Utils.getProperties("hosts.properties");
+        Properties props = Configs.getProperties("hosts");
         for (int i = 0; i < SPIChannel.getChannelCount(); i++) {
             try {
-                String root = "hosts.host_" + i + ".";
+                String root = "host_" + i + ".";
                 boolean enabled = Boolean
                         .parseBoolean(props.getProperty(root + "enabled", "false"));
                 String sect = props.getProperty(root + "sector");

@@ -19,6 +19,7 @@ import com.pi4j.io.spi.SpiDevice;
 import com.pi4j.io.spi.SpiFactory;
 import com.pi4j.io.spi.SpiMode;
 
+import ch.awae.moba.core.Configs;
 import ch.awae.moba.core.spi.SPIChannel;
 import ch.awae.moba.core.spi.SPIHost;
 import ch.awae.moba.core.util.Registries;
@@ -57,7 +58,7 @@ public class SPIThread implements IThreaded {
         this.hosts = new ArrayList<>();
         this.pinMap = new HashMap<>();
 
-        Properties props = Utils.getProperties("spi.properties");
+        Properties props = Configs.getProperties("spi");
 
         this.SPI_SPEED = Integer.parseInt(props.getProperty("spi.speed"), 10);
         this.HOST_SELECT_DELAY = Long.parseLong(props.getProperty("spi.hostSelectDelay"), 10);
