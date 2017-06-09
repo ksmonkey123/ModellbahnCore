@@ -1,8 +1,10 @@
 package ch.awae.moba.operator;
 
-import ch.awae.moba.core.model.ButtonMapping;
+import ch.awae.moba.core.logic.Logic;
+import ch.awae.moba.core.model.ButtonProvider;
 import ch.awae.moba.core.model.Model;
 import ch.awae.moba.core.model.Path;
+import ch.awae.moba.core.model.Sector;
 import ch.awae.moba.core.operators.Enabled;
 import ch.awae.moba.core.operators.External;
 import ch.awae.moba.core.operators.IOperation;
@@ -17,11 +19,20 @@ public class RightClearOperator implements IOperation {
     @External
     private Model model;
 
+    private Logic clear_a, clear_b;
+
+    {
+        ButtonProvider p = new ButtonProvider(Sector.RIGHT);
+
+        this.clear_a = p.button("clear_A");
+        this.clear_b = p.button("clear_B");
+    }
+
     @Override
     public void update() {
-        if (ButtonMapping.R_CLR_A.evaluate(this.model))
+        if (this.clear_a.evaluate(this.model))
             this.model.paths.register(Path.R_CLR_A);
-        if (ButtonMapping.R_CLR_B.evaluate(this.model))
+        if (this.clear_b.evaluate(this.model))
             this.model.paths.register(Path.R_CLR_B);
     }
 

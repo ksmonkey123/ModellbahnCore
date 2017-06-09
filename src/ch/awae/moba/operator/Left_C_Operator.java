@@ -1,22 +1,18 @@
 package ch.awae.moba.operator;
 
-import static ch.awae.moba.core.model.ButtonMapping.L_CLEAR;
-import static ch.awae.moba.core.model.ButtonMapping.L_PTH_A;
-import static ch.awae.moba.core.model.ButtonMapping.L_PTH_B;
-import static ch.awae.moba.core.model.ButtonMapping.L_PTH_C;
-import static ch.awae.moba.core.model.ButtonMapping.L_TRK_1;
-import static ch.awae.moba.core.model.ButtonMapping.L_TRK_2;
-import static ch.awae.moba.core.model.ButtonMapping.L_TRK_3;
-import static ch.awae.moba.core.model.ButtonMapping.L_TRK_4;
-
+import ch.awae.moba.core.Configs;
 import ch.awae.moba.core.logic.Logic;
+import ch.awae.moba.core.logic.LogicGroup;
+import ch.awae.moba.core.model.ButtonProvider;
 import ch.awae.moba.core.model.Model;
 import ch.awae.moba.core.model.Path;
+import ch.awae.moba.core.model.Sector;
 import ch.awae.moba.core.operators.Enabled;
 import ch.awae.moba.core.operators.External;
 import ch.awae.moba.core.operators.IOperation;
 import ch.awae.moba.core.operators.Loaded;
 import ch.awae.moba.core.operators.Operator;
+import ch.awae.moba.core.util.Props;
 
 @Enabled
 @Loaded
@@ -26,7 +22,8 @@ public class Left_C_Operator implements IOperation {
     @External
     private Model model;
 
-    private final static long DECORATOR_DELAY = 700;
+    private final static Props props           = Configs.load("station");
+    private final static long  DECORATOR_DELAY = props.getInt("decoration_delay");
 
     private final Logic _C, _1, _2, _3, _4;
     private final Logic _C_solo, _one_trk_solo;
@@ -40,18 +37,23 @@ public class Left_C_Operator implements IOperation {
     private boolean processed;
 
     public Left_C_Operator() {
-        Logic NC = L_CLEAR.not();
-        Logic one_pth = Logic.count(1, L_PTH_A, L_PTH_B, L_PTH_C);
-        Logic one_trk = Logic.count(1, L_TRK_1, L_TRK_2, L_TRK_3, L_TRK_4);
+        ButtonProvider provider = new ButtonProvider(Sector.LEFT);
 
-        this._C = L_PTH_C.and(one_pth).and(NC);
-        this._1 = L_TRK_1.and(one_trk).and(NC);
-        this._2 = L_TRK_2.and(one_trk).and(NC);
-        this._3 = L_TRK_3.and(one_trk).and(NC);
-        this._4 = L_TRK_4.and(one_trk).and(NC);
+        Logic NC = provider.button("clear").not();
 
-        this._C_solo = this._C.and(Logic.count(0, L_TRK_1, L_TRK_2, L_TRK_3, L_TRK_4));
-        this._one_trk_solo = one_trk.and(Logic.count(0, L_PTH_A, L_PTH_B, L_PTH_C, L_CLEAR));
+        LogicGroup paths = provider.group("paths");
+        LogicGroup tracks = provider.group("tracks");
+        Logic one_pth = paths.count(1);
+        Logic one_trk = tracks.count(1);
+
+        this._C = provider.button("path_C").and(one_pth).and(NC);
+        this._1 = provider.button("track_1").and(one_trk).and(NC);
+        this._2 = provider.button("track_2").and(one_trk).and(NC);
+        this._3 = provider.button("track_3").and(one_trk).and(NC);
+        this._4 = provider.button("track_4").and(one_trk).and(NC);
+
+        this._C_solo = this._C.and(tracks.none());
+        this._one_trk_solo = one_trk.and(paths.none());
 
         this.C_1 = this._C.and(this._1);
         this.C_2 = this._C.and(this._2);

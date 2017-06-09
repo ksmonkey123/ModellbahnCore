@@ -1,25 +1,35 @@
 package ch.awae.moba.operator;
 
+import static ch.awae.moba.core.model.Sector.BOTTOM;
+
 import java.util.List;
 import java.util.logging.Logger;
 
+import ch.awae.moba.core.Configs;
 import ch.awae.moba.core.logic.Logic;
-import ch.awae.moba.core.model.ButtonMapping;
+import ch.awae.moba.core.model.ButtonProvider;
 import ch.awae.moba.core.model.Model;
 import ch.awae.moba.core.model.Path;
-import ch.awae.moba.core.model.Sector;
 import ch.awae.moba.core.operators.Enabled;
 import ch.awae.moba.core.operators.External;
 import ch.awae.moba.core.operators.IOperation;
 import ch.awae.moba.core.operators.IOperator;
 import ch.awae.moba.core.operators.Loaded;
 import ch.awae.moba.core.operators.Operator;
+import ch.awae.moba.core.util.Props;
 import ch.awae.moba.core.util.Utils;
 
 @Enabled(true)
 @Loaded(true)
 @Operator("bottom.supervisor")
 public class BottomQuickActivator implements IOperation {
+
+    private static final Props props = Configs.load("bottom.qma");
+
+    private static final long TRIGGER_ON_DELAY       = props.getInt("qm.trigger_on_delay");
+    private static final long TRIGGER_OFF_DELAY      = props.getInt("qm.trigger_off_delay");
+    private static final long TRANSITION_SLEEP_LONG  = props.getInt("qm.transition_long");
+    private static final long TRANSITION_SLEEP_SHORT = props.getInt("qm.transition_short");
 
     @External
     private Model model;
@@ -33,21 +43,13 @@ public class BottomQuickActivator implements IOperation {
     @Operator("bottom.qm")
     private IOperator qm;
 
-    private static final long TRIGGER_ON_DELAY       = 2000;
-    private static final long TRIGGER_OFF_DELAY      = 1000;
-    private static final long TRANSITION_SLEEP_LONG  = 500;
-    private static final long TRANSITION_SLEEP_SHORT = 100;
+    private final Logger         logger   = Utils.getLogger();
+    private final ButtonProvider provider = new ButtonProvider(BOTTOM);
 
-    public BottomQuickActivator() {
-        this.enableGroup = ButtonMapping.B_ENT_L;
-        this.disableGroup = ButtonMapping.B_CLEAR.or(ButtonMapping.B_ENT_L);
-        this.disableFastGroup = ButtonMapping.B_ENT_R;
-    }
-
-    private final Logger logger = Utils.getLogger();
-    private final Logic  disableGroup;
-    private final Logic  enableGroup;
-    private final Logic  disableFastGroup;
+    private final Logic clear            = this.provider.button("clear");
+    private final Logic enableGroup      = this.provider.group("qm.enable").any();
+    private final Logic disableGroup     = this.provider.group("qm.disable").any();
+    private final Logic disableFastGroup = this.provider.group("qm.kill").any();
 
     private State state = State.BASE;
     private long  timestamp;
@@ -101,7 +103,7 @@ public class BottomQuickActivator implements IOperation {
 
     private void enableQM() {
         // CACHE POTENTIAL ACTIVE CODE (ONLY <LEFT> IS VALID)
-        List<Path> paths = this.model.paths.getPaths(Sector.BOTTOM);
+        List<Path> paths = this.model.paths.getPaths(BOTTOM);
 
         Path cached = null;
         for (Path p : Path.BOTTOM_LEFT) {
@@ -130,10 +132,10 @@ public class BottomQuickActivator implements IOperation {
 
     private void disableQM(boolean quick) {
         // CACHE POTENTIAL ACTIVE CODE (ONLY <LEFT> IS VALID)
-        List<Path> paths = this.model.paths.getPaths(Sector.BOTTOM);
+        List<Path> paths = this.model.paths.getPaths(BOTTOM);
 
         Path cached = null;
-        if (!ButtonMapping.B_CLEAR.evaluate(this.model))
+        if (!this.clear.evaluate(this.model))
             for (Path p : Path.BOTTOM_LEFT)
                 if (paths.contains(p)) {
                     cached = p;

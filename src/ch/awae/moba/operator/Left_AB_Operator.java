@@ -1,17 +1,10 @@
 package ch.awae.moba.operator;
 
-import static ch.awae.moba.core.model.ButtonMapping.L_CLEAR;
-import static ch.awae.moba.core.model.ButtonMapping.L_PTH_A;
-import static ch.awae.moba.core.model.ButtonMapping.L_PTH_B;
-import static ch.awae.moba.core.model.ButtonMapping.L_PTH_C;
-import static ch.awae.moba.core.model.ButtonMapping.L_TRK_1;
-import static ch.awae.moba.core.model.ButtonMapping.L_TRK_2;
-import static ch.awae.moba.core.model.ButtonMapping.L_TRK_3;
-import static ch.awae.moba.core.model.ButtonMapping.L_TRK_4;
-
 import ch.awae.moba.core.logic.Logic;
+import ch.awae.moba.core.model.ButtonProvider;
 import ch.awae.moba.core.model.Model;
 import ch.awae.moba.core.model.Path;
+import ch.awae.moba.core.model.Sector;
 import ch.awae.moba.core.operators.Enabled;
 import ch.awae.moba.core.operators.External;
 import ch.awae.moba.core.operators.IOperation;
@@ -31,15 +24,17 @@ public class Left_AB_Operator implements IOperation {
     private final Logic B_2;
 
     public Left_AB_Operator() {
-        Logic one_pth = Logic.count(1, L_PTH_A, L_PTH_B, L_PTH_C);
-        Logic one_trk = Logic.count(1, L_TRK_1, L_TRK_2, L_TRK_3, L_TRK_4);
+        ButtonProvider provider = new ButtonProvider(Sector.LEFT);
 
-        Logic NC = L_CLEAR.not();
+        Logic one_pth = provider.group("paths").count(1);
+        Logic one_trk = provider.group("tracks").count(1);
 
-        Logic _A = L_PTH_A.and(one_pth).and(NC);
-        Logic _B = L_PTH_B.and(one_pth).and(NC);
-        Logic _1 = L_TRK_1.and(one_trk).and(NC);
-        Logic _2 = L_TRK_2.and(one_trk).and(NC);
+        Logic NC = provider.button("clear").not();
+
+        Logic _A = provider.button("path_A").and(one_pth).and(NC);
+        Logic _B = provider.button("path_B").and(one_pth).and(NC);
+        Logic _1 = provider.button("track_1").and(one_trk).and(NC);
+        Logic _2 = provider.button("track_2").and(one_trk).and(NC);
 
         this.A_1 = _A.and(_1);
         this.B_1 = _B.and(_1);

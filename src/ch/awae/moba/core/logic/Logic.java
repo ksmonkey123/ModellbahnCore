@@ -20,6 +20,16 @@ import ch.awae.moba.core.model.Model;
 @FunctionalInterface
 public interface Logic {
 
+    static Logic TRUE  = new Logic() {
+
+                           @Override
+                           public boolean evaluate(@SuppressWarnings("unused") Model m) {
+                               return true;
+                           }
+
+                       };
+    static Logic FALSE = TRUE.not();
+
     /**
      * Evaluates the given {@link Model} to a boolean value. Usually checks if
      * the current Model state satisfies a defined condition.
@@ -99,6 +109,25 @@ public interface Logic {
      */
     static Logic count(int target, Logic... logics) {
         return new CounterLogic(target, logics);
+    }
+
+    static Logic all(Logic... logics) {
+        return count(logics.length, logics);
+    }
+
+    static Logic none(Logic... logics) {
+        return count(0, logics);
+    }
+
+    static Logic any(Logic... logics) {
+        if (logics.length == 0)
+            return FALSE;
+        Logic l = logics[0];
+
+        for (int i = 1; i < logics.length; i++)
+            l = l.or(logics[i]);
+
+        return l;
     }
 
 }

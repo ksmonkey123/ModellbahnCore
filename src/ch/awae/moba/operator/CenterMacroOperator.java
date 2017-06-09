@@ -1,9 +1,10 @@
 package ch.awae.moba.operator;
 
 import ch.awae.moba.core.logic.Logic;
-import ch.awae.moba.core.model.ButtonMapping;
+import ch.awae.moba.core.model.ButtonProvider;
 import ch.awae.moba.core.model.Model;
 import ch.awae.moba.core.model.Path;
+import ch.awae.moba.core.model.Sector;
 import ch.awae.moba.core.operators.Enabled;
 import ch.awae.moba.core.operators.External;
 import ch.awae.moba.core.operators.IOperation;
@@ -22,15 +23,14 @@ public class CenterMacroOperator implements IOperation {
     private final Logic logic_2;
 
     public CenterMacroOperator() {
-        Logic L1a = ButtonMapping.C_S_1_A;
-        Logic L1b = ButtonMapping.C_S_1_B;
-        Logic L2a = ButtonMapping.C_S_2_A;
-        Logic L2b = ButtonMapping.C_S_2_B;
-        Logic L4a = ButtonMapping.C_S_4_A;
-        Logic L4b = ButtonMapping.C_S_4_B;
+        ButtonProvider provider = new ButtonProvider(Sector.CENTER);
 
-        this.logic_1 = L1a.or(L1b).and(L4a.or(L4b));
-        this.logic_2 = L2a.or(L2b).and(L4a.or(L4b));
+        Logic S0 = provider.group("switch_0").any();
+        Logic S1 = provider.group("switch_1").any();
+        Logic S3 = provider.group("switch_3").any();
+
+        this.logic_1 = S0.and(S3);
+        this.logic_2 = S1.and(S3);
     }
 
     @Override

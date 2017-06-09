@@ -1,9 +1,11 @@
 package ch.awae.moba.operator;
 
-import ch.awae.moba.core.model.ButtonMapping;
+import static ch.awae.moba.core.model.Sector.BOTTOM;
+
+import ch.awae.moba.core.logic.Logic;
+import ch.awae.moba.core.model.ButtonProvider;
 import ch.awae.moba.core.model.Model;
 import ch.awae.moba.core.model.Path;
-import ch.awae.moba.core.model.Sector;
 import ch.awae.moba.core.operators.Enabled;
 import ch.awae.moba.core.operators.External;
 import ch.awae.moba.core.operators.IOperation;
@@ -18,14 +20,18 @@ public class BottomOperator implements IOperation {
     @External
     private Model model;
 
+    private ButtonProvider provider = new ButtonProvider(BOTTOM);
+
+    private Logic clear = this.provider.button("clear");
+
     @Override
     public void update() {
-        if (this.model.buttons.getState(ButtonMapping.B_CLEAR)) {
+        if (this.clear.equals(this.model)) {
             this.model.paths.register(Path.B_CLEAR);
             return;
         }
 
-        short buttons = (short) (this.model.buttons.getState(Sector.BOTTOM) & 0x00000fff);
+        short buttons = (short) (this.model.buttons.getState(BOTTOM) & 0x00000fff);
 
         Path p = null;
         switch (buttons) {

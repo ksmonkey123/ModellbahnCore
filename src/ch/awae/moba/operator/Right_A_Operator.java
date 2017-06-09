@@ -1,22 +1,18 @@
 package ch.awae.moba.operator;
 
-import static ch.awae.moba.core.model.ButtonMapping.R_CLR_A;
-import static ch.awae.moba.core.model.ButtonMapping.R_CLR_B;
-import static ch.awae.moba.core.model.ButtonMapping.R_PTH_A;
-import static ch.awae.moba.core.model.ButtonMapping.R_PTH_B;
-import static ch.awae.moba.core.model.ButtonMapping.R_TRK_1;
-import static ch.awae.moba.core.model.ButtonMapping.R_TRK_2;
-import static ch.awae.moba.core.model.ButtonMapping.R_TRK_3;
-import static ch.awae.moba.core.model.ButtonMapping.R_TRK_4;
-
+import ch.awae.moba.core.Configs;
 import ch.awae.moba.core.logic.Logic;
+import ch.awae.moba.core.logic.LogicGroup;
+import ch.awae.moba.core.model.ButtonProvider;
 import ch.awae.moba.core.model.Model;
 import ch.awae.moba.core.model.Path;
+import ch.awae.moba.core.model.Sector;
 import ch.awae.moba.core.operators.Enabled;
 import ch.awae.moba.core.operators.External;
 import ch.awae.moba.core.operators.IOperation;
 import ch.awae.moba.core.operators.Loaded;
 import ch.awae.moba.core.operators.Operator;
+import ch.awae.moba.core.util.Props;
 
 @Enabled
 @Loaded
@@ -26,7 +22,8 @@ public class Right_A_Operator implements IOperation {
     @External
     private Model model;
 
-    private final static long DECORATOR_DELAY = 700;
+    private final static Props props           = Configs.load("station");
+    private final static long  DECORATOR_DELAY = props.getInt("decoration_delay");
 
     private final Logic _A, _1, _2, _3, _4;
     private final Logic _A_solo, _one_trk_solo;
@@ -40,18 +37,24 @@ public class Right_A_Operator implements IOperation {
     private boolean processed;
 
     public Right_A_Operator() {
-        Logic NC = R_CLR_A.or(R_CLR_B).not();
-        Logic one_pth = Logic.count(1, R_PTH_A, R_PTH_B);
-        Logic one_trk = Logic.count(1, R_TRK_1, R_TRK_2, R_TRK_3, R_TRK_4);
 
-        this._A = R_PTH_A.and(one_pth).and(NC);
-        this._1 = R_TRK_1.and(one_trk).and(NC);
-        this._2 = R_TRK_2.and(one_trk).and(NC);
-        this._3 = R_TRK_3.and(one_trk).and(NC);
-        this._4 = R_TRK_4.and(one_trk).and(NC);
+        ButtonProvider p = new ButtonProvider(Sector.RIGHT);
 
-        this._A_solo = this._A.and(Logic.count(0, R_TRK_1, R_TRK_2, R_TRK_3, R_TRK_4));
-        this._one_trk_solo = one_trk.and(Logic.count(0, R_PTH_A, R_PTH_B, R_CLR_A, R_CLR_B));
+        LogicGroup paths = p.group("paths");
+        LogicGroup tracks = p.group("tracks");
+
+        Logic NC = p.group("clear").none();
+        Logic one_pth = paths.count(1);
+        Logic one_trk = tracks.count(1);
+
+        this._A = p.button("path_A").and(one_pth).and(NC);
+        this._1 = p.button("track_1").and(one_trk).and(NC);
+        this._2 = p.button("track_2").and(one_trk).and(NC);
+        this._3 = p.button("track_3").and(one_trk).and(NC);
+        this._4 = p.button("track_4").and(one_trk).and(NC);
+
+        this._A_solo = this._A.and(tracks.none());
+        this._one_trk_solo = one_trk.and(NC.and(paths.none()));
 
         this.A_1 = this._A.and(this._1);
         this.A_2 = this._A.and(this._2);

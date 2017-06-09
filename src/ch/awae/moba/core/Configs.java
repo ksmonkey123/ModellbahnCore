@@ -3,6 +3,7 @@ package ch.awae.moba.core;
 import java.io.IOException;
 import java.util.Properties;
 
+import ch.awae.moba.core.util.Props;
 import ch.awae.moba.core.util.Utils;
 
 public final class Configs {
@@ -34,6 +35,14 @@ public final class Configs {
      */
     public static Properties getProperties(String key) throws IOException {
         return Utils.getProperties(configs.getProperty(key));
+    }
+
+    public static Props load(String key) {
+        try {
+            return new Props(getProperties(key));
+        } catch (IOException ioe) {
+            throw new RuntimeException(ioe);
+        }
     }
 
 }

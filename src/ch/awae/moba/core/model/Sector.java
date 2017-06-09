@@ -5,5 +5,4 @@ public enum Sector {
     CENTER,
     LEFT,
     RIGHT;
-
 }
