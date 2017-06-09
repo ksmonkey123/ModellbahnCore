@@ -1,4 +1,4 @@
-package operator;
+package ch.awae.moba.operator;
 
 import static ch.awae.moba.core.model.ButtonMapping.R_CLR_A;
 import static ch.awae.moba.core.model.ButtonMapping.R_CLR_B;

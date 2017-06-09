@@ -1,4 +1,4 @@
-package operator;
+package ch.awae.moba.operator;
 
 import static ch.awae.moba.core.model.ButtonMapping.L_CLEAR;
 import static ch.awae.moba.core.model.ButtonMapping.L_PTH_A;

@@ -1,4 +1,4 @@
-package operator;
+package ch.awae.moba.operator;
 
 import java.util.List;
 

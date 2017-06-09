@@ -1,4 +1,4 @@
-package operator;
+package ch.awae.moba.operator;
 
 import ch.awae.moba.core.logic.Logic;
 import ch.awae.moba.core.model.ButtonMapping;
