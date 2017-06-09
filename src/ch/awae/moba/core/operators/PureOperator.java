@@ -4,7 +4,7 @@ import java.util.logging.Logger;
 
 import ch.awae.moba.core.util.Utils;
 
-public class PureOperator implements IOperator {
+class PureOperator implements IOperator {
 
     private volatile boolean enabled = false;
 

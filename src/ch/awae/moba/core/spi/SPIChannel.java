@@ -21,4 +21,14 @@ public enum SPIChannel {
         this.pin = pin;
     }
 
+    // FACTORY STYLE METHODS
+
+    public static int getChannelCount() {
+        return values().length;
+    }
+
+    public static SPIChannel getChannelByIndex(final int index) {
+        return values()[index];
+    }
+
 }

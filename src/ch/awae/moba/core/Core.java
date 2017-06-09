@@ -5,6 +5,7 @@ import java.io.IOException;
 import ch.awae.moba.core.model.Model;
 import ch.awae.moba.core.model.Sector;
 import ch.awae.moba.core.operators.IOperator;
+import ch.awae.moba.core.operators.OperatorLoader;
 import ch.awae.moba.core.processors.AdditiveProcessor;
 import ch.awae.moba.core.spi.Host;
 import ch.awae.moba.core.spi.HostFactory;
@@ -15,7 +16,6 @@ import ch.awae.moba.core.threads.IThreaded;
 import ch.awae.moba.core.threads.OperatorThread;
 import ch.awae.moba.core.threads.ProcessorThread;
 import ch.awae.moba.core.threads.SPIThread;
-import ch.awae.moba.core.util.OperatorLoader;
 import ch.awae.moba.core.util.Pair;
 import ch.awae.moba.core.util.Registries;
 
@@ -69,6 +69,10 @@ public final class Core {
                 System.out.println(e);
             }
         }
+    }
+    
+    public void loadHosts() {
+        
     }
 
     public void startOperators() {

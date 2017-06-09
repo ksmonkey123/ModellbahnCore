@@ -8,11 +8,11 @@ import static ch.awae.moba.core.model.ButtonMapping.R_CLR_B;
 
 import ch.awae.moba.core.logic.Logic;
 import ch.awae.moba.core.model.Model;
+import ch.awae.moba.core.operators.Enabled;
+import ch.awae.moba.core.operators.External;
 import ch.awae.moba.core.operators.IOperation;
-import ch.awae.moba.core.operators.annotations.Enabled;
-import ch.awae.moba.core.operators.annotations.External;
-import ch.awae.moba.core.operators.annotations.Loaded;
-import ch.awae.moba.core.operators.annotations.Operator;
+import ch.awae.moba.core.operators.Loaded;
+import ch.awae.moba.core.operators.Operator;
 import ch.awae.moba.core.util.Utils;
 
 @Enabled

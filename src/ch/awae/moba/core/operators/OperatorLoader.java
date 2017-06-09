@@ -1,4 +1,4 @@
-package ch.awae.moba.core.util;
+package ch.awae.moba.core.operators;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -9,13 +9,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import ch.awae.moba.core.model.Model;
-import ch.awae.moba.core.operators.IOperation;
-import ch.awae.moba.core.operators.IOperator;
-import ch.awae.moba.core.operators.PureOperator;
-import ch.awae.moba.core.operators.annotations.Enabled;
-import ch.awae.moba.core.operators.annotations.External;
-import ch.awae.moba.core.operators.annotations.Loaded;
-import ch.awae.moba.core.operators.annotations.Operator;
+import ch.awae.moba.core.util.Registries;
+import ch.awae.moba.core.util.Utils;
 import io.github.lukehutch.fastclasspathscanner.FastClasspathScanner;
 
 public class OperatorLoader {
