@@ -146,4 +146,13 @@ public final class Utils {
         }
     }
 
+    public static int parseInt(String number) {
+        if (number.startsWith("0b"))
+            return Integer.parseInt(number.substring(2), 2);
+        else if (number.startsWith("0x"))
+            return Integer.parseInt(number.substring(2), 16);
+        else
+            return Integer.parseInt(number, 10);
+    }
+
 }
