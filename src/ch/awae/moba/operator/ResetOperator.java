@@ -29,7 +29,7 @@ public class ResetOperator implements IOperation {
             ButtonProvider.getButton(Sector.CENTER, "clear"),
             ButtonProvider.getButton(Sector.LEFT, "clear"),
             ButtonProvider.getButton(Sector.RIGHT, "clear_A"),
-            ButtonProvider.getButton(Sector.CENTER, "clear_B"));
+            ButtonProvider.getButton(Sector.RIGHT, "clear_B"));
 
     private boolean armed;
     private long    armTime;
