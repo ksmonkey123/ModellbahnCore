@@ -10,6 +10,7 @@ import java.util.logging.Logger;
 
 import ch.awae.moba.core.model.Model;
 import ch.awae.moba.core.model.Path;
+import scala.Function0;
 
 /**
  * Collection of utility methods
@@ -122,6 +123,12 @@ public final class Utils {
      */
     public static void async(Runnable runnable) {
         async(runnable, null);
+    }
+
+    public static void async(Function0<Void> f) {
+        async(() -> {
+            f.apply();
+        });
     }
 
     /**

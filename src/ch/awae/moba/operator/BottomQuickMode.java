@@ -29,32 +29,32 @@ public class BottomQuickMode implements IOperation {
 
     private final ButtonProvider provider = new ButtonProvider(Sector.BOTTOM);
 
-    private final Logic[] tracks = this.provider.group("all_tracks").toArray();
-    private final Logic   clear  = this.provider.button("clear");
+    private final Logic[] tracks = provider.group("all_tracks").toArray();
+    private final Logic   clear  = provider.button("clear");
 
     @Override
     public void update() {
-        List<Path> paths = this.model.paths.getPaths(Sector.BOTTOM);
+        List<Path> paths = model.getPaths(Sector.BOTTOM);
 
-        if (this.clear.evaluate(this.model)) {
-            for (Path path : this.model.paths.getPaths(Sector.BOTTOM)) {
+        if (clear.evaluate(model)) {
+            for (Path path : model.getPaths(Sector.BOTTOM)) {
                 if (path != Path.B_DUMMY_L && !path.forced)
-                    this.model.paths.unregister(path);
+                    model.unregister(path);
             }
         }
 
         if (paths.isEmpty() || (paths.size() == 1) && paths.contains(Path.B_DUMMY_L)) {
             if (System.currentTimeMillis() % (2 * BLINK_TIME) > BLINK_TIME)
-                this.model.paths.register(Path.B_DUMMY_L);
+                model.register(Path.B_DUMMY_L);
             else
-                this.model.paths.unregister(Path.B_DUMMY_L);
+                model.unregister(Path.B_DUMMY_L);
         }
         for (int i = 0; i < 10; i++) {
             Path path = Path.BOTTOM_LEFT[i];
             assert path != null;
-            Logic button = this.tracks[i];
-            if (button.evaluate(this.model)) {
-                this.model.paths.register(path);
+            Logic button = tracks[i];
+            if (button.evaluate(model)) {
+                model.register(path);
                 return;
             }
         }

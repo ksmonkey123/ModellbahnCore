@@ -3,7 +3,6 @@ package ch.awae.moba.core.util;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.function.Predicate;
 
 public class Registry<A> {
 
@@ -23,11 +22,4 @@ public class Registry<A> {
         return list;
     }
 
-    public A find(Predicate<A> test) {
-        for (A e : this.map.values()) {
-            if (test.test(e))
-                return e;
-        }
-        return null;
-    }
 }
