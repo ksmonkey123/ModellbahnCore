@@ -40,7 +40,6 @@ public final class Core {
         return this.model;
     }
 
-    @SuppressWarnings("unused")
     public void registerHost(SPIChannel channel, Sector sector, String title) {
         Pair<SPIHost, Host> host = HostFactory.createHost(channel, title);
         new ProcessorThread(host._2, new AdditiveProcessor(this.model, sector));
@@ -55,7 +54,6 @@ public final class Core {
         new ConsoleThread(this.model).start();
     }
 
-    @SuppressWarnings("unused")
     public void start() throws InterruptedException {
         new OperatorThread(this.model);
         this.spi.start();

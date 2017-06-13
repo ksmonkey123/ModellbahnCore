@@ -1,5 +1,7 @@
 package ch.awae.moba.core.logic;
 
+import java.util.Objects;
+
 import ch.awae.moba.core.model.Model;
 
 /**
@@ -12,23 +14,19 @@ import ch.awae.moba.core.model.Model;
  * </p>
  * 
  * @author Andreas Wälchli
- * @see NotLogic
- * @see AndLogic
- * @see OrLogic
- * @see CounterLogic
  */
 @FunctionalInterface
 public interface Logic {
 
-    static Logic TRUE  = new Logic() {
+    /**
+     * a logic instance that always evaluates to {@code true}
+     */
+    final static Logic TRUE = new FunctionalLogic(m -> true);
 
-                           @Override
-                           public boolean evaluate(@SuppressWarnings("unused") Model m) {
-                               return true;
-                           }
-
-                       };
-    static Logic FALSE = TRUE.not();
+    /**
+     * a logic instance that always evaluates to {@code false}
+     */
+    final static Logic FALSE = new FunctionalLogic(m -> false);
 
     /**
      * Evaluates the given {@link Model} to a boolean value. Usually checks if
@@ -47,87 +45,264 @@ public interface Logic {
     boolean evaluate(Model m);
 
     /**
-     * Inverts the Logic instance
+     * Returns an instance with inverted logic. This inverted logic instance
+     * evaluates this instance and inverts the result.
      * 
-     * @return an inverted Logic instance
-     * @see NotLogic
+     * @return an instance with inverted logic
      */
     default Logic not() {
         return new NotLogic(this);
     }
 
     /**
-     * Composes this instance with an other one with the {@code AND}-operator
+     * Combines this logic instance with another one in an {@code AND}
+     * operation.
      * 
-     * @param l
-     *            the instance to compose this one with. In the default
-     *            implementation this may not be {@code null}
-     * @return the {@code AND}-Composed instance
+     * <p>
+     * The resulting logic instance evaluates to {@code true} iff both this and
+     * the other instance evaluate to {@code true}. If either instance evaluates
+     * to {@code false}, the result will be {@code false}.
+     * </p>
+     * 
+     * @param other
+     *            the logic instance to combine with this one
+     * @return a logic instance evaluating to the {@code AND} composition of
+     *         both this and the {@code other} logic instance
      * @throws NullPointerException
-     *             in the default implementation if {@code l} is {@code null}
-     * @see AndLogic
+     *             if the {@code other} parameter is {@code null}
      */
-    default Logic and(Logic l) {
-        return new AndLogic(this, l);
+    default Logic and(Logic other) {
+        Objects.requireNonNull(other, "the 'other' instance may not be null!");
+        return and(this, other);
     }
 
     /**
-     * Composes this instance with an other one with the {@code IOR}-operator
+     * Combines this logic instance with another one in an {@code OR} operation.
      * 
-     * @param l
-     *            the instance to compose this one with. In the default
-     *            implementation this may not be {@code null}
-     * @return the {@code IOR}-Composed instance
+     * <p>
+     * The resulting logic instance evaluates to {@code true} if either this or
+     * the other instance evaluates to {@code true} (or both).
+     * </p>
+     * 
+     * @param other
+     *            the logic instance to combine with this one
+     * @return a logic instance evaluating to the {@code OR} composition of both
+     *         this and the {@code other} logic instance
      * @throws NullPointerException
-     *             in the default implementation if {@code l} is {@code null}
-     * @see OrLogic
+     *             if the {@code other} parameter is {@code null}
      */
-    default Logic or(Logic l) {
-        return new OrLogic(this, l);
+    default Logic or(Logic other) {
+        Objects.requireNonNull(other, "the 'other' instance may not be null!");
+        return or(this, other);
+    }
+
+    // ====== FACTORY STYLE METHODS ======
+
+    /**
+     * Creates a {@link Logic} instance that combines all given logic instances
+     * with an {@code OR} operation.
+     * 
+     * <p>
+     * If any logic instance evaluates to {@code true} the combined logic
+     * evaluates to {@code true}. The instance evaluates to {@code false} iff
+     * all base logic instances also evaluate to {@code false}.
+     * </p>
+     * 
+     * @param logic0
+     *            the first logic instance
+     * @param logics
+     *            the remaining logic instances
+     * @return a combined logic instance
+     * @throws NullPointerException
+     *             if any parameter is {@code null}, or the {@code logics} array
+     *             contains {@code null} values.
+     * @throws IllegalArgumentException
+     *             if the {@code logics} array is empty
+     */
+    static Logic or(Logic logic0, Logic... logics) {
+        Objects.requireNonNull(logic0, "no logic instance may be null!");
+        Objects.requireNonNull(logics, "the logics array may not be null!");
+        for (Logic l : logics)
+            Objects.requireNonNull(l, "no logic instance may be null!");
+        if (logics.length == 0)
+            throw new IllegalArgumentException("logics array may not be empty!");
+        // code
+        return new FunctionalLogic(model -> {
+            if (logic0.evaluate(model))
+                return true;
+            for (Logic logic : logics)
+                if (logic.evaluate(model))
+                    return true;
+            return false;
+        });
     }
 
     /**
-     * Factory method for a counting Logic instance. This evaluates to
-     * {@code true} if the number of Logic instances that evaluate to
-     * {@code true} matches the parameter {@code target}.
+     * Creates a {@link Logic} instance that combines all given logic instances
+     * with an {@code AND} operation.
+     * 
+     * <p>
+     * The instance evaluates to {@code true} iff all base logic instances also
+     * evaluate to {@code true}. If any logic instance evaluates to
+     * {@code false} the combined logic evaluates to {@code false}.
+     * </p>
+     * 
+     * @param logic0
+     *            the first logic instance
+     * @param logics
+     *            the remaining logic instances
+     * @return a combined logic instance
+     * @throws NullPointerException
+     *             if any parameter is {@code null}, or the {@code logics} array
+     *             contains {@code null} values.
+     * @throws IllegalArgumentException
+     *             if the {@code logics} array is empty
+     */
+    static Logic and(Logic logic0, Logic... logics) {
+        Objects.requireNonNull(logic0, "no logic instance may be null!");
+        Objects.requireNonNull(logics, "the logics array may not be null!");
+        for (Logic l : logics)
+            Objects.requireNonNull(l, "no logic instance may be null!");
+        if (logics.length == 0)
+            throw new IllegalArgumentException("logics array may not be empty!");
+        // code
+        return new FunctionalLogic(model -> {
+            if (!logic0.evaluate(model))
+                return false;
+            for (Logic logic : logics)
+                if (!logic.evaluate(model))
+                    return false;
+            return true;
+        });
+    }
+
+    /**
+     * Creates a logic instance that counts how many base instances evaluate to
+     * {@code true}. The instance evaluates to {@code true} iff the number of
+     * base instances that evaluate to {@code true} matches the given
+     * {@code target} parameter.
      * 
      * @param target
-     *            the target number of satisfied Logic instances. Must be a
-     *            number between zero and {@code logics.length} (both
-     *            inclusive).
+     *            the exact number of logic instances that must evaluate to
+     *            {@code true} for this instance to evaluate to {@code true}.
      * @param logics
-     *            the Logic instances to check. May not be {@code null} and may
-     *            not contain {@code null} elements.
-     * @return a counting Logic instance
+     *            the base logic instances
+     * @return the combined logic instances
      * @throws NullPointerException
-     *             if {@code logics} is {@code null} or contains
-     *             {@code null} elements.
+     *             if the logics array is {@code null} or any of its elements is
+     *             {@code null}
      * @throws IllegalArgumentException
-     *             if {@code target} is not in the inclusive range
-     *             {@code [0, logics.length]}
-     * @see CounterLogic
+     *             if the logics array is empty
+     * @throws IllegalArgumentException
+     *             if the {@code target} value is negative or larger than the
+     *             number of elements in the logics array. Both of these
+     *             conditions would result in the instance evaluating to
+     *             {@code false} and are therefore prohibited.
      */
     static Logic count(int target, Logic... logics) {
-        return new CounterLogic(target, logics);
-    }
-
-    static Logic all(Logic... logics) {
-        return count(logics.length, logics);
-    }
-
-    static Logic none(Logic... logics) {
-        return count(0, logics);
-    }
-
-    static Logic any(Logic... logics) {
+        Objects.requireNonNull(logics, "the logics array may not be null!");
+        for (Logic l : logics)
+            Objects.requireNonNull(l, "no logic instance may be null!");
         if (logics.length == 0)
-            return FALSE;
-        Logic l = logics[0];
+            throw new IllegalArgumentException("logics array may not be empty!");
+        if (target < 0)
+            throw new IllegalArgumentException("the target value may not be negative!");
+        if (target > logics.length)
+            throw new IllegalArgumentException(
+                    "the target value may not exceed the size of the logics array");
+        // code
+        return new FunctionalLogic(model -> {
+            int counter = 0;
+            for (Logic logic : logics)
+                if (logic.evaluate(model))
+                    counter++;
+            return counter == target;
+        });
+    }
 
-        for (int i = 1; i < logics.length; i++)
-            l = l.or(logics[i]);
+    /**
+     * Creates a logic instance that evaluates to {@code true} iff all base
+     * instances evaluate to {@code false}.
+     * 
+     * @param logics
+     *            the base logics
+     * @return a combined logic instance
+     * @throws NullPointerException
+     *             if the logics array is {@code null} or any of its elements
+     *             are {@code null}
+     * @throws IllegalArgumentException
+     *             if the logics array is empty
+     */
+    static Logic none(Logic... logics) {
+        Objects.requireNonNull(logics, "the logics array may not be null!");
+        for (Logic l : logics)
+            Objects.requireNonNull(l, "no logic instance may be null!");
+        if (logics.length == 0)
+            throw new IllegalArgumentException("logics array may not be empty!");
+        // code
+        return any(logics).not();
+    }
 
-        return l;
+    /**
+     * Creates a logic instance that evaluates to {@code true} iff all base
+     * instance evaluate to {@code true}. This is essentially identical to an
+     * {@code AND} operation over all base logics.
+     * 
+     * @param logics
+     *            the base logics
+     * @return a combined logic instance
+     * @throws NullPointerException
+     *             if the logics array is {@code null} or any of its elements
+     *             are {@code null}
+     * @throws IllegalArgumentException
+     *             if the logics array is empty
+     */
+    static Logic all(Logic... logics) {
+        Objects.requireNonNull(logics, "the logics array may not be null!");
+        for (Logic l : logics)
+            Objects.requireNonNull(l, "no logic instance may be null!");
+        if (logics.length == 0)
+            throw new IllegalArgumentException("logics array may not be empty!");
+        // code
+        return and(TRUE, logics);
+    }
+
+    /**
+     * Creates a logic instance that evaluates to {@code true} if any base
+     * instance evaluates to {@code true}. This is essentially identical to an
+     * {@code OR} operation over all base logics.
+     * 
+     * @param logics
+     *            the base logics
+     * @return a combined logic instance
+     * @throws NullPointerException
+     *             if the logics array is {@code null} or any of its elements
+     *             are {@code null}
+     * @throws IllegalArgumentException
+     *             if the logics array is empty
+     */
+    static Logic any(Logic... logics) {
+        Objects.requireNonNull(logics, "the logics array may not be null!");
+        for (Logic l : logics)
+            Objects.requireNonNull(l, "no logic instance may be null!");
+        if (logics.length == 0)
+            throw new IllegalArgumentException("logics array may not be empty!");
+        // code
+        return or(FALSE, logics);
+    }
+
+    /**
+     * Creates a logic instance with inverted logic. This inverted instance
+     * evaluates to {@code true} if the base instance evaluates to {@code false}
+     * (and vice versa).
+     * 
+     * @return an instance with inverted logic
+     * @throws NullPointerException
+     *             if the logic parameter is {@code null}
+     */
+    static Logic not(Logic logic) {
+        Objects.requireNonNull(logic, "the logic parameter may not be null");
+        return logic.not();
     }
 
 }

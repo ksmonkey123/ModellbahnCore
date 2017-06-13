@@ -8,11 +8,12 @@ import ch.awae.moba.core.model.Model;
  * Inverted {@link Logic} instance
  * 
  * @author Andreas Wälchli
+ * 
  * @see Logic
  */
-public class NotLogic implements Logic {
+final class NotLogic implements Logic {
 
-    private final Logic backer;
+    private final Logic λ;
 
     /**
      * Creates a new NotLogic instance from a backing Logic instance
@@ -23,12 +24,12 @@ public class NotLogic implements Logic {
      *             if {@code backer} is {@code null}
      */
     public NotLogic(Logic backer) {
-        this.backer = Objects.requireNonNull(backer, "backer may not be null");
+        λ = Objects.requireNonNull(backer, "backer may not be null");
     }
 
     @Override
     public boolean evaluate(Model m) {
-        return !this.backer.evaluate(m);
+        return !λ.evaluate(m);
     }
 
     /**
@@ -42,7 +43,7 @@ public class NotLogic implements Logic {
      */
     @Override
     public Logic not() {
-        return this.backer;
+        return λ;
     }
 
 }

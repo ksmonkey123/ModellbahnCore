@@ -1,33 +1,102 @@
 package ch.awae.moba.core.logic;
 
 import java.util.Arrays;
+import java.util.Objects;
 
+/**
+ * Groups a list of {@link Logic} instances. A LogicGroup must consist of at
+ * least one member. This is enforced during creation.
+ * 
+ * @author Andreas Wälchli
+ * 
+ * @see Logic
+ */
 public final class LogicGroup {
 
     private final Logic members[];
 
+    /**
+     * Creates a new Logic group
+     * 
+     * @param members
+     *            the group members
+     * @throws NullPointerException
+     *             if the members array is {@code null} or contains any
+     *             {@code null} elements
+     * @throws IllegalArgumentException
+     *             if the members array is empty
+     */
     public LogicGroup(Logic[] members) {
+        Objects.requireNonNull(members, "the members array may not be null!");
+        for (Logic l : members)
+            Objects.requireNonNull(l, "no logic instance may be null!");
+        if (members.length == 0)
+            throw new IllegalArgumentException("the members array may not be empty!");
         this.members = members;
     }
 
+    /**
+     * Provides an array containing all group members
+     * 
+     * @return an array of all members
+     */
     public Logic[] toArray() {
-        return Arrays.copyOf(this.members, this.members.length);
+        return Arrays.copyOf(members, members.length);
     }
 
+    /**
+     * Creates a Logic instance over the group, defined by
+     * {@link Logic#any(Logic...)}.
+     * 
+     * @return the created logic instance
+     */
     public Logic any() {
-        return Logic.any(this.members);
+        return Logic.any(members);
     }
 
+    /**
+     * Creates a Logic instance over the group, defined by
+     * {@link Logic#all(Logic...)}.
+     * 
+     * @return the created logic instance
+     */
     public Logic all() {
-        return Logic.all(this.members);
+        return Logic.all(members);
     }
 
+    /**
+     * Creates a Logic instance over the group, defined by
+     * {@link Logic#none(Logic...)}.
+     * 
+     * @return the created logic instance
+     */
     public Logic none() {
-        return Logic.none(this.members);
+        return Logic.none(members);
     }
 
+    /**
+     * Creates a Logic instance over the group, defined by
+     * {@link Logic#count(int, Logic...)}.
+     * 
+     * @param target
+     *            the exact number of group members to evaluate to {@code true}
+     *            for the created Logic instance to evaluate to {@code true}
+     * 
+     * @return the created logic instance
+     * @throws IllegalArgumentException
+     *             if the target value is negative or larger than the group size
+     * 
+     * @see Logic#count(int, Logic...)
+     */
     public Logic count(int target) {
-        return Logic.count(target, this.members);
+        return Logic.count(target, members);
+    }
+
+    /**
+     * @return the size of the group
+     */
+    public int size() {
+        return members.length;
     }
 
 }
