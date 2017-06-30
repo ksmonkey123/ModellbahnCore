@@ -26,12 +26,12 @@ public class BottomOperator implements IOperation {
 
     @Override
     public void update() {
-        if (this.clear.equals(this.model)) {
-            this.model.paths.register(Path.B_CLEAR);
+        if (clear.evaluate(this.model)) {
+            model.paths.register(Path.B_CLEAR);
             return;
         }
 
-        short buttons = (short) (this.model.buttons.getState(BOTTOM) & 0x00000fff);
+        short buttons = (short) (model.buttons.getState(BOTTOM) & 0x00000fff);
 
         Path p = null;
         switch (buttons) {
@@ -81,7 +81,7 @@ public class BottomOperator implements IOperation {
                 break;
         }
         if (p != null)
-            this.model.paths.register(p);
+            model.paths.register(p);
     }
 
 }
