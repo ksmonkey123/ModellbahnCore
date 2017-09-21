@@ -2,6 +2,7 @@ package ch.awae.moba.core.util;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Objects;
 import java.util.Properties;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Handler;
@@ -18,15 +19,15 @@ import ch.awae.moba.core.model.Path;
  */
 public final class Utils {
 
+    private final static String REBOOT_COMMAND = "sudo reboot";
     private final static Logger logger;
 
     static {
-        Logger l = Logger.getLogger("core");
-        assert l != null;
-        l.setLevel(Level.ALL);
-        logger = l;
         Handler systemOut = new ConsoleHandler();
         systemOut.setLevel(Level.ALL);
+
+        logger = Logger.getLogger("core");
+        logger.setLevel(Level.ALL);
         logger.addHandler(systemOut);
         logger.setLevel(Level.INFO);
         logger.setUseParentHandlers(false);
@@ -60,7 +61,7 @@ public final class Utils {
         model.paths.register(Path.SYSTEM_ERROR_L);
         model.paths.register(Path.SYSTEM_ERROR_R);
         try {
-            Runtime.getRuntime().exec("sudo reboot");
+            Runtime.getRuntime().exec(REBOOT_COMMAND);
         } catch (Exception e) {
             logger.severe(e.toString());
             model.paths.register(Path.SYSTEM_FATAL_B);
@@ -146,7 +147,28 @@ public final class Utils {
         }
     }
 
+    /**
+     * Parses a String into a signed integer.
+     * 
+     * The following formats are supported:
+     * <ul>
+     * <li>{@code 0b00011011} represents a binary number</li>
+     * <li>{@code 0x0123af6b} represents a hexadecimal number</li>
+     * <li>any decimal format supported by {@link Integer#parseInt(String)}</li>
+     * </ul>
+     * 
+     * @param number
+     *            the number to parse. may not be null
+     * @return the signed integer value of the given String
+     * @throws NullPointerException
+     *             the {@code number} is null
+     * @throws NumberFormatException
+     *             the {@code number} cannot be parsed into an integer. See
+     *             {@link Integer#parseInt(String, int)} for more information
+     * @see Integer#parseInt(String, int)
+     */
     public static int parseInt(String number) {
+        Objects.requireNonNull(number, "the number may not be null");
         if (number.startsWith("0b"))
             return Integer.parseInt(number.substring(2), 2);
         else if (number.startsWith("0x"))

@@ -111,47 +111,48 @@ public class SPIThread implements IThreaded {
 
         @Override
         public void run() {
-            loop: while (!this.isInterrupted()) {
-                list: for (int i = 0; i < SPIThread.this.hosts.size(); i++) {
-                    SPIHost host = SPIThread.this.hosts.get(i);
-                    GpioPinDigitalOutput pin = SPIThread.this.pinMap.get(host.getChannel());
-                    assert pin != null;
-                    pin.setState(PinState.HIGH);
-                    if (SPIThread.this.HOST_SELECT_DELAY > 0)
-                        LockSupport.parkNanos(SPIThread.this.HOST_SELECT_DELAY);
+            while (!this.isInterrupted())
+                for (SPIHost host : SPIThread.this.hosts)
+                    processHost(host);
+        }
 
-                    short input = host.getInput();
-                    byte[] array = { SPIThread.this.MAGIC_NUMBER, (byte) (input & 0x00ff),
-                            (byte) ((input >> 8) & 0x00ff), host.getNetwork() };
-                    byte[] response;
-                    try {
-                        response = SPIThread.this.spi.write(array);
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                    pin.setState(PinState.LOW);
-                    assert response != null;
-                    if (response[0] != SPIThread.this.MAGIC_NUMBER) {
-                        if (response[0] != -1)
-                            SPIThread.this.logger.fine("Invalid response from device "
-                                    + host.getName() + " on channel " + host.getChannel()
-                                    + "\n > magic number was wrong: " + response[0]);
-                        continue list;
-                    }
-                    byte check = (byte) ((array[1] ^ array[2]) & 0x000000ff);
-                    if (response[3] != check) {
-                        SPIThread.this.logger.fine("Invalid response from device " + host.getName()
-                                + " on channel " + host.getChannel() + "\n > invalid readback: "
-                                + response[3] + " instead of " + check);
-                        continue list;
-                    }
-                    short output = (short) (((response[2] << 8) & 0x0000ff00)
-                            | (response[1] & 0x000000ff));
-                    host.setOutput(output);
+        private void processHost(SPIHost host) {
+            GpioPinDigitalOutput pin = SPIThread.this.pinMap.get(host.getChannel());
+            byte[] data = { SPIThread.this.MAGIC_NUMBER, (byte) (host.getInput() & 0x00ff),
+                    (byte) ((host.getInput() >> 8) & 0x00ff), host.getNetwork() };
 
-                    if (this.isInterrupted())
-                        break loop;
-                }
+            byte[] response = runSPI(pin, data);
+
+            assert response != null;
+            if (response[0] != SPIThread.this.MAGIC_NUMBER) {
+                if (response[0] != -1)
+                    SPIThread.this.logger.fine("Invalid response from device " + host.getName()
+                            + " on channel " + host.getChannel() + "\n > magic number was wrong: "
+                            + response[0]);
+                return;
+            }
+            byte check = (byte) ((data[1] ^ data[2]) & 0x000000ff);
+            if (response[3] != check) {
+                SPIThread.this.logger.fine("Invalid response from device " + host.getName()
+                        + " on channel " + host.getChannel() + "\n > invalid readback: "
+                        + response[3] + " instead of " + check);
+                return;
+            }
+            short output = (short) (((response[2] << 8) & 0x0000ff00) | (response[1] & 0x000000ff));
+            host.setOutput(output);
+        }
+
+        private byte[] runSPI(GpioPinDigitalOutput SS, byte[] data) {
+            SS.setState(PinState.HIGH);
+            if (SPIThread.this.HOST_SELECT_DELAY > 0)
+                LockSupport.parkNanos(SPIThread.this.HOST_SELECT_DELAY);
+
+            try {
+                return SPIThread.this.spi.write(data);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            } finally {
+                SS.setState(PinState.LOW);
             }
         }
 

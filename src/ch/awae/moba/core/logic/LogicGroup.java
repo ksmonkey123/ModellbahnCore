@@ -99,4 +99,20 @@ public final class LogicGroup {
         return members.length;
     }
 
+    /**
+     * Merges this LogicGroup with another one and returns a new LogicGroup
+     * containing the members from both this and the other group.
+     * 
+     * @param other
+     * @return
+     */
+    public LogicGroup merge(LogicGroup other) {
+        Objects.requireNonNull(other);
+        int size = members.length + other.members.length;
+        Logic[] children = new Logic[size];
+        System.arraycopy(members, 0, children, 0, members.length);
+        System.arraycopy(other.members, 0, children, members.length, other.members.length);
+        return new LogicGroup(children);
+    }
+
 }
