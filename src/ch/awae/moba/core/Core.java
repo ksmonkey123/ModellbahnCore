@@ -1,20 +1,21 @@
 package ch.awae.moba.core;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import ch.awae.moba.core.model.Model;
 import ch.awae.moba.core.model.Sector;
 import ch.awae.moba.core.operators.IOperator;
 import ch.awae.moba.core.operators.OperatorLoader;
-import ch.awae.moba.core.processors.AdditiveProcessor;
 import ch.awae.moba.core.spi.Host;
 import ch.awae.moba.core.spi.HostFactory;
 import ch.awae.moba.core.spi.SPIChannel;
 import ch.awae.moba.core.spi.SPIHost;
 import ch.awae.moba.core.threads.ConsoleThread;
 import ch.awae.moba.core.threads.IThreaded;
+import ch.awae.moba.core.threads.InputProcessor;
 import ch.awae.moba.core.threads.OperatorThread;
-import ch.awae.moba.core.threads.ProcessorThread;
+import ch.awae.moba.core.threads.OutputProcessor;
 import ch.awae.moba.core.threads.SPIThread;
 import ch.awae.moba.core.util.Pair;
 import ch.awae.moba.core.util.Registries;
@@ -28,12 +29,14 @@ public final class Core {
         return new Core();
     }
 
-    private final SPIThread spi;
-    private final Model     model;
+    private final SPIThread       spi;
+    private final Model           model;
+    private final ArrayList<Host> hosts;
 
     private Core() throws IOException {
         this.spi = new SPIThread();
         this.model = new Model();
+        this.hosts = new ArrayList<>();
     }
 
     public Model getModel() {
@@ -41,8 +44,9 @@ public final class Core {
     }
 
     public void registerHost(SPIChannel channel, Sector sector, String title) {
-        Pair<SPIHost, Host> host = HostFactory.createHost(channel, title);
-        new ProcessorThread(host._2, new AdditiveProcessor(this.model, sector));
+        Pair<SPIHost, Host> host = HostFactory.createHost(sector, channel, title);
+        new InputProcessor(host._2, this.model, sector);
+        this.hosts.add(host._2);
         this.spi.registerHost(host._1);
     }
 
@@ -55,6 +59,7 @@ public final class Core {
     }
 
     public void start() throws InterruptedException {
+        new OutputProcessor(this.model, this.hosts.toArray(new Host[0]));
         new OperatorThread(this.model);
         this.spi.start();
         Thread.sleep(2000);

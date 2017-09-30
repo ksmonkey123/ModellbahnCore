@@ -19,8 +19,8 @@ public final class HostFactory {
         throw new AssertionError("unreachable");
     }
 
-    public static Pair<SPIHost, Host> createHost(SPIChannel channel, String name) {
-        final HostImpl host = new HostImpl(channel, name);
+    public static Pair<SPIHost, Host> createHost(Sector sector, SPIChannel channel, String name) {
+        final BlockingHost host = new BlockingHost(sector, channel, name);
         return new Pair<>(host, host);
     }
 

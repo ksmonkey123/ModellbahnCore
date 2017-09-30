@@ -1,22 +1,27 @@
 package ch.awae.moba.core.spi;
 
+import java.util.Objects;
+
 import ch.awae.moba.core.model.Sector;
 
-final class HostImpl implements Host, SPIHost {
+final class BlockingHost implements Host, SPIHost {
 
-    private final Object     LOCK = new Object();
-    private final SPIChannel channel;
+    // LOCKS
+    private final Object MONITOR = new Object();
+    // CONFIGURATION DATA
     private final String     name;
-
+    private final SPIChannel channel;
+    private final Sector     sector;
+    // VOLATILE DATA
     private volatile short   input      = (short) 0xffff;
     private volatile short   output     = (short) 0x0000;
-    private volatile short   output_raw = (short) 0x0000;
     private volatile byte    network    = (byte) 0x00;
     private volatile boolean updateFlag = false;
 
-    HostImpl(final SPIChannel channel, final String name) {
-        this.channel = channel;
-        this.name = name;
+    BlockingHost(final Sector sector, final SPIChannel channel, final String name) {
+        this.channel = Objects.requireNonNull(channel);
+        this.name = Objects.requireNonNull(name);
+        this.sector = Objects.requireNonNull(sector);
     }
 
     @Override
@@ -31,14 +36,11 @@ final class HostImpl implements Host, SPIHost {
 
     @Override
     public void setOutput(short output) {
-        synchronized (this.LOCK) {
-            if ((this.output_raw ^ output) == 0) {
-                this.output = output;
+        synchronized (this.MONITOR) {
+            if (this.output != output) {
                 this.updateFlag = true;
-            }
-            this.output_raw = output;
-            synchronized (this) {
-                this.notifyAll();
+                this.output = output;
+                this.MONITOR.notify();
             }
         }
     }
@@ -56,18 +58,23 @@ final class HostImpl implements Host, SPIHost {
 
     @Override
     public short read() {
-        synchronized (this.LOCK) {
-            final short value = this.output;
+        synchronized (this.MONITOR) {
+            // wait for next update
+            if (!this.updateFlag)
+                try {
+                    this.MONITOR.wait();
+                } catch (@SuppressWarnings("unused") InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
             this.updateFlag = false;
-            return value;
+            return this.output;
         }
     }
 
     @Override
     public boolean isUpdated() {
-        synchronized (this.LOCK) {
-            return this.updateFlag;
-        }
+        // TODO Auto-generated method stub
+        return false;
     }
 
     @Override
@@ -77,8 +84,7 @@ final class HostImpl implements Host, SPIHost {
 
     @Override
     public Sector getSector() {
-        // TODO Auto-generated method stub
-        return null;
+        return this.sector;
     }
 
 }

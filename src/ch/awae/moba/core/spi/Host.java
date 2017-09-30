@@ -1,5 +1,7 @@
 package ch.awae.moba.core.spi;
 
+import ch.awae.moba.core.model.Sector;
+
 public interface Host {
 
     /**
@@ -27,8 +29,11 @@ public interface Host {
      * 
      * @return {@code true} if a read/write cycle has occurred
      */
+    @Deprecated
     boolean isUpdated();
 
     String getName();
+    
+    Sector getSector();
 
 }
