@@ -4,7 +4,25 @@ import java.util.ArrayList;
 
 import ch.awae.moba.core.model.command.UpdateCommand;
 
-public class Model {
+public final class Model {
+
+    // SINGLETON
+    private static Model INSTANCE = null;
+
+    public static Model getInstance() {
+        if (INSTANCE == null)
+            synchronized (Model.class) {
+                if (INSTANCE == null)
+                    INSTANCE = new Model();
+            }
+        return INSTANCE;
+    }
+
+    private Model() {
+        super();
+    }
+
+    // INSTANCE
 
     public final PathRegistry paths   = new PathRegistry();
     public final Buttons      buttons = new Buttons();

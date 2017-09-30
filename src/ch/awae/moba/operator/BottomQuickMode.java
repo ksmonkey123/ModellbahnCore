@@ -9,7 +9,6 @@ import ch.awae.moba.core.model.Model;
 import ch.awae.moba.core.model.Path;
 import ch.awae.moba.core.model.Sector;
 import ch.awae.moba.core.operators.Enabled;
-import ch.awae.moba.core.operators.External;
 import ch.awae.moba.core.operators.IOperation;
 import ch.awae.moba.core.operators.Loaded;
 import ch.awae.moba.core.operators.Operator;
@@ -20,8 +19,7 @@ import ch.awae.moba.core.util.Props;
 @Operator("bottom.qm")
 public class BottomQuickMode implements IOperation {
 
-    @External
-    private Model model;
+    private final Model model = Model.getInstance();
 
     private static final Props props = Configs.load("bottom.qma");
 
@@ -36,7 +34,7 @@ public class BottomQuickMode implements IOperation {
     public void update() {
         List<Path> paths = this.model.paths.getPaths(Sector.BOTTOM);
 
-        if (this.clear.evaluate(this.model)) {
+        if (this.clear.evaluate()) {
             for (Path path : this.model.paths.getPaths(Sector.BOTTOM)) {
                 if (path != Path.B_DUMMY_L && !path.forced)
                     this.model.paths.unregister(path);
@@ -53,7 +51,7 @@ public class BottomQuickMode implements IOperation {
             Path path = Path.BOTTOM_LEFT[i];
             assert path != null;
             Logic button = this.tracks[i];
-            if (button.evaluate(this.model)) {
+            if (button.evaluate()) {
                 this.model.paths.register(path);
                 return;
             }

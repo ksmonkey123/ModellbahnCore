@@ -6,7 +6,6 @@ import ch.awae.moba.core.model.Model;
 import ch.awae.moba.core.model.Path;
 import ch.awae.moba.core.model.Sector;
 import ch.awae.moba.core.operators.Enabled;
-import ch.awae.moba.core.operators.External;
 import ch.awae.moba.core.operators.IOperation;
 import ch.awae.moba.core.operators.Loaded;
 import ch.awae.moba.core.operators.Operator;
@@ -16,8 +15,7 @@ import ch.awae.moba.core.operators.Operator;
 @Operator("center.base")
 public class CenterBaseOperator implements IOperation {
 
-    @External
-    private Model model;
+    private final Model model = Model.getInstance();
 
     private final ButtonProvider provider = new ButtonProvider(Sector.CENTER);
 
@@ -29,13 +27,13 @@ public class CenterBaseOperator implements IOperation {
 
     @Override
     public void update() {
-        if (this.clear.evaluate(this.model)) {
+        if (this.clear.evaluate()) {
             this.model.paths.register(Path.C_CLEAR);
             return;
         }
 
         for (int i = 0; i < this.buttons.length; i++) {
-            if (this.buttons[i].evaluate(this.model))
+            if (this.buttons[i].evaluate())
                 this.model.paths.register(this.PATHS[i]);
         }
 

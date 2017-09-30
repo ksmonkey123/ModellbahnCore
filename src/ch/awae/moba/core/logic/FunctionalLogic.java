@@ -1,9 +1,7 @@
 package ch.awae.moba.core.logic;
 
 import java.util.Objects;
-import java.util.function.Function;
-
-import ch.awae.moba.core.model.Model;
+import java.util.function.BooleanSupplier;
 
 /**
  * Functional implementation of the {@link Logic} interface. Allows the
@@ -15,23 +13,23 @@ import ch.awae.moba.core.model.Model;
  */
 final class FunctionalLogic implements Logic {
 
-    private final Function<Model, Boolean> λ;
+    private final BooleanSupplier λάμδα;
 
     /**
      * Creates a new instance.
      * 
-     * @param λάμδα
+     * @param λ
      *            the function to be evaluated for the logic value
      * @throws NullPointerException
-     *             if {@code λάμδα} is {@code null}
+     *             if {@code λ} is {@code null}
      */
-    FunctionalLogic(final Function<Model, Boolean> λάμδα) {
-        λ = Objects.requireNonNull(λάμδα, "'λάμδα' may not be null!");
+    FunctionalLogic(final BooleanSupplier λ) {
+        λάμδα = Objects.requireNonNull(λ, "'λ' may not be null!");
     }
 
     @Override
-    public boolean evaluate(Model model) {
-        return λ.apply(model);
+    public boolean evaluate() {
+        return λάμδα.getAsBoolean();
     }
 
 }

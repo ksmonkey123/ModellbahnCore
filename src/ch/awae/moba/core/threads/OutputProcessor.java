@@ -12,12 +12,12 @@ public class OutputProcessor extends AThreaded {
 
     private final long TARGET_UPDATE_DURATION_MILLIS = 20;
 
-    private final Model  model;
-    private final Host[] hosts;
+    private final Model      model;
+    private final List<Host> hosts;
 
-    public OutputProcessor(final Model model, final Host[] hosts) {
+    public OutputProcessor(final List<Host> hosts) {
         super("oupt_proc");
-        this.model = model;
+        this.model = Model.getInstance();
         this.hosts = hosts;
     }
 

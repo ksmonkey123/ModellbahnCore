@@ -25,6 +25,8 @@ import ch.awae.moba.core.util.Utils;
  */
 public class ButtonProvider {
 
+    
+    
     private static final HashMap<Sector, Properties> properties = new HashMap<>();
 
     static {

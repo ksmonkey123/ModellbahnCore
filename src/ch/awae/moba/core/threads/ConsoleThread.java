@@ -23,8 +23,8 @@ public class ConsoleThread extends Thread {
 
     private Model model;
 
-    public ConsoleThread(Model model) {
-        this.model = model;
+    public ConsoleThread() {
+        this.model = Model.getInstance();
         this.setDaemon(true);
     }
 
@@ -85,15 +85,17 @@ public class ConsoleThread extends Thread {
     private void doUnregisterPath(String substring) {
         for (Path p : Path.values()) {
             if (p.title.equals(substring)) {
-                synchronized (this.model.paths) {
-                    if (!this.model.paths.isRegistered(p))
-                        System.out.println("path '" + p.title + "' not active");
-                    else {
-                        this.model.paths.unregister(p);
-                        System.out.println("removing path '" + p.title + "'");
+                synchronized (this.model) {
+                    synchronized (this.model.paths) {
+                        if (!this.model.paths.isRegistered(p))
+                            System.out.println("path '" + p.title + "' not active");
+                        else {
+                            this.model.paths.unregister(p);
+                            System.out.println("removing path '" + p.title + "'");
+                        }
                     }
+                    return;
                 }
-                return;
             }
         }
         System.out.println("path '" + substring + "' not found");
@@ -102,12 +104,14 @@ public class ConsoleThread extends Thread {
     private void doRegisterPath(String substring) {
         for (Path p : Path.values()) {
             if (p.title.equals(substring)) {
-                synchronized (this.model.paths) {
-                    if (this.model.paths.isRegistered(p))
-                        System.out.println("path '" + p.title + "' already active");
-                    else {
-                        this.model.paths.register(p);
-                        System.out.println("registering path '" + p.title + "'");
+                synchronized (this.model) {
+                    synchronized (this.model.paths) {
+                        if (this.model.paths.isRegistered(p))
+                            System.out.println("path '" + p.title + "' already active");
+                        else {
+                            this.model.paths.register(p);
+                            System.out.println("registering path '" + p.title + "'");
+                        }
                     }
                 }
                 return;

@@ -6,7 +6,6 @@ import ch.awae.moba.core.model.Model;
 import ch.awae.moba.core.model.Path;
 import ch.awae.moba.core.model.Sector;
 import ch.awae.moba.core.operators.Enabled;
-import ch.awae.moba.core.operators.External;
 import ch.awae.moba.core.operators.IOperation;
 import ch.awae.moba.core.operators.Loaded;
 import ch.awae.moba.core.operators.Operator;
@@ -16,14 +15,13 @@ import ch.awae.moba.core.operators.Operator;
 @Operator("left.clear")
 public class LeftClearOperator implements IOperation {
 
-    @External
-    private Model model;
+    private final Model model = Model.getInstance();
 
     private Logic clear = ButtonProvider.getButton(Sector.LEFT, "clear");
 
     @Override
     public void update() {
-        if (this.clear.evaluate(this.model))
+        if (this.clear.evaluate())
             this.model.paths.register(Path.L_CLEAR);
     }
 

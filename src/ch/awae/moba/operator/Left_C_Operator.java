@@ -8,7 +8,6 @@ import ch.awae.moba.core.model.Model;
 import ch.awae.moba.core.model.Path;
 import ch.awae.moba.core.model.Sector;
 import ch.awae.moba.core.operators.Enabled;
-import ch.awae.moba.core.operators.External;
 import ch.awae.moba.core.operators.IOperation;
 import ch.awae.moba.core.operators.Loaded;
 import ch.awae.moba.core.operators.Operator;
@@ -19,8 +18,7 @@ import ch.awae.moba.core.util.Props;
 @Operator("left.C")
 public class Left_C_Operator implements IOperation {
 
-    @External
-    private Model model;
+    private final Model model = Model.getInstance();
 
     private final static Props props           = Configs.load("station");
     private final static long  DECORATOR_DELAY = props.getInt("decoration_delay");
@@ -66,29 +64,29 @@ public class Left_C_Operator implements IOperation {
         Logic curr = this.current;
         if (curr == null) {
             // base mode
-            if (this._C_solo.evaluate(this.model))
+            if (this._C_solo.evaluate())
                 // only C is pressed => inbound
                 this.inbound = true;
-            if (this._one_trk_solo.evaluate(this.model))
+            if (this._one_trk_solo.evaluate())
                 // exactly one track is pressed => outbound
                 this.inbound = false;
             // check for combo
-            if (this.C_1.evaluate(this.model)) {
+            if (this.C_1.evaluate()) {
                 this.model.paths.register(Path.L_C_1_R);
                 this.trackID = 1;
                 this.current = this.C_1;
                 this.activeTime = System.currentTimeMillis();
-            } else if (this.C_2.evaluate(this.model)) {
+            } else if (this.C_2.evaluate()) {
                 this.model.paths.register(Path.L_C_2_R);
                 this.trackID = 2;
                 this.current = this.C_2;
                 this.activeTime = System.currentTimeMillis();
-            } else if (this.C_3.evaluate(this.model)) {
+            } else if (this.C_3.evaluate()) {
                 this.model.paths.register(Path.L_C_3_R);
                 this.trackID = 3;
                 this.current = this.C_3;
                 this.activeTime = System.currentTimeMillis();
-            } else if (this.C_4.evaluate(this.model)) {
+            } else if (this.C_4.evaluate()) {
                 this.model.paths.register(Path.L_C_4_R);
                 this.trackID = 4;
                 this.current = this.C_4;
@@ -96,7 +94,7 @@ public class Left_C_Operator implements IOperation {
             }
         } else {
             // active mode => check if current still holds
-            if (curr.evaluate(this.model)) {
+            if (curr.evaluate()) {
                 // still good => if time reached, decorate
                 long deltaT = System.currentTimeMillis() - this.activeTime;
                 if ((deltaT > DECORATOR_DELAY) && !this.processed) {

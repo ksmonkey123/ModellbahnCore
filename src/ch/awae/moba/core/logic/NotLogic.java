@@ -2,8 +2,6 @@ package ch.awae.moba.core.logic;
 
 import java.util.Objects;
 
-import ch.awae.moba.core.model.Model;
-
 /**
  * Inverted {@link Logic} instance
  * 
@@ -13,7 +11,7 @@ import ch.awae.moba.core.model.Model;
  */
 final class NotLogic implements Logic {
 
-    private final Logic λ;
+    private final Logic λάμδα;
 
     /**
      * Creates a new NotLogic instance from a backing Logic instance
@@ -24,12 +22,12 @@ final class NotLogic implements Logic {
      *             if {@code backer} is {@code null}
      */
     public NotLogic(Logic backer) {
-        λ = Objects.requireNonNull(backer, "backer may not be null");
+        λάμδα = Objects.requireNonNull(backer, "backer may not be null");
     }
 
     @Override
-    public boolean evaluate(Model m) {
-        return !λ.evaluate(m);
+    public boolean evaluate() {
+        return !λάμδα.evaluate();
     }
 
     /**
@@ -43,7 +41,7 @@ final class NotLogic implements Logic {
      */
     @Override
     public Logic not() {
-        return λ;
+        return λάμδα;
     }
 
 }

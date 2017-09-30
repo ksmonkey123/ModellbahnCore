@@ -19,30 +19,42 @@ import ch.awae.moba.core.model.Model;
 public interface Logic {
 
     /**
+     * prepares a function evaluating all given elements and returns a summary
+     * representing all states as a number. Enables quick evaluation of a large
+     * group of Logic instances and processing the result with a single switch
+     * instead of a lot of if clauses.
+     * 
+     * Every instance evaluating to {@code true} is indicated as a 1. The first
+     * parameter lies in the unit column, the second in the two's column etc.
+     * 
+     * {@code null} parameters will always yield 0 digits. This allows for
+     * hex-alignment.
+     * 
+     * @param elements
+     *            the Logic instances to evaluate. Limited to 32.
+     * @return a function evaluating
+     */
+    static LogicCluster cluster(Logic... elements) {
+        return new LogicCluster(elements);
+    }
+
+    /**
      * a logic instance that always evaluates to {@code true}
      */
-    final static Logic TRUE = new FunctionalLogic(m -> true);
+    final static Logic TRUE = new FunctionalLogic(() -> true);
 
     /**
      * a logic instance that always evaluates to {@code false}
      */
-    final static Logic FALSE = new FunctionalLogic(m -> false);
+    final static Logic FALSE = new FunctionalLogic(() -> false);
 
     /**
-     * Evaluates the given {@link Model} to a boolean value. Usually checks if
-     * the current Model state satisfies a defined condition.
-     * <p>
-     * It is recommended that all implementations reject {@code null} Models
-     * with a {@link NullPointerException}. The predefined composed Logic
-     * instances do not perform {@code null}-checks and pass the Model to their
-     * backer objects directly.
-     * </p>
+     * Evaluates the logic object to a boolean value. Usually checks if the
+     * current Model state satisfies a defined condition.
      * 
-     * @param m
-     *            the {@link Model} to evaluate
-     * @return a boolean evaluation of the model
+     * @return a boolean evaluation of the logic expression
      */
-    boolean evaluate(Model m);
+    boolean evaluate();
 
     /**
      * Returns an instance with inverted logic. This inverted logic instance
@@ -127,11 +139,11 @@ public interface Logic {
         if (logics.length == 0)
             throw new IllegalArgumentException("logics array may not be empty!");
         // code
-        return new FunctionalLogic(model -> {
-            if (logic0.evaluate(model))
+        return new FunctionalLogic(() -> {
+            if (logic0.evaluate())
                 return true;
             for (Logic logic : logics)
-                if (logic.evaluate(model))
+                if (logic.evaluate())
                     return true;
             return false;
         });
@@ -166,11 +178,11 @@ public interface Logic {
         if (logics.length == 0)
             throw new IllegalArgumentException("logics array may not be empty!");
         // code
-        return new FunctionalLogic(model -> {
-            if (!logic0.evaluate(model))
+        return new FunctionalLogic(() -> {
+            if (!logic0.evaluate())
                 return false;
             for (Logic logic : logics)
-                if (!logic.evaluate(model))
+                if (!logic.evaluate())
                     return false;
             return true;
         });
@@ -211,10 +223,10 @@ public interface Logic {
             throw new IllegalArgumentException(
                     "the target value may not exceed the size of the logics array");
         // code
-        return new FunctionalLogic(model -> {
+        return new FunctionalLogic(() -> {
             int counter = 0;
             for (Logic logic : logics)
-                if (logic.evaluate(model))
+                if (logic.evaluate())
                     counter++;
             return counter == target;
         });

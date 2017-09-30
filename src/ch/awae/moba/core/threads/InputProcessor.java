@@ -10,10 +10,10 @@ public class InputProcessor extends AThreaded {
     final Model  model;
     final Sector sector;
 
-    public InputProcessor(final Host host, final Model model, final Sector sector) {
+    public InputProcessor(final Host host, final Sector sector) {
         super("inpt_proc_" + host.getName());
         this.host = host;
-        this.model = model;
+        this.model = Model.getInstance();
         this.sector = sector;
     }
 

@@ -6,7 +6,6 @@ import ch.awae.moba.core.model.ButtonProvider;
 import ch.awae.moba.core.model.Model;
 import ch.awae.moba.core.model.Sector;
 import ch.awae.moba.core.operators.Enabled;
-import ch.awae.moba.core.operators.External;
 import ch.awae.moba.core.operators.IOperation;
 import ch.awae.moba.core.operators.Loaded;
 import ch.awae.moba.core.operators.Operator;
@@ -18,8 +17,7 @@ import ch.awae.moba.core.util.Utils;
 @Operator("system.reset")
 public class ResetOperator implements IOperation {
 
-    @External
-    private Model model;
+    private final Model model = Model.getInstance();
 
     private final static Props props    = Configs.load("resetter");
     private final static long  ARM_TIME = props.getInt("arm_time");
@@ -36,7 +34,7 @@ public class ResetOperator implements IOperation {
 
     @Override
     public void update() {
-        boolean signal = this.trigger.evaluate(this.model);
+        boolean signal = this.trigger.evaluate();
 
         if (signal) {
             if (this.armed) {

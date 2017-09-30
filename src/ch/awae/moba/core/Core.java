@@ -3,7 +3,6 @@ package ch.awae.moba.core;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import ch.awae.moba.core.model.Model;
 import ch.awae.moba.core.model.Sector;
 import ch.awae.moba.core.operators.IOperator;
 import ch.awae.moba.core.operators.OperatorLoader;
@@ -30,37 +29,31 @@ public final class Core {
     }
 
     private final SPIThread       spi;
-    private final Model           model;
     private final ArrayList<Host> hosts;
 
     private Core() throws IOException {
         this.spi = new SPIThread();
-        this.model = new Model();
         this.hosts = new ArrayList<>();
-    }
-
-    public Model getModel() {
-        return this.model;
     }
 
     public void registerHost(SPIChannel channel, Sector sector, String title) {
         Pair<SPIHost, Host> host = HostFactory.createHost(sector, channel, title);
-        new InputProcessor(host._2, this.model, sector);
+        new InputProcessor(host._2, sector);
         this.hosts.add(host._2);
         this.spi.registerHost(host._1);
     }
 
     public void loadOperators() throws IllegalAccessException {
-        OperatorLoader.loadOperators(this.model);
+        OperatorLoader.loadOperators();
     }
 
     public void startConsole() {
-        new ConsoleThread(this.model).start();
+        new ConsoleThread().start();
     }
 
     public void start() throws InterruptedException {
-        new OutputProcessor(this.model, this.hosts.toArray(new Host[0]));
-        new OperatorThread(this.model);
+        new OutputProcessor(this.hosts);
+        new OperatorThread();
         this.spi.start();
         Thread.sleep(2000);
         for (String name : Registries.threads.getNames()) {

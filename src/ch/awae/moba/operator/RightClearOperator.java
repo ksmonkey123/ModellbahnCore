@@ -6,7 +6,6 @@ import ch.awae.moba.core.model.Model;
 import ch.awae.moba.core.model.Path;
 import ch.awae.moba.core.model.Sector;
 import ch.awae.moba.core.operators.Enabled;
-import ch.awae.moba.core.operators.External;
 import ch.awae.moba.core.operators.IOperation;
 import ch.awae.moba.core.operators.Loaded;
 import ch.awae.moba.core.operators.Operator;
@@ -16,8 +15,7 @@ import ch.awae.moba.core.operators.Operator;
 @Operator("right.clear")
 public class RightClearOperator implements IOperation {
 
-    @External
-    private Model model;
+    private final Model model = Model.getInstance();
 
     private Logic clear_a, clear_b;
 
@@ -30,9 +28,9 @@ public class RightClearOperator implements IOperation {
 
     @Override
     public void update() {
-        if (this.clear_a.evaluate(this.model))
+        if (this.clear_a.evaluate())
             this.model.paths.register(Path.R_CLR_A);
-        if (this.clear_b.evaluate(this.model))
+        if (this.clear_b.evaluate())
             this.model.paths.register(Path.R_CLR_B);
     }
 

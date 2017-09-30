@@ -8,23 +8,21 @@ import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import ch.awae.moba.core.model.Model;
 import ch.awae.moba.core.util.Registries;
 import ch.awae.moba.core.util.Utils;
 import io.github.lukehutch.fastclasspathscanner.FastClasspathScanner;
 
 public class OperatorLoader {
 
-    public static void loadOperators(Model model) throws IllegalAccessException, RuntimeException {
-        OperatorLoader loader = new OperatorLoader(model);
+    public static void loadOperators() throws IllegalAccessException, RuntimeException {
+        OperatorLoader loader = new OperatorLoader();
         loader.load();
     }
 
-    private final Model      model;
     private volatile boolean consumed = false;
 
-    private OperatorLoader(Model model) {
-        this.model = model;
+    private OperatorLoader() {
+        super();
     }
 
     private final Logger logger = Utils.getLogger();
@@ -123,15 +121,15 @@ public class OperatorLoader {
         }
     }
 
-    private void bindExternal(IOperation op, Field field)
-            throws RuntimeException, IllegalAccessException {
+    private void bindExternal(IOperation op, Field field) throws RuntimeException {
         String fieldName = op.getClass() + "#" + field.getName() + ":" + field.getType().getName();
         if (!field.isAccessible())
             field.setAccessible(true);
-        if (field.getType().equals(Model.class)) {
-            this.logger.info("binding model to field " + fieldName);
-            field.set(op, this.model);
-        } else {
+        /*
+         * if (field.getType().equals(Model.class)) {
+         * this.logger.info("binding model to field " + fieldName);
+         * field.set(op, this.model); } else
+         */ {
             throw new IllegalArgumentException("no binding available for field " + fieldName);
         }
     }

@@ -6,7 +6,6 @@ import ch.awae.moba.core.model.Model;
 import ch.awae.moba.core.model.Path;
 import ch.awae.moba.core.model.Sector;
 import ch.awae.moba.core.operators.Enabled;
-import ch.awae.moba.core.operators.External;
 import ch.awae.moba.core.operators.IOperation;
 import ch.awae.moba.core.operators.Loaded;
 import ch.awae.moba.core.operators.Operator;
@@ -16,8 +15,7 @@ import ch.awae.moba.core.operators.Operator;
 @Operator("center.macro")
 public class CenterMacroOperator implements IOperation {
 
-    @External
-    private Model model;
+    private final Model model = Model.getInstance();
 
     private final Logic logic_1;
     private final Logic logic_2;
@@ -35,11 +33,11 @@ public class CenterMacroOperator implements IOperation {
 
     @Override
     public void update() {
-        if (this.logic_1.evaluate(this.model)) {
+        if (this.logic_1.evaluate()) {
             this.model.paths.register(Path.C_S_2_B);
             this.model.paths.register(Path.C_S_3_A);
         }
-        if (this.logic_2.evaluate(this.model)) {
+        if (this.logic_2.evaluate()) {
             this.model.paths.register(Path.C_S_1_B);
             this.model.paths.register(Path.C_S_3_B);
         }

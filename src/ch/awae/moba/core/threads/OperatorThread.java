@@ -10,9 +10,9 @@ public class OperatorThread extends AThreaded {
 
     final Model model;
 
-    public OperatorThread(Model model) {
+    public OperatorThread() {
         super("operator");
-        this.model = model;
+        this.model = Model.getInstance();
     }
 
     @Override

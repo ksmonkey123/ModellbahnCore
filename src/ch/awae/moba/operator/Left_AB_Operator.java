@@ -6,7 +6,6 @@ import ch.awae.moba.core.model.Model;
 import ch.awae.moba.core.model.Path;
 import ch.awae.moba.core.model.Sector;
 import ch.awae.moba.core.operators.Enabled;
-import ch.awae.moba.core.operators.External;
 import ch.awae.moba.core.operators.IOperation;
 import ch.awae.moba.core.operators.Loaded;
 import ch.awae.moba.core.operators.Operator;
@@ -16,8 +15,7 @@ import ch.awae.moba.core.operators.Operator;
 @Operator("left.AB")
 public class Left_AB_Operator implements IOperation {
 
-    @External
-    private Model model;
+    private final Model model = Model.getInstance();
 
     private final Logic A_1;
     private final Logic B_1;
@@ -43,11 +41,11 @@ public class Left_AB_Operator implements IOperation {
 
     @Override
     public void update() {
-        if (this.A_1.evaluate(this.model))
+        if (this.A_1.evaluate())
             this.model.paths.register(Path.L_A_1_R);
-        if (this.B_1.evaluate(this.model))
+        if (this.B_1.evaluate())
             this.model.paths.register(Path.L_B_1_R);
-        if (this.B_2.evaluate(this.model))
+        if (this.B_2.evaluate())
             this.model.paths.register(Path.L_B_2_R);
     }
 

@@ -11,7 +11,6 @@ import ch.awae.moba.core.model.ButtonProvider;
 import ch.awae.moba.core.model.Model;
 import ch.awae.moba.core.model.Path;
 import ch.awae.moba.core.operators.Enabled;
-import ch.awae.moba.core.operators.External;
 import ch.awae.moba.core.operators.IOperation;
 import ch.awae.moba.core.operators.IOperator;
 import ch.awae.moba.core.operators.Loaded;
@@ -31,8 +30,7 @@ public class BottomQuickActivator implements IOperation {
     private static final long TRANSITION_SLEEP_LONG  = props.getInt("qm.transition_long");
     private static final long TRANSITION_SLEEP_SHORT = props.getInt("qm.transition_short");
 
-    @External
-    private Model model;
+    private final Model model = Model.getInstance();
 
     @Operator("bottom.supervisor")
     private IOperator self;
@@ -58,9 +56,9 @@ public class BottomQuickActivator implements IOperation {
     public void update() {
         long now = System.currentTimeMillis();
         long deltaT = now - this.timestamp;
-        boolean enable = this.enableGroup.evaluate(this.model);
-        boolean disable = this.disableGroup.evaluate(this.model);
-        boolean disableNow = this.disableFastGroup.evaluate(this.model);
+        boolean enable = this.enableGroup.evaluate();
+        boolean disable = this.disableGroup.evaluate();
+        boolean disableNow = this.disableFastGroup.evaluate();
 
         switch (this.state) {
             case BASE:
@@ -135,7 +133,7 @@ public class BottomQuickActivator implements IOperation {
         List<Path> paths = this.model.paths.getPaths(BOTTOM);
 
         Path cached = null;
-        if (!this.clear.evaluate(this.model))
+        if (!this.clear.evaluate())
             for (Path p : Path.BOTTOM_LEFT)
                 if (paths.contains(p)) {
                     cached = p;
