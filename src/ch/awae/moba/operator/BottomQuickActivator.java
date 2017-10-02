@@ -49,6 +49,9 @@ public class BottomQuickActivator implements IOperation {
     private final Logic disableGroup     = this.provider.group("qm.disable").any();
     private final Logic disableFastGroup = this.provider.group("qm.kill").any();
 
+    private final Path[] BOTTOM_LEFT = { Path.B_01_L, Path.B_02_L, Path.B_03_L, Path.B_04_L,
+            Path.B_05_L, Path.B_06_L, Path.B_07_L, Path.B_08_L, Path.B_09_L, Path.B_10_L };
+
     private State state = State.BASE;
     private long  timestamp;
 
@@ -104,7 +107,7 @@ public class BottomQuickActivator implements IOperation {
         List<Path> paths = this.model.paths.getPaths(BOTTOM);
 
         Path cached = null;
-        for (Path p : Path.BOTTOM_LEFT) {
+        for (Path p : BOTTOM_LEFT) {
             if (paths.contains(p)) {
                 cached = p;
                 break;
@@ -134,7 +137,7 @@ public class BottomQuickActivator implements IOperation {
 
         Path cached = null;
         if (!this.clear.evaluate())
-            for (Path p : Path.BOTTOM_LEFT)
+            for (Path p : BOTTOM_LEFT)
                 if (paths.contains(p)) {
                     cached = p;
                     break;

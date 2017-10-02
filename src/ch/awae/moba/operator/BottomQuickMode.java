@@ -30,6 +30,9 @@ public class BottomQuickMode implements IOperation {
     private final Logic[] tracks = this.provider.group("all_tracks").toArray();
     private final Logic   clear  = this.provider.button("clear");
 
+    private final Path[] BOTTOM_LEFT = { Path.B_01_L, Path.B_02_L, Path.B_03_L, Path.B_04_L,
+            Path.B_05_L, Path.B_06_L, Path.B_07_L, Path.B_08_L, Path.B_09_L, Path.B_10_L };
+
     @Override
     public void update() {
         List<Path> paths = this.model.paths.getPaths(Sector.BOTTOM);
@@ -48,7 +51,7 @@ public class BottomQuickMode implements IOperation {
                 this.model.paths.unregister(Path.B_DUMMY_L);
         }
         for (int i = 0; i < 10; i++) {
-            Path path = Path.BOTTOM_LEFT[i];
+            Path path = BOTTOM_LEFT[i];
             assert path != null;
             Logic button = this.tracks[i];
             if (button.evaluate()) {
