@@ -20,7 +20,7 @@ public class PathRegistry {
         for (int index = 0; index < this.paths.size(); index++) {
             Path p = this.paths.get(index);
             if (path.collides(p)) {
-                if (p.forced & !path.forced) {
+                if (p.priority > path.priority) {
                     this.logger.warning("cannot discard forced code '" + p.title + "'");
                     return;
                 }

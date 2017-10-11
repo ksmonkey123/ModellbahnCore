@@ -7,6 +7,7 @@ import java.util.logging.Logger;
 
 import ch.awae.moba.core.model.Model;
 import ch.awae.moba.core.model.Path;
+import ch.awae.moba.core.model.PathProvider;
 import ch.awae.moba.core.util.Controllable;
 import ch.awae.moba.core.util.Registries;
 import ch.awae.moba.core.util.Registry;
@@ -83,7 +84,8 @@ public class ConsoleThread extends Thread {
     }
 
     private void doUnregisterPath(String substring) {
-        for (Path p : Path.values()) {
+        Path p = PathProvider.getInstance().getPath(substring);
+        if (p != null) {
             if (p.title.equals(substring)) {
                 synchronized (this.model) {
                     synchronized (this.model.paths) {
@@ -97,12 +99,14 @@ public class ConsoleThread extends Thread {
                     return;
                 }
             }
+        } else {
+            System.out.println("path '" + substring + "' not found");
         }
-        System.out.println("path '" + substring + "' not found");
     }
 
     private void doRegisterPath(String substring) {
-        for (Path p : Path.values()) {
+        Path p = PathProvider.getInstance().getPath(substring);
+        if (p != null) {
             if (p.title.equals(substring)) {
                 synchronized (this.model) {
                     synchronized (this.model.paths) {
@@ -116,18 +120,20 @@ public class ConsoleThread extends Thread {
                 }
                 return;
             }
-        }
-        System.out.println("path '" + substring + "' not found");
+        } else
+            System.out.println("path '" + substring + "' not found");
     }
 
     private void listAllPaths() {
         System.out.println("Full Path Listing");
         System.out.println("=================");
-        Path[] paths = Path.values();
-        for (int i = 0; i < paths.length; i += 3) {
-            Path p1 = paths[i];
-            Path p2 = (i + 1) < paths.length ? paths[i + 1] : null;
-            Path p3 = (i + 2) < paths.length ? paths[i + 2] : null;
+
+        List<Path> paths = PathProvider.getInstance().getSorted();
+
+        for (int i = 0; i < paths.size(); i += 3) {
+            Path p1 = paths.get(i);
+            Path p2 = (i + 1) < paths.size() ? paths.get(i + 1) : null;
+            Path p3 = (i + 2) < paths.size() ? paths.get(i + 2) : null;
             String line = strech(p1 == null ? ""
                     : ((this.model.paths.isRegistered(p1) ? " * " : "   ") + p1.title), 20)
                     + strech(p2 == null ? ""

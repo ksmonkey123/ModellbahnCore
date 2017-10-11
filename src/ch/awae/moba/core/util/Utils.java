@@ -11,6 +11,7 @@ import java.util.logging.Logger;
 
 import ch.awae.moba.core.model.Model;
 import ch.awae.moba.core.model.Path;
+import ch.awae.moba.core.model.PathProvider;
 
 /**
  * Collection of utility methods
@@ -21,10 +22,18 @@ public final class Utils {
 
     private final static String REBOOT_COMMAND = "sudo reboot";
     private final static Logger logger;
+    private final static Path[] error, fatal;
 
     static {
         Handler systemOut = new ConsoleHandler();
         systemOut.setLevel(Level.ALL);
+
+        PathProvider pp = PathProvider.getInstance();
+
+        error = pp.getPaths("bottom.system_error", "left.system_error", "right.system_error",
+                "center.system_error");
+        fatal = pp.getPaths("bottom.fatal_error", "left.fatal_error", "right.fatal_error",
+                "center.fatal_error");
 
         logger = Logger.getLogger("core");
         logger.setLevel(Level.ALL);
@@ -56,18 +65,14 @@ public final class Utils {
      */
     public static void doReboot(Model model) {
         logger.info("initiating system reset");
-        model.paths.register(Path.SYSTEM_ERROR_B);
-        model.paths.register(Path.SYSTEM_ERROR_C);
-        model.paths.register(Path.SYSTEM_ERROR_L);
-        model.paths.register(Path.SYSTEM_ERROR_R);
+        for (Path p : error)
+            model.paths.register(p);
         try {
             Runtime.getRuntime().exec(REBOOT_COMMAND);
         } catch (Exception e) {
             logger.severe(e.toString());
-            model.paths.register(Path.SYSTEM_FATAL_B);
-            model.paths.register(Path.SYSTEM_FATAL_C);
-            model.paths.register(Path.SYSTEM_FATAL_L);
-            model.paths.register(Path.SYSTEM_FATAL_R);
+            for (Path p : fatal)
+                model.paths.register(p);
             async(() -> {
                 sleep(1000);
                 System.exit(-1);

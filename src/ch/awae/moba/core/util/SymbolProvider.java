@@ -22,7 +22,7 @@ public final class SymbolProvider {
     }
 
     public synchronized String next() {
-        return "$anon_#" + (this.index++);
+        return ("$anon_#" + (this.index++)).intern();
     }
 
 }
