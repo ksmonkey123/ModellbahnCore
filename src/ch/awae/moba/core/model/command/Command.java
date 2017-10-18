@@ -15,5 +15,7 @@ public class Command {
     public static UpdateCommand unregisterPath(Path path) {
         return new PathCommand(path, false);
     }
+    
+    
 
 }
