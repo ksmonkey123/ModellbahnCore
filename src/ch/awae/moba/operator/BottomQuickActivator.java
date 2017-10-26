@@ -127,8 +127,7 @@ public class BottomQuickActivator implements IOperation {
         }
 
         // lock controls
-        allGreen.issue(true);
-        Model.executeCommands();
+        allGreen.issueNow(true);
         // wait a bit
         Utils.sleep(TRANSITION_SLEEP_LONG);
         // unlock controls
@@ -161,8 +160,7 @@ public class BottomQuickActivator implements IOperation {
         this.logger.info("switching to BaseMode");
 
         // lock controls
-        allGreen.issue(true);
-        Model.executeCommands();
+        allGreen.issueNow(true);
 
         Utils.sleep(quick ? TRANSITION_SLEEP_SHORT : TRANSITION_SLEEP_LONG);
 
