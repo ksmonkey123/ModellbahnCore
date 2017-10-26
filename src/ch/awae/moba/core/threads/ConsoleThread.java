@@ -84,17 +84,13 @@ public class ConsoleThread extends Thread {
         Path p = PathProvider.getInstance().getPath(substring);
         if (p != null) {
             if (p.title.equals(substring)) {
-                synchronized (Model.class) {
-                    synchronized (Model.paths()) {
-                        if (!Model.paths().isRegistered(p))
-                            System.out.println("path '" + p.title + "' not active");
-                        else {
-                            Model.paths().unregister(p);
-                            System.out.println("removing path '" + p.title + "'");
-                        }
-                    }
-                    return;
+                if (!Model.isPathActive(p))
+                    System.out.println("path '" + p.title + "' not active");
+                else {
+                    p.issueNow(true);
+                    System.out.println("removing path '" + p.title + "'");
                 }
+                return;
             }
         } else {
             System.out.println("path '" + substring + "' not found");
@@ -105,15 +101,11 @@ public class ConsoleThread extends Thread {
         Path p = PathProvider.getInstance().getPath(substring);
         if (p != null) {
             if (p.title.equals(substring)) {
-                synchronized (Model.class) {
-                    synchronized (Model.paths()) {
-                        if (Model.paths().isRegistered(p))
-                            System.out.println("path '" + p.title + "' already active");
-                        else {
-                            Model.paths().register(p);
-                            System.out.println("registering path '" + p.title + "'");
-                        }
-                    }
+                if (Model.isPathActive(p))
+                    System.out.println("path '" + p.title + "' already active");
+                else {
+                    p.issueNow(true);
+                    System.out.println("registering path '" + p.title + "'");
                 }
                 return;
             }
@@ -132,15 +124,12 @@ public class ConsoleThread extends Thread {
             Path p2 = (i + 1) < paths.size() ? paths.get(i + 1) : null;
             Path p3 = (i + 2) < paths.size() ? paths.get(i + 2) : null;
             String line = strech(
-                    p1 == null ? "" : ((Model.paths().isRegistered(p1) ? " * " : "   ") + p1.title),
-                    20)
+                    p1 == null ? "" : ((Model.isPathActive(p1) ? " * " : "   ") + p1.title), 20)
                     + strech(
-                            p2 == null ? ""
-                                    : ((Model.paths().isRegistered(p2) ? " * " : "   ") + p2.title),
+                            p2 == null ? "" : ((Model.isPathActive(p2) ? " * " : "   ") + p2.title),
                             20)
                     + strech(
-                            p3 == null ? ""
-                                    : ((Model.paths().isRegistered(p3) ? " * " : "   ") + p3.title),
+                            p3 == null ? "" : ((Model.isPathActive(p3) ? " * " : "   ") + p3.title),
                             20);
             System.out.println(line);
         }
@@ -150,7 +139,7 @@ public class ConsoleThread extends Thread {
     private void listActivePaths() {
         System.out.println("Active Path Listing");
         System.out.println("=================");
-        List<Path> paths = Model.paths().getAllPaths();
+        List<Path> paths = Model.getActivePaths();
         for (int i = 0; i < paths.size(); i += 3) {
             Path p1 = paths.get(i);
             Path p2 = (i + 1) < paths.size() ? paths.get(i) : null;

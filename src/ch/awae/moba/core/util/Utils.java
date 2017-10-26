@@ -66,13 +66,15 @@ public final class Utils {
     public static void doReboot() {
         logger.info("initiating system reset");
         for (Path p : error)
-            Model.paths().register(p);
+            p.issue(true);
+        Model.executeCommands();
         try {
             Runtime.getRuntime().exec(REBOOT_COMMAND);
         } catch (Exception e) {
             logger.severe(e.toString());
             for (Path p : fatal)
-                Model.paths().register(p);
+                p.issue(true);
+            Model.executeCommands();
             async(() -> {
                 sleep(1000);
                 System.exit(-1);

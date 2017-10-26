@@ -7,22 +7,22 @@ import ch.awae.moba.core.spi.Host;
 
 public class AdditiveProcessor extends HostProcessor {
 
-	private final Sector sector;
+    private final Sector sector;
 
-	public AdditiveProcessor(Sector sector) {
-		this.sector = sector;
-	}
+    public AdditiveProcessor(Sector sector) {
+        this.sector = sector;
+    }
 
-	@Override
-	public void process(Host host) {
-		Model.buttons().setState(this.sector, host.read());
+    @Override
+    public void process(Host host) {
+        Model.buttons().setState(this.sector, host.read());
 
-		int data = 0;
-		for (Path p :Model.paths().getPaths(this.sector)) {
-			data += p.data;
-		}
+        int data = 0;
+        for (Path p : Model.getActivePaths(sector)) {
+            data += p.data;
+        }
 
-		host.write((short) ((data >> 8) & 0x0000ffff), (byte) (data & 0x000000ff));
-	}
+        host.write((short) ((data >> 8) & 0x0000ffff), (byte) (data & 0x000000ff));
+    }
 
 }

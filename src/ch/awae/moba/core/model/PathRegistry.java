@@ -14,7 +14,6 @@ public class PathRegistry {
     private ArrayList<Path> paths = new ArrayList<>();
 
     public synchronized void register(Path path) {
-        assertOwned();
         if (this.paths.contains(path))
             this.logger.info("path '" + path + "' already registered");
         for (int index = 0; index < this.paths.size(); index++) {
@@ -35,17 +34,13 @@ public class PathRegistry {
 
     }
 
-    private void assertOwned() {
-        if (!Thread.holdsLock(this))
-            throw new IllegalMonitorStateException("cannot update path registry without ownership");
-    }
-
     public synchronized List<Path> getAllPaths() {
-        return Collections.unmodifiableList(this.paths);
+        List<Path> result = new ArrayList<>();
+        Collections.copy(result, paths);
+        return result;
     }
 
     public synchronized void unregister(Path path) {
-        assertOwned();
         if (this.paths.remove(path))
             this.logger.info("discarding path '" + path.title + "'");
         else

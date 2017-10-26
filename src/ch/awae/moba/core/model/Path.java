@@ -61,14 +61,18 @@ public final class Path {
             return false;
         return true;
     }
-    
+
     // background command issuing
     public PathCommand getCommand(boolean state) {
         return new PathCommand(this, state);
     }
-    
+
     public void issue(boolean state) {
         getCommand(state).issue();
+    }
+
+    public void issueNow(boolean state) {
+        getCommand(state).issueNow();
     }
 
 }

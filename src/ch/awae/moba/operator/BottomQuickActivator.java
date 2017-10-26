@@ -106,8 +106,17 @@ public class BottomQuickActivator implements IOperation {
     // TRANSITION METHODS
 
     private void enableQM() {
+        this.logger.info("switching to QickMode");
+
+        // disable BM and supervisor
+        this.base.halt();
+        this.self.halt();
+
+        // empty command queue
+        Model.executeCommands();
+
         // CACHE POTENTIAL ACTIVE CODE (ONLY <LEFT> IS VALID)
-        List<Path> paths = Model.paths().getPaths(BOTTOM);
+        List<Path> paths = Model.getActivePaths(BOTTOM);
 
         Path cached = null;
         for (Path p : BOTTOM_LEFT) {
@@ -116,27 +125,31 @@ public class BottomQuickActivator implements IOperation {
                 break;
             }
         }
-        this.logger.info("switching to QickMode");
 
-        // disable BM and supervisor
-        this.base.halt();
-        this.self.halt();
         // lock controls
-        Model.paths().register(allGreen);
+        allGreen.issue(true);
+        Model.executeCommands();
+        // wait a bit
         Utils.sleep(TRANSITION_SLEEP_LONG);
         // unlock controls
-        Model.paths().unregister(allGreen);
+        allGreen.issue(false);
         // restore cached path
         if (cached != null)
-            Model.paths().register(cached);
+            cached.issue(true);
+        Model.executeCommands();
         // enable QM and supervisor
         this.qm.start();
         this.self.start();
     }
 
     private void disableQM(boolean quick) {
+        // disable operators and flush command queue
+        qm.halt();
+        self.halt();
+        Model.executeCommands();
+
         // CACHE POTENTIAL ACTIVE CODE (ONLY <LEFT> IS VALID)
-        List<Path> paths = Model.paths().getPaths(BOTTOM);
+        List<Path> paths = Model.getActivePaths(BOTTOM);
 
         Path cached = null;
         if (!this.clear.evaluate())
@@ -147,21 +160,20 @@ public class BottomQuickActivator implements IOperation {
                 }
         this.logger.info("switching to BaseMode");
 
-        // disable QM and supervisor
-        this.qm.halt();
-        this.self.halt();
         // lock controls
-        Model.paths().register(allGreen);
+        allGreen.issue(true);
+        Model.executeCommands();
+
         Utils.sleep(quick ? TRANSITION_SLEEP_SHORT : TRANSITION_SLEEP_LONG);
-        // unlock controls
-        Model.paths().unregister(allGreen);
-        // restore cached path
+
+        // unlock controls and restore cached path
+        allGreen.issue(false);
         if (cached != null)
-            Model.paths().register(cached);
+            cached.issue(true);
+        Model.executeCommands();
         // enable BM and supervisor
         this.base.start();
         this.self.start();
-
     }
 
     private static enum State {

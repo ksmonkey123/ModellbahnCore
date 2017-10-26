@@ -37,16 +37,16 @@ public class BottomQuickMode implements IOperation {
 
     @Override
     public void update() {
-        List<Path> paths = Model.paths().getPaths(Sector.BOTTOM);
+        List<Path> paths = Model.getActivePaths(Sector.BOTTOM);
 
         if (this.clear.evaluate()) {
-            for (Path path : Model.paths().getPaths(Sector.BOTTOM)) {
+            for (Path path : paths) {
                 if (path != dummy && path.priority == 0)
                     path.issue(false);
             }
         }
 
-        if (paths.isEmpty() || (paths.size() == 1) && paths.contains(dummy))
+        if (paths.isEmpty() || ((paths.size() == 1) && paths.contains(dummy)))
             dummy.issue(System.currentTimeMillis() % (2 * BLINK_TIME) > BLINK_TIME);
 
         for (int i = 0; i < 10; i++) {

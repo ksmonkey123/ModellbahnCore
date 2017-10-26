@@ -1,6 +1,5 @@
 package ch.awae.moba.core.threads;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import ch.awae.moba.core.model.Model;
@@ -22,7 +21,7 @@ public class OutputProcessor extends AThreaded {
     @Override
     protected void step() throws InterruptedException {
         long start = System.currentTimeMillis();
-        List<Path> paths = this.getPaths();
+        List<Path> paths = Model.getActivePaths();
         // assemble paths
         int[] data = new int[Sector.values().length];
         for (Path path : paths) {
@@ -40,12 +39,6 @@ public class OutputProcessor extends AThreaded {
         long Δt = TARGET_UPDATE_DURATION_MILLIS - (end - start);
         if (Δt > 0)
             Thread.sleep(Δt);
-    }
-
-    private List<Path> getPaths() {
-        synchronized (Model.class) {
-            return new ArrayList<>(Model.paths().getAllPaths());
-        }
     }
 
 }
