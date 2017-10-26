@@ -4,8 +4,8 @@ import ch.awae.moba.core.Configs;
 import ch.awae.moba.core.logic.Logic;
 import ch.awae.moba.core.logic.LogicGroup;
 import ch.awae.moba.core.model.ButtonProvider;
-import ch.awae.moba.core.model.Model;
 import ch.awae.moba.core.model.Path;
+import ch.awae.moba.core.model.PathProvider;
 import ch.awae.moba.core.model.Sector;
 import ch.awae.moba.core.operators.Enabled;
 import ch.awae.moba.core.operators.IOperation;
@@ -18,8 +18,6 @@ import ch.awae.moba.core.util.Props;
 @Operator("right.A")
 public class Right_A_Operator implements IOperation {
 
-    private final Model model = Model.getInstance();
-
     private final static Props props           = Configs.load("station");
     private final static long  DECORATOR_DELAY = props.getInt("decoration_delay");
 
@@ -28,6 +26,8 @@ public class Right_A_Operator implements IOperation {
 
     private final Logic A_1, A_2, A_3, A_4;
 
+    private final Path[] path_A_R, path_A_I, path_A_O;
+
     private Logic   current;
     private boolean inbound;
     private long    activeTime;
@@ -35,8 +35,8 @@ public class Right_A_Operator implements IOperation {
     private boolean processed;
 
     public Right_A_Operator() {
-
         ButtonProvider p = new ButtonProvider(Sector.RIGHT);
+        PathProvider pathProvider = PathProvider.getInstance();
 
         LogicGroup paths = p.group("paths");
         LogicGroup tracks = p.group("tracks");
@@ -58,6 +58,10 @@ public class Right_A_Operator implements IOperation {
         this.A_2 = this._A.and(this._2);
         this.A_3 = this._A.and(this._3);
         this.A_4 = this._A.and(this._4);
+
+        path_A_R = pathProvider.getPaths("right.A1_R", "right.A2_R", "right.A3_R", "right.A4_R");
+        path_A_I = pathProvider.getPaths("right.A1_I", "right.A2_I", "right.A3_I", "right.A4_I");
+        path_A_O = pathProvider.getPaths("right.A1_O", "right.A2_O", "right.A3_O", "right.A4_O");
     }
 
     @Override
@@ -73,26 +77,25 @@ public class Right_A_Operator implements IOperation {
                 this.inbound = false;
             // check for combo
             if (this.A_1.evaluate()) {
-                this.model.paths.register(Path.R_A_1_R);
                 this.trackID = 1;
                 this.current = this.A_1;
                 this.activeTime = System.currentTimeMillis();
             } else if (this.A_2.evaluate()) {
-                this.model.paths.register(Path.R_A_2_R);
                 this.trackID = 2;
                 this.current = this.A_2;
                 this.activeTime = System.currentTimeMillis();
             } else if (this.A_3.evaluate()) {
-                this.model.paths.register(Path.R_A_3_R);
                 this.trackID = 3;
                 this.current = this.A_3;
                 this.activeTime = System.currentTimeMillis();
             } else if (this.A_4.evaluate()) {
-                this.model.paths.register(Path.R_A_4_R);
                 this.trackID = 4;
                 this.current = this.A_4;
                 this.activeTime = System.currentTimeMillis();
             }
+            if (trackID >= 1 && trackID <= 4)
+                path_A_R[trackID - 1].issue(true);
+
         } else {
             // active mode => check if current still holds
             if (curr.evaluate()) {
@@ -101,22 +104,8 @@ public class Right_A_Operator implements IOperation {
                 if ((deltaT > DECORATOR_DELAY) && !this.processed) {
                     this.processed = true;
                     // decorate
-                    switch (this.trackID) {
-                        case 1:
-                            this.model.paths.register(this.inbound ? Path.R_A_1_I : Path.R_A_1_O);
-                            break;
-                        case 2:
-                            this.model.paths.register(this.inbound ? Path.R_A_2_I : Path.R_A_2_O);
-                            break;
-                        case 3:
-                            this.model.paths.register(this.inbound ? Path.R_A_3_I : Path.R_A_3_O);
-                            break;
-                        case 4:
-                            this.model.paths.register(this.inbound ? Path.R_A_4_I : Path.R_A_4_O);
-                            break;
-                        default:
-                            // do nothing
-                    }
+                    if (trackID >= 1 && trackID <= 4)
+                        (inbound ? path_A_I : path_A_O)[trackID - 1].issue(true);
                 }
 
             } else {

@@ -7,6 +7,7 @@ import ch.awae.moba.core.logic.Logic;
 import ch.awae.moba.core.model.ButtonProvider;
 import ch.awae.moba.core.model.Model;
 import ch.awae.moba.core.model.Path;
+import ch.awae.moba.core.model.PathProvider;
 import ch.awae.moba.core.model.Sector;
 import ch.awae.moba.core.operators.Enabled;
 import ch.awae.moba.core.operators.IOperation;
@@ -19,43 +20,41 @@ import ch.awae.moba.core.util.Props;
 @Operator("bottom.qm")
 public class BottomQuickMode implements IOperation {
 
-    private final Model model = Model.getInstance();
-
     private static final Props props = Configs.load("bottom.qma");
 
     private static final long BLINK_TIME = props.getInt("qm.blink_time");
 
-    private final ButtonProvider provider = new ButtonProvider(Sector.BOTTOM);
+    private final ButtonProvider provider     = new ButtonProvider(Sector.BOTTOM);
+    private final PathProvider   pathProvider = PathProvider.getInstance();
 
     private final Logic[] tracks = this.provider.group("all_tracks").toArray();
     private final Logic   clear  = this.provider.button("clear");
 
-    private final Path[] BOTTOM_LEFT = { Path.B_01_L, Path.B_02_L, Path.B_03_L, Path.B_04_L,
-            Path.B_05_L, Path.B_06_L, Path.B_07_L, Path.B_08_L, Path.B_09_L, Path.B_10_L };
+    private final Path   dummy       = pathProvider.getPath("bottom.dummy_l");
+    private final Path[] BOTTOM_LEFT = pathProvider.getPaths("bottom.01", "bottom.02", "bottom.03",
+            "bottom.04", "bottom.05", "bottom.06", "bottom.07", "bottom.08", "bottom.09",
+            "bottom.10");
 
     @Override
     public void update() {
-        List<Path> paths = this.model.paths.getPaths(Sector.BOTTOM);
+        List<Path> paths = Model.paths().getPaths(Sector.BOTTOM);
 
         if (this.clear.evaluate()) {
-            for (Path path : this.model.paths.getPaths(Sector.BOTTOM)) {
-                if (path != Path.B_DUMMY_L && !path.forced)
-                    this.model.paths.unregister(path);
+            for (Path path : Model.paths().getPaths(Sector.BOTTOM)) {
+                if (path != dummy && path.priority == 0)
+                    path.issue(false);
             }
         }
 
-        if (paths.isEmpty() || (paths.size() == 1) && paths.contains(Path.B_DUMMY_L)) {
-            if (System.currentTimeMillis() % (2 * BLINK_TIME) > BLINK_TIME)
-                this.model.paths.register(Path.B_DUMMY_L);
-            else
-                this.model.paths.unregister(Path.B_DUMMY_L);
-        }
+        if (paths.isEmpty() || (paths.size() == 1) && paths.contains(dummy))
+            dummy.issue(System.currentTimeMillis() % (2 * BLINK_TIME) > BLINK_TIME);
+
         for (int i = 0; i < 10; i++) {
             Path path = BOTTOM_LEFT[i];
             assert path != null;
             Logic button = this.tracks[i];
             if (button.evaluate()) {
-                this.model.paths.register(path);
+                path.issue(true);
                 return;
             }
         }

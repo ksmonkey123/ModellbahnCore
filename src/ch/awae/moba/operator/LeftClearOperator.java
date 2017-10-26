@@ -2,8 +2,8 @@ package ch.awae.moba.operator;
 
 import ch.awae.moba.core.logic.Logic;
 import ch.awae.moba.core.model.ButtonProvider;
-import ch.awae.moba.core.model.Model;
 import ch.awae.moba.core.model.Path;
+import ch.awae.moba.core.model.PathProvider;
 import ch.awae.moba.core.model.Sector;
 import ch.awae.moba.core.operators.Enabled;
 import ch.awae.moba.core.operators.IOperation;
@@ -15,14 +15,13 @@ import ch.awae.moba.core.operators.Operator;
 @Operator("left.clear")
 public class LeftClearOperator implements IOperation {
 
-    private final Model model = Model.getInstance();
-
-    private Logic clear = ButtonProvider.getButton(Sector.LEFT, "clear");
+    private Logic clear   = ButtonProvider.getButton(Sector.LEFT, "clear");
+    private Path  p_clear = PathProvider.getInstance().getPath("left.clear");
 
     @Override
     public void update() {
-        if (this.clear.evaluate())
-            this.model.paths.register(Path.L_CLEAR);
+        if (clear.evaluate())
+            p_clear.issue(true);
     }
 
 }

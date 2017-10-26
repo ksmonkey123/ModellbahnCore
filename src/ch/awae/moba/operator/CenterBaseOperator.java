@@ -2,8 +2,8 @@ package ch.awae.moba.operator;
 
 import ch.awae.moba.core.logic.Logic;
 import ch.awae.moba.core.model.ButtonProvider;
-import ch.awae.moba.core.model.Model;
 import ch.awae.moba.core.model.Path;
+import ch.awae.moba.core.model.PathProvider;
 import ch.awae.moba.core.model.Sector;
 import ch.awae.moba.core.operators.Enabled;
 import ch.awae.moba.core.operators.IOperation;
@@ -15,28 +15,26 @@ import ch.awae.moba.core.operators.Operator;
 @Operator("center.base")
 public class CenterBaseOperator implements IOperation {
 
-    private final Model model = Model.getInstance();
-
-    private final ButtonProvider provider = new ButtonProvider(Sector.CENTER);
+    private final ButtonProvider provider     = new ButtonProvider(Sector.CENTER);
+    private final PathProvider   pathProvider = PathProvider.getInstance();
 
     private final Logic[] buttons = this.provider.group("buttons").toArray();
     private final Logic   clear   = this.provider.button("clear");
 
-    private final Path[] PATHS = { Path.C_S_1_A, Path.C_S_1_B, Path.C_S_2_A, Path.C_S_2_B,
-            Path.C_S_3_A, Path.C_S_3_B, Path.C_S_4_A, Path.C_S_4_B };
+    private final Path   p_clear = pathProvider.getPath("center.clear");
+    private final Path[] paths   = pathProvider.getPaths("center.1a", "center.1b", "center.2a",
+            "center.2b", "center.3a", "center.3b", "center.4a", "center.4b");
 
     @Override
     public void update() {
-        if (this.clear.evaluate()) {
-            this.model.paths.register(Path.C_CLEAR);
+        if (clear.evaluate()) {
+            p_clear.issue(true);
             return;
         }
 
-        for (int i = 0; i < this.buttons.length; i++) {
-            if (this.buttons[i].evaluate())
-                this.model.paths.register(this.PATHS[i]);
-        }
-
+        for (int i = 0; i < buttons.length; i++)
+            if (buttons[i].evaluate())
+                paths[i].issue(true);
     }
 
 }

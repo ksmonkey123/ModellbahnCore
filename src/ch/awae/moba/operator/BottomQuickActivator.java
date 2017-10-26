@@ -10,6 +10,7 @@ import ch.awae.moba.core.logic.Logic;
 import ch.awae.moba.core.model.ButtonProvider;
 import ch.awae.moba.core.model.Model;
 import ch.awae.moba.core.model.Path;
+import ch.awae.moba.core.model.PathProvider;
 import ch.awae.moba.core.operators.Enabled;
 import ch.awae.moba.core.operators.IOperation;
 import ch.awae.moba.core.operators.IOperator;
@@ -39,16 +40,20 @@ public class BottomQuickActivator implements IOperation {
     @Operator("bottom.qm")
     private IOperator qm;
 
-    private final Logger         logger   = Utils.getLogger();
-    private final ButtonProvider provider = new ButtonProvider(BOTTOM);
+    private final Logger         logger       = Utils.getLogger();
+    private final ButtonProvider provider     = new ButtonProvider(BOTTOM);
+    private final PathProvider   pathProvider = PathProvider.getInstance();
 
     private final Logic clear            = this.provider.button("clear");
     private final Logic enableGroup      = this.provider.group("qm.enable").any();
     private final Logic disableGroup     = this.provider.group("qm.disable").any();
     private final Logic disableFastGroup = this.provider.group("qm.kill").any();
 
-    private final Path[] BOTTOM_LEFT = { Path.B_01_L, Path.B_02_L, Path.B_03_L, Path.B_04_L,
-            Path.B_05_L, Path.B_06_L, Path.B_07_L, Path.B_08_L, Path.B_09_L, Path.B_10_L };
+    private final Path[] BOTTOM_LEFT = pathProvider.getPaths("bottom.01", "bottom.02", "bottom.03",
+            "bottom.04", "bottom.05", "bottom.06", "bottom.07", "bottom.08", "bottom.09",
+            "bottom.10");
+
+    private final Path allGreen = pathProvider.getPath("bottom.system_error");
 
     private State state = State.BASE;
     private long  timestamp;
@@ -102,7 +107,7 @@ public class BottomQuickActivator implements IOperation {
 
     private void enableQM() {
         // CACHE POTENTIAL ACTIVE CODE (ONLY <LEFT> IS VALID)
-        List<Path> paths = this.model.paths.getPaths(BOTTOM);
+        List<Path> paths = Model.paths().getPaths(BOTTOM);
 
         Path cached = null;
         for (Path p : BOTTOM_LEFT) {
@@ -117,13 +122,13 @@ public class BottomQuickActivator implements IOperation {
         this.base.halt();
         this.self.halt();
         // lock controls
-        this.model.paths.register(Path.SYSTEM_ERROR_B);
+        Model.paths().register(allGreen);
         Utils.sleep(TRANSITION_SLEEP_LONG);
         // unlock controls
-        this.model.paths.unregister(Path.SYSTEM_ERROR_B);
+        Model.paths().unregister(allGreen);
         // restore cached path
         if (cached != null)
-            this.model.paths.register(cached);
+            Model.paths().register(cached);
         // enable QM and supervisor
         this.qm.start();
         this.self.start();
@@ -131,7 +136,7 @@ public class BottomQuickActivator implements IOperation {
 
     private void disableQM(boolean quick) {
         // CACHE POTENTIAL ACTIVE CODE (ONLY <LEFT> IS VALID)
-        List<Path> paths = this.model.paths.getPaths(BOTTOM);
+        List<Path> paths = Model.paths().getPaths(BOTTOM);
 
         Path cached = null;
         if (!this.clear.evaluate())
@@ -146,13 +151,13 @@ public class BottomQuickActivator implements IOperation {
         this.qm.halt();
         this.self.halt();
         // lock controls
-        this.model.paths.register(Path.SYSTEM_ERROR_B);
+        Model.paths().register(allGreen);
         Utils.sleep(quick ? TRANSITION_SLEEP_SHORT : TRANSITION_SLEEP_LONG);
         // unlock controls
-        this.model.paths.unregister(Path.SYSTEM_ERROR_B);
+        Model.paths().unregister(allGreen);
         // restore cached path
         if (cached != null)
-            this.model.paths.register(cached);
+            Model.paths().register(cached);
         // enable BM and supervisor
         this.base.start();
         this.self.start();

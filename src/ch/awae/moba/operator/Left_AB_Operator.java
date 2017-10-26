@@ -2,8 +2,8 @@ package ch.awae.moba.operator;
 
 import ch.awae.moba.core.logic.Logic;
 import ch.awae.moba.core.model.ButtonProvider;
-import ch.awae.moba.core.model.Model;
 import ch.awae.moba.core.model.Path;
+import ch.awae.moba.core.model.PathProvider;
 import ch.awae.moba.core.model.Sector;
 import ch.awae.moba.core.operators.Enabled;
 import ch.awae.moba.core.operators.IOperation;
@@ -15,14 +15,12 @@ import ch.awae.moba.core.operators.Operator;
 @Operator("left.AB")
 public class Left_AB_Operator implements IOperation {
 
-    private final Model model = Model.getInstance();
-
-    private final Logic A_1;
-    private final Logic B_1;
-    private final Logic B_2;
+    private final Logic A_1, B_1, B_2;
+    private final Path  A_1_R, B_1_R, B_2_R;
 
     public Left_AB_Operator() {
         ButtonProvider provider = new ButtonProvider(Sector.LEFT);
+        PathProvider pathProvider = PathProvider.getInstance();
 
         Logic one_pth = provider.group("paths").count(1);
         Logic one_trk = provider.group("tracks").count(1);
@@ -37,16 +35,20 @@ public class Left_AB_Operator implements IOperation {
         this.A_1 = _A.and(_1);
         this.B_1 = _B.and(_1);
         this.B_2 = _B.and(_2);
+
+        this.A_1_R = pathProvider.getPath("left.A1_R");
+        this.B_1_R = pathProvider.getPath("left.B1_R");
+        this.B_2_R = pathProvider.getPath("left.B2_R");
     }
 
     @Override
     public void update() {
-        if (this.A_1.evaluate())
-            this.model.paths.register(Path.L_A_1_R);
-        if (this.B_1.evaluate())
-            this.model.paths.register(Path.L_B_1_R);
-        if (this.B_2.evaluate())
-            this.model.paths.register(Path.L_B_2_R);
+        if (A_1.evaluate())
+            A_1_R.issue(true);
+        if (B_1.evaluate())
+            B_1_R.issue(true);
+        if (B_2.evaluate())
+            B_2_R.issue(true);
     }
 
 }

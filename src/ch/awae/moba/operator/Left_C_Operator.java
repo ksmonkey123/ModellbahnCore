@@ -4,8 +4,8 @@ import ch.awae.moba.core.Configs;
 import ch.awae.moba.core.logic.Logic;
 import ch.awae.moba.core.logic.LogicGroup;
 import ch.awae.moba.core.model.ButtonProvider;
-import ch.awae.moba.core.model.Model;
 import ch.awae.moba.core.model.Path;
+import ch.awae.moba.core.model.PathProvider;
 import ch.awae.moba.core.model.Sector;
 import ch.awae.moba.core.operators.Enabled;
 import ch.awae.moba.core.operators.IOperation;
@@ -26,6 +26,8 @@ public class Left_C_Operator implements IOperation {
 
     private final Logic C_1, C_2, C_3, C_4;
 
+    private final Path[] path_R, path_I, path_O;
+
     private Logic   current;
     private boolean inbound;
     private long    activeTime;
@@ -34,6 +36,7 @@ public class Left_C_Operator implements IOperation {
 
     public Left_C_Operator() {
         ButtonProvider provider = new ButtonProvider(Sector.LEFT);
+        PathProvider pathProvider = PathProvider.getInstance();
 
         Logic NC = provider.button("clear").not();
 
@@ -55,6 +58,10 @@ public class Left_C_Operator implements IOperation {
         this.C_2 = this._C.and(this._2);
         this.C_3 = this._C.and(this._3);
         this.C_4 = this._C.and(this._4);
+
+        this.path_R = pathProvider.getPaths("left.C1_R", "left.C2_R", "left.C3_R", "left.C4_R");
+        this.path_I = pathProvider.getPaths("left.C1_I", "left.C2_I", "left.C3_I", "left.C4_I");
+        this.path_O = pathProvider.getPaths("left.C1_O", "left.C2_O", "left.C3_O", "left.C4_O");
     }
 
     @Override
@@ -70,22 +77,22 @@ public class Left_C_Operator implements IOperation {
                 this.inbound = false;
             // check for combo
             if (this.C_1.evaluate()) {
-                this.model.paths.register(Path.L_C_1_R);
+                path_R[0].issue(true);
                 this.trackID = 1;
                 this.current = this.C_1;
                 this.activeTime = System.currentTimeMillis();
             } else if (this.C_2.evaluate()) {
-                this.model.paths.register(Path.L_C_2_R);
+                path_R[1].issue(true);
                 this.trackID = 2;
                 this.current = this.C_2;
                 this.activeTime = System.currentTimeMillis();
             } else if (this.C_3.evaluate()) {
-                this.model.paths.register(Path.L_C_3_R);
+                path_R[2].issue(true);
                 this.trackID = 3;
                 this.current = this.C_3;
                 this.activeTime = System.currentTimeMillis();
             } else if (this.C_4.evaluate()) {
-                this.model.paths.register(Path.L_C_4_R);
+                path_R[3].issue(true);
                 this.trackID = 4;
                 this.current = this.C_4;
                 this.activeTime = System.currentTimeMillis();
@@ -98,24 +105,9 @@ public class Left_C_Operator implements IOperation {
                 if ((deltaT > DECORATOR_DELAY) && !this.processed) {
                     this.processed = true;
                     // decorate
-                    switch (this.trackID) {
-                        case 1:
-                            this.model.paths.register(this.inbound ? Path.L_C_1_I : Path.L_C_1_O);
-                            break;
-                        case 2:
-                            this.model.paths.register(this.inbound ? Path.L_C_2_I : Path.L_C_2_O);
-                            break;
-                        case 3:
-                            this.model.paths.register(this.inbound ? Path.L_C_3_I : Path.L_C_3_O);
-                            break;
-                        case 4:
-                            this.model.paths.register(this.inbound ? Path.L_C_4_I : Path.L_C_4_O);
-                            break;
-                        default:
-                            // do nothing
-                    }
+                    if (trackID >= 1 && trackID <= 4)
+                        (inbound ? path_I : path_O)[trackID - 1].issue(true);
                 }
-
             } else {
                 // degraded => return to base mode
                 this.trackID = 0;
