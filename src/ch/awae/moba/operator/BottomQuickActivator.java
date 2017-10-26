@@ -30,8 +30,6 @@ public class BottomQuickActivator implements IOperation {
     private static final long TRANSITION_SLEEP_LONG  = props.getInt("qm.transition_long");
     private static final long TRANSITION_SLEEP_SHORT = props.getInt("qm.transition_short");
 
-    private final Model model = Model.getInstance();
-
     @Operator("bottom.supervisor")
     private IOperator self;
 

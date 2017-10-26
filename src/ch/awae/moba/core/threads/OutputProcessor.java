@@ -12,12 +12,10 @@ public class OutputProcessor extends AThreaded {
 
     private final long TARGET_UPDATE_DURATION_MILLIS = 20;
 
-    private final Model      model;
     private final List<Host> hosts;
 
     public OutputProcessor(final List<Host> hosts) {
         super("oupt_proc");
-        this.model = Model.getInstance();
         this.hosts = hosts;
     }
 
@@ -45,8 +43,8 @@ public class OutputProcessor extends AThreaded {
     }
 
     private List<Path> getPaths() {
-        synchronized (this.model) {
-            return new ArrayList<>(this.model.paths.getAllPaths());
+        synchronized (Model.class) {
+            return new ArrayList<>(Model.paths().getAllPaths());
         }
     }
 

@@ -20,7 +20,6 @@ final class Button implements Logic {
 
     private final Sector sector;
     private final int    mask;
-    private final Model  model;
 
     /**
      * Creates a new Button instance
@@ -41,7 +40,6 @@ final class Button implements Logic {
     Button(Sector sector, int mask) {
         this.sector = sector;
         this.mask = mask;
-        this.model = Model.getInstance();
         assertInvariant();
     }
 
@@ -68,7 +66,7 @@ final class Button implements Logic {
 
     @Override
     public boolean evaluate() {
-        short state = model.buttons.getState(this.sector);
+        short state = Model.buttons().getState(this.sector);
         return ((state & this.mask) & 0x0000ffff) > 0;
     }
 

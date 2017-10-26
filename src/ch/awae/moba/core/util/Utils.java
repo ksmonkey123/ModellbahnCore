@@ -63,16 +63,16 @@ public final class Utils {
      * @param model
      *            the model to apply the indications to
      */
-    public static void doReboot(Model model) {
+    public static void doReboot() {
         logger.info("initiating system reset");
         for (Path p : error)
-            model.paths.register(p);
+            Model.paths().register(p);
         try {
             Runtime.getRuntime().exec(REBOOT_COMMAND);
         } catch (Exception e) {
             logger.severe(e.toString());
             for (Path p : fatal)
-                model.paths.register(p);
+                Model.paths().register(p);
             async(() -> {
                 sleep(1000);
                 System.exit(-1);

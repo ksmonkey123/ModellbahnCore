@@ -1,5 +1,7 @@
 package ch.awae.moba.core.model;
 
+import ch.awae.moba.core.model.command.PathCommand;
+
 public final class Path {
 
     // ######## FIELDS ############
@@ -61,6 +63,12 @@ public final class Path {
     }
     
     // background command issuing
+    public PathCommand getCommand(boolean state) {
+        return new PathCommand(this, state);
+    }
     
+    public void issue(boolean state) {
+        getCommand(state).issue();
+    }
 
 }

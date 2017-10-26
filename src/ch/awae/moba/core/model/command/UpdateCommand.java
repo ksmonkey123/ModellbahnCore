@@ -6,7 +6,7 @@ public interface UpdateCommand {
     // marker interface
     
     default void issue() {
-        Model.getInstance().issueCommand(this);
+        Model.issueCommand(this);
     }
     
 }

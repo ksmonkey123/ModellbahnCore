@@ -9,17 +9,16 @@ public class AdditiveProcessor extends HostProcessor {
 
 	private final Sector sector;
 
-	public AdditiveProcessor(Model model, Sector sector) {
-		super(model);
+	public AdditiveProcessor(Sector sector) {
 		this.sector = sector;
 	}
 
 	@Override
 	public void process(Host host) {
-		this.model.buttons.setState(this.sector, host.read());
+		Model.buttons().setState(this.sector, host.read());
 
 		int data = 0;
-		for (Path p : this.model.paths.getPaths(this.sector)) {
+		for (Path p :Model.paths().getPaths(this.sector)) {
 			data += p.data;
 		}
 

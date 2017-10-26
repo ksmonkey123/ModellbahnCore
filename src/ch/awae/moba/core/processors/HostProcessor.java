@@ -5,19 +5,13 @@ import ch.awae.moba.core.spi.Host;
 
 public abstract class HostProcessor {
 
-	protected final Model model;
+    public final void performUpdate(Host host) {
+        this.process(host);
+        synchronized (Model.class) {
+            Model.class.notifyAll();
+        }
+    }
 
-	public HostProcessor(Model model) {
-		this.model = model;
-	}
-
-	public final void performUpdate(Host host) {
-		this.process(host);
-		synchronized (this.model) {
-			this.model.notifyAll();
-		}
-	}
-
-	abstract void process(Host host);
+    abstract void process(Host host);
 
 }

@@ -22,10 +22,7 @@ public class ConsoleThread extends Thread {
 
     private final Scanner scanner = new Scanner(System.in);
 
-    private Model model;
-
     public ConsoleThread() {
-        this.model = Model.getInstance();
         this.setDaemon(true);
     }
 
@@ -73,7 +70,7 @@ public class ConsoleThread extends Thread {
                 else if (command.startsWith("path - "))
                     doUnregisterPath(command.substring(7));
                 else if (command.equals("reboot"))
-                    Utils.doReboot(this.model);
+                    Utils.doReboot();
                 else
                     System.out.println("unknown command: " + command);
 
@@ -87,12 +84,12 @@ public class ConsoleThread extends Thread {
         Path p = PathProvider.getInstance().getPath(substring);
         if (p != null) {
             if (p.title.equals(substring)) {
-                synchronized (this.model) {
-                    synchronized (this.model.paths) {
-                        if (!this.model.paths.isRegistered(p))
+                synchronized (Model.class) {
+                    synchronized (Model.paths()) {
+                        if (!Model.paths().isRegistered(p))
                             System.out.println("path '" + p.title + "' not active");
                         else {
-                            this.model.paths.unregister(p);
+                            Model.paths().unregister(p);
                             System.out.println("removing path '" + p.title + "'");
                         }
                     }
@@ -108,12 +105,12 @@ public class ConsoleThread extends Thread {
         Path p = PathProvider.getInstance().getPath(substring);
         if (p != null) {
             if (p.title.equals(substring)) {
-                synchronized (this.model) {
-                    synchronized (this.model.paths) {
-                        if (this.model.paths.isRegistered(p))
+                synchronized (Model.class) {
+                    synchronized (Model.paths()) {
+                        if (Model.paths().isRegistered(p))
                             System.out.println("path '" + p.title + "' already active");
                         else {
-                            this.model.paths.register(p);
+                            Model.paths().register(p);
                             System.out.println("registering path '" + p.title + "'");
                         }
                     }
@@ -134,12 +131,17 @@ public class ConsoleThread extends Thread {
             Path p1 = paths.get(i);
             Path p2 = (i + 1) < paths.size() ? paths.get(i + 1) : null;
             Path p3 = (i + 2) < paths.size() ? paths.get(i + 2) : null;
-            String line = strech(p1 == null ? ""
-                    : ((this.model.paths.isRegistered(p1) ? " * " : "   ") + p1.title), 20)
-                    + strech(p2 == null ? ""
-                            : ((this.model.paths.isRegistered(p2) ? " * " : "   ") + p2.title), 20)
-                    + strech(p3 == null ? ""
-                            : ((this.model.paths.isRegistered(p3) ? " * " : "   ") + p3.title), 20);
+            String line = strech(
+                    p1 == null ? "" : ((Model.paths().isRegistered(p1) ? " * " : "   ") + p1.title),
+                    20)
+                    + strech(
+                            p2 == null ? ""
+                                    : ((Model.paths().isRegistered(p2) ? " * " : "   ") + p2.title),
+                            20)
+                    + strech(
+                            p3 == null ? ""
+                                    : ((Model.paths().isRegistered(p3) ? " * " : "   ") + p3.title),
+                            20);
             System.out.println(line);
         }
         System.out.println("==============");
@@ -148,7 +150,7 @@ public class ConsoleThread extends Thread {
     private void listActivePaths() {
         System.out.println("Active Path Listing");
         System.out.println("=================");
-        List<Path> paths = this.model.paths.getAllPaths();
+        List<Path> paths = Model.paths().getAllPaths();
         for (int i = 0; i < paths.size(); i += 3) {
             Path p1 = paths.get(i);
             Path p2 = (i + 1) < paths.size() ? paths.get(i) : null;

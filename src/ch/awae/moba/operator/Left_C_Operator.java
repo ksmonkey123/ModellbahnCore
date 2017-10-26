@@ -18,8 +18,6 @@ import ch.awae.moba.core.util.Props;
 @Operator("left.C")
 public class Left_C_Operator implements IOperation {
 
-    private final Model model = Model.getInstance();
-
     private final static Props props           = Configs.load("station");
     private final static long  DECORATOR_DELAY = props.getInt("decoration_delay");
 
