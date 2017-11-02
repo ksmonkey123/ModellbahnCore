@@ -144,9 +144,10 @@ public final class Utils {
      *             if an error occurred while reading the file
      */
     public static Properties getProperties(String file) throws IOException {
-        try (InputStream in = Utils.class.getClassLoader().getResourceAsStream(file)) {
+        try (InputStream in = Utils.class.getClassLoader()
+                .getResourceAsStream("resources/" + file)) {
             if (in == null)
-                throw new IllegalArgumentException("file not found: " + file);
+                throw new IllegalArgumentException("file not found: resources/" + file);
 
             Properties p = new Properties();
             p.load(in);
