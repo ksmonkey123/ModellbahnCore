@@ -1,7 +1,6 @@
 package ch.awae.moba.core.model;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -15,25 +14,26 @@ public class PathRegistry {
 
     public synchronized void register(Path path) {
         if (this.paths.contains(path)) {
-            this.logger.info("path '" + path + "' already registered");
+            this.logger.fine("path '" + path.title + "' already registered");
             return;
         }
+        final StringBuilder changes = new StringBuilder("path + " + path.title);
         for (int index = 0; index < this.paths.size(); index++) {
             Path p = this.paths.get(index);
             if (path.collides(p)) {
                 if (p.priority > path.priority) {
+                    this.logger.info(changes.toString());
                     this.logger.warning("cannot discard forced code '" + p.title + "'");
                     return;
                 }
-                this.logger.info("discarding path '" + p.title + "'");
+                changes.append("\n  | discarding path '" + p.title + "'");
                 this.paths.remove(index);
                 index--;
             }
         }
-
-        this.logger.info("registering path '" + path.title + "'");
+        changes.append("\n  | registering path '" + path.title + "'");
+        this.logger.info(changes.toString());
         this.paths.add(path);
-
     }
 
     public synchronized List<Path> getAllPaths() {

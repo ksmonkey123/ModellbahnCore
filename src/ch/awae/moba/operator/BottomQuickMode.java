@@ -35,6 +35,8 @@ public class BottomQuickMode implements IOperation {
             "bottom.04", "bottom.05", "bottom.06", "bottom.07", "bottom.08", "bottom.09",
             "bottom.10");
 
+    private boolean previousBlinkState = false;
+
     @Override
     public void update() {
         List<Path> paths = Model.getActivePaths(Sector.BOTTOM);
@@ -46,8 +48,12 @@ public class BottomQuickMode implements IOperation {
             }
         }
 
-        if (paths.isEmpty() || ((paths.size() == 1) && paths.contains(dummy)))
-            dummy.issue(System.currentTimeMillis() % (2 * BLINK_TIME) > BLINK_TIME);
+        if (paths.isEmpty() || ((paths.size() == 1) && paths.contains(dummy))) {
+            boolean next = System.currentTimeMillis() % (2 * BLINK_TIME) > BLINK_TIME;
+            if (next != previousBlinkState)
+                dummy.issue(next);
+            previousBlinkState = next;
+        }
 
         for (int i = 0; i < 10; i++) {
             Path path = BOTTOM_LEFT[i];
