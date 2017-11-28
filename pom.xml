@@ -39,11 +39,6 @@
 			<version>LATEST</version>
 		</dependency>
 		<dependency>
-			<groupId>ch.awae</groupId>
-			<artifactId>awaeUtils</artifactId>
-			<version>LATEST</version>
-		</dependency>
-		<dependency>
 			<groupId>com.pi4j</groupId>
 			<artifactId>pi4j-core</artifactId>
 			<version>1.1</version>

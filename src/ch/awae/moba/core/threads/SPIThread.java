@@ -116,7 +116,19 @@ public class SPIThread implements IThreaded {
                     processHost(host);
         }
 
+        private int  counter = 0;
+        private long time    = System.currentTimeMillis();
+
         private void processHost(SPIHost host) {
+            counter++;
+            counter %= 640;
+            if (counter == 0) {
+                long t = System.currentTimeMillis();
+                long dt = t - time;
+                time = t;
+                //System.out.println(dt);
+            }
+
             GpioPinDigitalOutput pin = SPIThread.this.pinMap.get(host.getChannel());
             byte[] data = { SPIThread.this.MAGIC_NUMBER, (byte) (host.getInput() & 0x00ff),
                     (byte) ((host.getInput() >> 8) & 0x00ff), host.getNetwork() };

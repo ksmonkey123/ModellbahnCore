@@ -16,7 +16,6 @@ public class OperatorThread extends AThreaded {
             IOperator operator = Registries.operators.get(name);
             if (operator != null && operator.isActive())
                 operator.update();
-            break;
         }
         Model.executeCommands();
     }

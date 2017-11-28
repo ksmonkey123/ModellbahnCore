@@ -74,8 +74,12 @@ public class ConsoleThread extends Thread {
                 else
                     System.out.println("unknown command: " + command);
 
-            } catch (Exception e) {
-                System.out.println(e);
+            } catch (Exception rex) {
+                StringBuilder b = new StringBuilder(rex.toString() + "\n");
+                for (StackTraceElement e : rex.getStackTrace()) {
+                    b.append(e.toString() + "\n");
+                }
+                this.logger.severe(b.toString());
             }
         }
     }

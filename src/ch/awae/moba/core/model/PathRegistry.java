@@ -14,8 +14,10 @@ public class PathRegistry {
     private ArrayList<Path> paths = new ArrayList<>();
 
     public synchronized void register(Path path) {
-        if (this.paths.contains(path))
+        if (this.paths.contains(path)) {
             this.logger.info("path '" + path + "' already registered");
+            return;
+        }
         for (int index = 0; index < this.paths.size(); index++) {
             Path p = this.paths.get(index);
             if (path.collides(p)) {
@@ -36,7 +38,8 @@ public class PathRegistry {
 
     public synchronized List<Path> getAllPaths() {
         List<Path> result = new ArrayList<>();
-        Collections.copy(result, paths);
+        for (Path p : paths)
+            result.add(p);
         return result;
     }
 

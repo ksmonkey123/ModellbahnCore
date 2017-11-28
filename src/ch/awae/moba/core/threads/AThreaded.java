@@ -54,6 +54,15 @@ public abstract class AThreaded implements IThreaded {
             } catch (@SuppressWarnings("unused") InterruptedException e) {
                 this.logger.warning("terminating thread " + this.name + " due to interrupt");
                 return;
+            } catch (RuntimeException rex) {
+                StringBuilder b = new StringBuilder(
+                        "terminating thread " + this.name + " due to error:\n");
+                b.append(rex.toString() + "\n");
+                for (StackTraceElement e : rex.getStackTrace()) {
+                    b.append(e.toString() + "\n");
+                }
+                this.logger.severe(b.toString());
+                this.thread = null;
             }
     }
 

@@ -13,4 +13,18 @@ public interface IOperation {
      */
     public void update();
 
+    /**
+     * Called whenever the operator is being started
+     */
+    default void onStart() {
+        // default no-op
+    }
+
+    /**
+     * Called whenever the operator is being halted
+     */
+    default void onStop() {
+        // default no-op
+    }
+
 }

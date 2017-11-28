@@ -28,13 +28,15 @@ class PureOperator implements IOperator {
     }
 
     @Override
-    public void start() {
+    public synchronized void start() {
+        instance.onStart();
         this.enabled = true;
     }
 
     @Override
-    public void halt() {
+    public synchronized void halt() {
         this.enabled = false;
+        instance.onStop();
     }
 
     @Override
