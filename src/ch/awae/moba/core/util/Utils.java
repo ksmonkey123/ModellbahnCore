@@ -117,7 +117,7 @@ public final class Utils {
      *            an optional name listed in the logs
      */
     public static void async(Runnable runnable, String name) {
-        new SafeRunner(runnable, name).start();
+        new SafeJob(runnable, name).issue();
     }
 
     /**
