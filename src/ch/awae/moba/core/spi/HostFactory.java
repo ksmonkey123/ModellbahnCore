@@ -19,9 +19,21 @@ public final class HostFactory {
         throw new AssertionError("unreachable");
     }
 
-    public static Pair<SPIHost, Host> createHost(Sector sector, SPIChannel channel, String name) {
-        final BlockingHost host = new BlockingHost(sector, channel, name);
-        return new Pair<>(host, host);
+    public static Pair<SPIHost, Host> createHost(Sector sector, SPIChannel channel, String name,
+            HostType type) {
+        logger.info("host requirement: " + sector + " -- " + type);
+        switch (type) {
+            case BASIC: {
+                final BlockingHost host = new BlockingHost(sector, channel, name);
+                return new Pair<>(host, host);
+            }
+            case LIGHTS: {
+                final LightsHost host = new LightsHost(sector, channel, name);
+                return new Pair<>(host, host);
+            }
+            default:
+                throw new AssertionError();
+        }
     }
 
     public static void loadHosts(Core core) throws IOException {
@@ -34,6 +46,7 @@ public final class HostFactory {
                         .parseBoolean(props.getProperty(root + "enabled", "false"));
                 String sect = props.getProperty(root + "sector");
                 String title = props.getProperty(root + "title");
+                String tpe = props.getProperty(root + "type");
                 // check if all is OK
                 if (sect == null || title == null) {
                     logger.info("Skipping host " + i + " due to missing entries");
@@ -45,8 +58,9 @@ public final class HostFactory {
                 }
                 SPIChannel channel = SPIChannel.getChannelByIndex(i);
                 Sector sector = Sector.valueOf(sect);
+                HostType type = HostType.valueOf(tpe);
                 // all is OK
-                core.registerHost(channel, sector, title);
+                core.registerHost(channel, sector, title, type);
             } catch (Exception ex) {
                 logger.log(Level.WARNING, "failed loading host " + i, ex);
             }

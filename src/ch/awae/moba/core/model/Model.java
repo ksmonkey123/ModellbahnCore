@@ -9,6 +9,7 @@ import ch.awae.moba.core.model.command.UpdateCommand;
 final public class Model {
     private final static PathRegistry paths   = new PathRegistry();
     private final static Buttons      buttons = new Buttons();
+    private final static Lights       lights  = new Lights();
 
     private final static LinkedList<UpdateCommand> queue = new LinkedList<>();
 
@@ -30,6 +31,10 @@ final public class Model {
 
     public static Buttons buttons() {
         return buttons;
+    }
+
+    public static Lights lights() {
+        return lights;
     }
 
     public static List<Path> getActivePaths() {

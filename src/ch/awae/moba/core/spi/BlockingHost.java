@@ -4,7 +4,7 @@ import java.util.Objects;
 
 import ch.awae.moba.core.model.Sector;
 
-final class BlockingHost implements Host, SPIHost {
+class BlockingHost implements Host, SPIHost {
 
     // LOCKS
     private final Object MONITOR = new Object();

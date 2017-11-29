@@ -9,7 +9,8 @@ public enum Sector {
     BOTTOM,
     CENTER,
     LEFT,
-    RIGHT;
+    RIGHT,
+    LIGHT;
 
     private final static Props host_config = Configs.load("hosts");
 

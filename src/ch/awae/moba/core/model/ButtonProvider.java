@@ -4,10 +4,12 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Objects;
 import java.util.Properties;
+import java.util.logging.Level;
 
 import ch.awae.moba.core.Configs;
 import ch.awae.moba.core.logic.Logic;
 import ch.awae.moba.core.logic.LogicGroup;
+import ch.awae.moba.core.util.Lazy;
 import ch.awae.moba.core.util.Utils;
 
 /**
@@ -25,20 +27,21 @@ import ch.awae.moba.core.util.Utils;
  */
 public class ButtonProvider {
 
-    
-    
-    private static final HashMap<Sector, Properties> properties = new HashMap<>();
-
-    static {
-        try {
-            // load the property file for each sector
-            for (Sector sector : Sector.values()) {
-                properties.put(sector, Configs.getProperties("buttons." + sector.name()));
+    private static final Lazy<HashMap<Sector, Properties>> properties = new Lazy<>(() -> {
+        HashMap<Sector, Properties> map = new HashMap<>();
+        for (Sector sector : Sector.values()) {
+            try {
+                Utils.getLogger().info("loading button configuration");
+                // load the property file for each sector
+                map.put(sector, Configs.getProperties("buttons." + sector.name()));
+            } catch (IOException ioe) {
+                Utils.getLogger().log(Level.SEVERE,
+                        "unable to load button configuration for sector " + sector, ioe);
+                throw new RuntimeException(ioe);
             }
-        } catch (IOException ioe) {
-            throw new RuntimeException(ioe);
         }
-    }
+        return map;
+    });
 
     /**
      * extracts the mask for a given {@code sector,id} combination
@@ -60,7 +63,7 @@ public class ButtonProvider {
         Objects.requireNonNull(sector, "sector may not be null");
         Objects.requireNonNull(id, "id may not be null");
 
-        String value = properties.get(sector).getProperty(id);
+        String value = properties.get().get(sector).getProperty(id);
         if (value == null)
             throw new NullPointerException("no button for id '" + id + "'");
         return Utils.parseInt(value) & 0x0000ffff;

@@ -8,6 +8,7 @@ import ch.awae.moba.core.operators.IOperator;
 import ch.awae.moba.core.operators.OperatorLoader;
 import ch.awae.moba.core.spi.Host;
 import ch.awae.moba.core.spi.HostFactory;
+import ch.awae.moba.core.spi.HostType;
 import ch.awae.moba.core.spi.SPIChannel;
 import ch.awae.moba.core.spi.SPIHost;
 import ch.awae.moba.core.threads.ConsoleThread;
@@ -18,6 +19,7 @@ import ch.awae.moba.core.threads.OutputProcessor;
 import ch.awae.moba.core.threads.SPIThread;
 import ch.awae.moba.core.util.Pair;
 import ch.awae.moba.core.util.Registries;
+import ch.awae.moba.core.util.Utils;
 
 /**
  * Manages (almost) everything
@@ -36,10 +38,13 @@ public final class Core {
         this.hosts = new ArrayList<>();
     }
 
-    public void registerHost(SPIChannel channel, Sector sector, String title) {
-        Pair<SPIHost, Host> host = HostFactory.createHost(sector, channel, title);
-        new InputProcessor(host._2, sector);
-        this.hosts.add(host._2);
+    public void registerHost(SPIChannel channel, Sector sector, String title, HostType type) {
+        Pair<SPIHost, Host> host = HostFactory.createHost(sector, channel, title, type);
+        Utils.getLogger().info("created host of type " + host._2.getClass().getName());
+        if (type.input)
+            new InputProcessor(host._2, sector);
+        if (type.output)
+            this.hosts.add(host._2);
         this.spi.registerHost(host._1);
     }
 
