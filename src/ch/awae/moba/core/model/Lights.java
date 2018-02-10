@@ -30,17 +30,19 @@ public final class Lights {
 
     public synchronized void setState(int decoder, int pin, boolean state) {
         int id = 8 * decoder + pin;
-        if (data[id] != state)
-            tchd[id] = data[id] = state;
+        if (data[id] != state) {
+            data[id] = state;
+            tchd[id] = true;
+        }
     }
 
     public synchronized byte getOptimal(int decoder, int dflt) {
         for (int i = 0; i < 8; i++) {
-            int baseID = 8 * decoder + i;
-            if (data[baseID] || data[baseID + 8]) {
+            int baseID = 2 * (8 * decoder + i);
+            if (tchd[baseID] || tchd[baseID + 1]) {
                 // clear touch flag
                 tchd[baseID + 0] = false;
-                tchd[baseID + 8] = false;
+                tchd[baseID + 1] = false;
                 // get data
                 return getData(decoder, i);
             }
@@ -55,8 +57,8 @@ public final class Lights {
 
     private byte getData(int decoder, int pair) {
         byte result = (byte) (((decoder << 5) & 0x000000e0) | ((pair << 2) & 0x0000001c) & 0xff);
-        result += data[8 * decoder + pair + 0] ? 1 : 0;
-        result += data[8 * decoder + pair + 8] ? 2 : 0;
+        result += data[2 * (8 * decoder + pair) + 0] ? 1 : 0;
+        result += data[2 * (8 * decoder + pair) + 1] ? 2 : 0;
         return result;
     }
 

@@ -71,6 +71,8 @@ public class ConsoleThread extends Thread {
                     doUnregisterPath(command.substring(7));
                 else if (command.equals("reboot"))
                     Utils.doReboot();
+                else if (command.equals("list lights"))
+                    listLights();
                 else
                     System.out.println("unknown command: " + command);
 
@@ -81,6 +83,18 @@ public class ConsoleThread extends Thread {
                 }
                 this.logger.severe(b.toString());
             }
+        }
+    }
+
+    private void listLights() {
+        for (int chip = 0; chip < 15; chip += 2) {
+            String a = "";
+            String b = "";
+            for (int pin = 0; pin < 8; pin++) {
+                a += Model.lights().getState(chip, pin) ? "1" : "0";
+                b += Model.lights().getState(chip + 1, pin) ? "1" : "0";
+            }
+            System.out.println(Integer.toHexString(chip) + " " + a + " " + b);
         }
     }
 

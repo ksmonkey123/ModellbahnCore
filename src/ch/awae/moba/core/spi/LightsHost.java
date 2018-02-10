@@ -22,8 +22,10 @@ public class LightsHost extends BlockingHost {
 
     @Override
     public short getInput() {
-        int raw = cache & 0x000000ff;
-        return (short) (((raw << 8) & 0x0000ff00) | raw);
+        long deltaT = System.currentTimeMillis() - Model.getLastUpdate();
+        int data = Model.isStealthMode() ? 0x0002 : 0x0000;
+        data += (deltaT < 50 ? 1 : 0);
+        return (short) (data & 0x000000ff);
     }
 
     @Override
@@ -40,6 +42,18 @@ public class LightsHost extends BlockingHost {
                 block = (block + 1) % 8;
             }
             cache = Model.lights().getOptimal(decoder, block);
+            /*
+             * String command =
+             * Integer.toBinaryString(Byte.toUnsignedInt(cache)); while
+             * (command.length() < 8) command = "0" + command;
+             * System.out.println("Next Command: " + command.substring(0, 3) +
+             * "." + command.substring(3, 6) + "." + command.substring(6, 8));
+             */
         }
+    }
+
+    @Override
+    public void setOutput(short output) {
+        super.setOutput(output);
     }
 }

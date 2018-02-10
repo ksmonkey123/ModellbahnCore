@@ -317,4 +317,29 @@ public interface Logic {
         return logic.not();
     }
 
+    default Logic edge() {
+        Logic self = this;
+        return new Logic() {
+
+            private boolean active = false;
+
+            @Override
+            public boolean evaluate() {
+                boolean next = self.evaluate();
+                if (active) {
+                    // currently active - ignore
+                    active = next;
+                    return false;
+                } else if (next) {
+                    // currently inactive and activating - trigger
+                    active = true;
+                    return true;
+                } else {
+                    // currently inactive and not activating - ignore
+                    return false;
+                }
+            }
+        };
+    }
+
 }

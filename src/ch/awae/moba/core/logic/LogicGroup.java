@@ -115,4 +115,8 @@ public final class LogicGroup {
         return new LogicGroup(children);
     }
 
+    public Logic strict(LogicGroup domain) {
+        return all().and(domain.count(size()));
+    }
+
 }

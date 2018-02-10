@@ -13,6 +13,9 @@ final public class Model {
 
     private final static LinkedList<UpdateCommand> queue = new LinkedList<>();
 
+    private static boolean stealthMode = false;
+    private static long    lastUpdate  = System.currentTimeMillis();
+
     public static void issueCommand(UpdateCommand command) {
         synchronized (queue) {
             queue.add(command);
@@ -29,12 +32,28 @@ final public class Model {
         }
     }
 
+    public static void update() {
+        lastUpdate = System.currentTimeMillis();
+    }
+
+    public static long getLastUpdate() {
+        return lastUpdate;
+    }
+
     public static Buttons buttons() {
         return buttons;
     }
 
     public static Lights lights() {
         return lights;
+    }
+
+    public static boolean isStealthMode() {
+        return stealthMode;
+    }
+
+    public static void toggleStealthMode() {
+        stealthMode = !stealthMode;
     }
 
     public static List<Path> getActivePaths() {

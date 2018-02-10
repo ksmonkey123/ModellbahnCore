@@ -2,6 +2,7 @@ package ch.awae.moba.core.spi;
 
 import java.util.Objects;
 
+import ch.awae.moba.core.model.Model;
 import ch.awae.moba.core.model.Sector;
 
 class BlockingHost implements Host, SPIHost {
@@ -18,6 +19,8 @@ class BlockingHost implements Host, SPIHost {
     private volatile byte    network    = (byte) 0x00;
     private volatile boolean updateFlag = false;
 
+    private volatile long lastUpdate = System.currentTimeMillis();
+    
     BlockingHost(final Sector sector, final SPIChannel channel, final String name) {
         this.channel = Objects.requireNonNull(channel);
         this.name = Objects.requireNonNull(name);
@@ -26,6 +29,10 @@ class BlockingHost implements Host, SPIHost {
 
     @Override
     public short getInput() {
+        if (Model.isStealthMode()) {
+            long deltaT = System.currentTimeMillis() - lastUpdate;
+            return deltaT < 1000 ? input : 0;
+        }
         return this.input;
     }
 
@@ -52,6 +59,10 @@ class BlockingHost implements Host, SPIHost {
 
     @Override
     public void write(short displayData, byte networkData) {
+        if (input != displayData || network != networkData) {
+            Model.update();
+            lastUpdate = System.currentTimeMillis();
+        }
         this.input = displayData;
         this.network = networkData;
     }
