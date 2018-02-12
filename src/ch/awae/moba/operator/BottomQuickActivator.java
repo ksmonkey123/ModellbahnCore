@@ -13,14 +13,12 @@ import ch.awae.moba.core.model.PathProvider;
 import ch.awae.moba.core.operators.Enabled;
 import ch.awae.moba.core.operators.IOperation;
 import ch.awae.moba.core.operators.IOperator;
-import ch.awae.moba.core.operators.Loaded;
 import ch.awae.moba.core.operators.Operator;
 import ch.awae.moba.core.util.Props;
 import ch.awae.moba.core.util.Utils;
 import ch.awae.utils.logic.Logic;
 
-@Enabled(true)
-@Loaded(true)
+@Enabled
 @Operator("bottom.supervisor")
 public class BottomQuickActivator implements IOperation {
 

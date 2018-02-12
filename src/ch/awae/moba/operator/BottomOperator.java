@@ -7,13 +7,11 @@ import ch.awae.moba.core.model.Path;
 import ch.awae.moba.core.model.PathProvider;
 import ch.awae.moba.core.operators.Enabled;
 import ch.awae.moba.core.operators.IOperation;
-import ch.awae.moba.core.operators.Loaded;
 import ch.awae.moba.core.operators.Operator;
 import ch.awae.utils.logic.Logic;
 import ch.awae.utils.logic.LogicCluster;
 
-@Enabled(true)
-@Loaded(true)
+@Enabled
 @Operator("bottom.base")
 public class BottomOperator implements IOperation {
 

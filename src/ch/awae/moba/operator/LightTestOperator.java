@@ -5,13 +5,11 @@ import ch.awae.moba.core.model.Model;
 import ch.awae.moba.core.model.Sector;
 import ch.awae.moba.core.operators.Enabled;
 import ch.awae.moba.core.operators.IOperation;
-import ch.awae.moba.core.operators.Loaded;
 import ch.awae.moba.core.operators.Operator;
 import ch.awae.utils.logic.Logic;
 import ch.awae.utils.logic.LogicGroup;
 
 @Enabled
-@Loaded
 @Operator("light.test")
 public class LightTestOperator implements IOperation {
 

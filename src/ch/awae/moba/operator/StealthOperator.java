@@ -5,12 +5,10 @@ import ch.awae.moba.core.model.Model;
 import ch.awae.moba.core.model.Sector;
 import ch.awae.moba.core.operators.Enabled;
 import ch.awae.moba.core.operators.IOperation;
-import ch.awae.moba.core.operators.Loaded;
 import ch.awae.moba.core.operators.Operator;
 import ch.awae.utils.logic.Logic;
 
-@Enabled(true)
-@Loaded(true)
+@Enabled
 @Operator("light.stealth")
 public class StealthOperator implements IOperation {
 

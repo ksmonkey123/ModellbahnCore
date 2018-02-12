@@ -63,14 +63,9 @@ public class OperatorLoader {
             this.logger.fine("checking class " + clazz.getName());
 
             Enabled enabled = instClass.getAnnotation(Enabled.class);
-            Loaded loaded = instClass.getAnnotation(Loaded.class);
             Operator operator = instClass.getAnnotation(Operator.class);
 
             String name = operator.value();
-            if (loaded != null && !loaded.value()) {
-                log.log("skip   ' x " + name + "'");
-                return;
-            }
 
             try {
                 IOperation inst = instClass.getConstructor().newInstance();

@@ -6,12 +6,10 @@ import ch.awae.moba.core.model.PathProvider;
 import ch.awae.moba.core.model.Sector;
 import ch.awae.moba.core.operators.Enabled;
 import ch.awae.moba.core.operators.IOperation;
-import ch.awae.moba.core.operators.Loaded;
 import ch.awae.moba.core.operators.Operator;
 import ch.awae.utils.logic.Logic;
 
 @Enabled
-@Loaded
 @Operator("center.macro")
 public class CenterMacroOperator implements IOperation {
 
