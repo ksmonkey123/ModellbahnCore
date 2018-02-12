@@ -91,8 +91,8 @@ public class ConsoleThread extends Thread {
             String a = "";
             String b = "";
             for (int pin = 0; pin < 8; pin++) {
-                a += Model.lights().getState(chip, pin) ? "1" : "0";
-                b += Model.lights().getState(chip + 1, pin) ? "1" : "0";
+                a += Model.lights().getPin(chip, pin) ? "1" : "0";
+                b += Model.lights().getPin(chip + 1, pin) ? "1" : "0";
             }
             System.out.println(Integer.toHexString(chip) + " " + a + " " + b);
         }

@@ -1,4 +1,4 @@
-package ch.awae.moba.operator;
+package ch.awae.moba.operator.light;
 
 import ch.awae.moba.core.model.ButtonProvider;
 import ch.awae.moba.core.model.Model;
@@ -18,13 +18,10 @@ public class LightTestOperator implements IOperation {
     private LogicGroup domain = p.group("__buttons");
     private Logic      button = p.group("button_15").strict(domain).edge();
 
-    private boolean state = false;
-
     @Override
     public void update() {
         if (button.evaluate()) {
-            state = !state;
-            Model.lights().setState(15, 0, state);
+            Model.lights().togglePin(15, 0);
         }
     }
 

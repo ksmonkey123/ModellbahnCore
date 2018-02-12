@@ -5,9 +5,9 @@ public final class Lights {
     final boolean[] data = new boolean[128];
     final boolean[] tchd = new boolean[128];
 
-    public synchronized void enable(int decoder, short mask) {
+    public synchronized void enable(int decoder, byte mask) {
         short probe = 0x0001;
-        for (int i = 0; i < 16; i++) {
+        for (int i = 0; i < 8; i++) {
             int id = 8 * decoder + i;
             if ((mask & (probe << i)) > 0)
                 if (!data[id])
@@ -16,9 +16,9 @@ public final class Lights {
         }
     }
 
-    public synchronized void disable(int decoder, short mask) {
+    public synchronized void disable(int decoder, byte mask) {
         short probe = 0x0001;
-        for (int i = 0; i < 16; i++) {
+        for (int i = 0; i < 8; i++) {
             int id = 8 * decoder + i;
             if ((mask & (probe << i)) > 0) {
                 if (data[id])
@@ -28,12 +28,22 @@ public final class Lights {
         }
     }
 
-    public synchronized void setState(int decoder, int pin, boolean state) {
+    public synchronized void setPin(int decoder, int pin, boolean state) {
         int id = 8 * decoder + pin;
         if (data[id] != state) {
             data[id] = state;
             tchd[id] = true;
         }
+    }
+
+    public synchronized void togglePin(int decoder, int pin) {
+        int id = 8 * decoder + pin;
+        data[id] = !data[id];
+        tchd[id] = true;
+    }
+
+    public synchronized boolean getPin(int decoder, int pin) {
+        return data[8 * decoder + pin];
     }
 
     public synchronized byte getOptimal(int decoder, int dflt) {
@@ -49,10 +59,6 @@ public final class Lights {
         }
         // no priority data. take default series
         return getData(decoder, dflt);
-    }
-
-    public synchronized boolean getState(int decoder, int pin) {
-        return data[8 * decoder + pin];
     }
 
     private byte getData(int decoder, int pair) {
