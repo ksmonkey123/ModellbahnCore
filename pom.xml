@@ -32,16 +32,25 @@
 			</plugin>
 		</plugins>
 	</build>
+	
 	<dependencies>
+		<!-- Classpath Scanner -->
 		<dependency>
 			<groupId>io.github.lukehutch</groupId>
 			<artifactId>fast-classpath-scanner</artifactId>
 			<version>LATEST</version>
 		</dependency>
+		<!-- PI4J -->
 		<dependency>
 			<groupId>com.pi4j</groupId>
 			<artifactId>pi4j-core</artifactId>
 			<version>1.1</version>
+		</dependency>
+		<!-- awaeUtils -->
+		<dependency>
+			<groupId>ch.awae</groupId>
+			<artifactId>awaeUtils</artifactId>
+			<version>LATEST</version>
 		</dependency>
 	</dependencies>
 </project>

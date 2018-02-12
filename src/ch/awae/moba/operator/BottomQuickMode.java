@@ -3,7 +3,6 @@ package ch.awae.moba.operator;
 import java.util.List;
 
 import ch.awae.moba.core.Configs;
-import ch.awae.moba.core.logic.Logic;
 import ch.awae.moba.core.model.ButtonProvider;
 import ch.awae.moba.core.model.Model;
 import ch.awae.moba.core.model.Path;
@@ -14,6 +13,7 @@ import ch.awae.moba.core.operators.IOperation;
 import ch.awae.moba.core.operators.Loaded;
 import ch.awae.moba.core.operators.Operator;
 import ch.awae.moba.core.util.Props;
+import ch.awae.utils.logic.Logic;
 
 @Enabled(false)
 @Loaded(true)

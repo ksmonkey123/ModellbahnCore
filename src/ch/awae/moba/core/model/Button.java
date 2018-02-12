@@ -2,7 +2,7 @@ package ch.awae.moba.core.model;
 
 import java.util.Objects;
 
-import ch.awae.moba.core.logic.Logic;
+import ch.awae.utils.logic.Logic;
 
 /**
  * Represents a button as a {@link Logic} instance for directly testing if a

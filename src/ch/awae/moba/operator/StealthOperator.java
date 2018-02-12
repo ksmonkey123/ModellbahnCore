@@ -1,6 +1,5 @@
 package ch.awae.moba.operator;
 
-import ch.awae.moba.core.logic.Logic;
 import ch.awae.moba.core.model.ButtonProvider;
 import ch.awae.moba.core.model.Model;
 import ch.awae.moba.core.model.Sector;
@@ -8,9 +7,10 @@ import ch.awae.moba.core.operators.Enabled;
 import ch.awae.moba.core.operators.IOperation;
 import ch.awae.moba.core.operators.Loaded;
 import ch.awae.moba.core.operators.Operator;
+import ch.awae.utils.logic.Logic;
 
-@Enabled
-@Loaded
+@Enabled(true)
+@Loaded(true)
 @Operator("light.stealth")
 public class StealthOperator implements IOperation {
 

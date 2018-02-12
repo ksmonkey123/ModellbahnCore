@@ -1,7 +1,6 @@
 package ch.awae.moba.operator;
 
 import ch.awae.moba.core.Configs;
-import ch.awae.moba.core.logic.Logic;
 import ch.awae.moba.core.model.ButtonProvider;
 import ch.awae.moba.core.model.Sector;
 import ch.awae.moba.core.operators.Enabled;
@@ -10,6 +9,7 @@ import ch.awae.moba.core.operators.Loaded;
 import ch.awae.moba.core.operators.Operator;
 import ch.awae.moba.core.util.Props;
 import ch.awae.moba.core.util.Utils;
+import ch.awae.utils.logic.Logic;
 
 @Enabled
 @Loaded

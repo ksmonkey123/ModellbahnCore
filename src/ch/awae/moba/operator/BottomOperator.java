@@ -2,8 +2,6 @@ package ch.awae.moba.operator;
 
 import static ch.awae.moba.core.model.Sector.BOTTOM;
 
-import ch.awae.moba.core.logic.Logic;
-import ch.awae.moba.core.logic.LogicCluster;
 import ch.awae.moba.core.model.ButtonProvider;
 import ch.awae.moba.core.model.Path;
 import ch.awae.moba.core.model.PathProvider;
@@ -11,6 +9,8 @@ import ch.awae.moba.core.operators.Enabled;
 import ch.awae.moba.core.operators.IOperation;
 import ch.awae.moba.core.operators.Loaded;
 import ch.awae.moba.core.operators.Operator;
+import ch.awae.utils.logic.Logic;
+import ch.awae.utils.logic.LogicCluster;
 
 @Enabled(true)
 @Loaded(true)

@@ -42,18 +42,7 @@ public class LightsHost extends BlockingHost {
                 block = (block + 1) % 8;
             }
             cache = Model.lights().getOptimal(decoder, block);
-            /*
-             * String command =
-             * Integer.toBinaryString(Byte.toUnsignedInt(cache)); while
-             * (command.length() < 8) command = "0" + command;
-             * System.out.println("Next Command: " + command.substring(0, 3) +
-             * "." + command.substring(3, 6) + "." + command.substring(6, 8));
-             */
         }
     }
 
-    @Override
-    public void setOutput(short output) {
-        super.setOutput(output);
-    }
 }

@@ -7,10 +7,10 @@ import java.util.Properties;
 import java.util.logging.Level;
 
 import ch.awae.moba.core.Configs;
-import ch.awae.moba.core.logic.Logic;
-import ch.awae.moba.core.logic.LogicGroup;
 import ch.awae.moba.core.util.Lazy;
 import ch.awae.moba.core.util.Utils;
+import ch.awae.utils.logic.Logic;
+import ch.awae.utils.logic.LogicGroup;
 
 /**
  * Provides Logic instances representing buttons from property files. Also
