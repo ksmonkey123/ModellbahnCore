@@ -1,4 +1,4 @@
-package ch.awae.moba.operator;
+package ch.awae.moba.operator.bottom;
 
 import static ch.awae.moba.core.model.Sector.BOTTOM;
 

@@ -1,4 +1,4 @@
-package ch.awae.moba.operator;
+package ch.awae.moba.operator.left;
 
 import ch.awae.moba.core.Configs;
 import ch.awae.moba.core.model.ButtonProvider;

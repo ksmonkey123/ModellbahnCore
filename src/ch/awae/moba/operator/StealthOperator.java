@@ -9,7 +9,7 @@ import ch.awae.moba.core.operators.Operator;
 import ch.awae.utils.logic.Logic;
 
 @Enabled
-@Operator("light.stealth")
+@Operator("system.stealth")
 public class StealthOperator implements IOperation {
 
     private Logic   stealth = ButtonProvider.getButton(Sector.LIGHT, "stealth_switch");
