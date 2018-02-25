@@ -1,24 +1,18 @@
 package ch.awae.moba.operator.light;
 
-import ch.awae.moba.core.model.ButtonProvider;
+import ch.awae.moba.core.model.LightButtonProvider;
 import ch.awae.moba.core.model.Model;
-import ch.awae.moba.core.model.Sector;
 import ch.awae.moba.core.operators.Enabled;
 import ch.awae.moba.core.operators.IOperation;
 import ch.awae.moba.core.operators.Operator;
 import ch.awae.utils.logic.Logic;
-import ch.awae.utils.logic.LogicGroup;
 
 @Enabled
 @Operator("light.master")
 public class LightMasterOperator implements IOperation {
 
-    private final ButtonProvider p = new ButtonProvider(Sector.LIGHT);
-
-    private final LogicGroup domain = p.group("__buttons");
-
-    private final Logic off = p.group("button_01").strict(domain).edge();
-    private final Logic on  = p.group("button_02").strict(domain).edge();
+    private final Logic off = LightButtonProvider.button("button_01");
+    private final Logic on  = LightButtonProvider.button("button_02");
 
     @Override
     public void update() {
