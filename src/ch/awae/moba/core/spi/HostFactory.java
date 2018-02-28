@@ -8,8 +8,8 @@ import java.util.logging.Logger;
 import ch.awae.moba.core.Configs;
 import ch.awae.moba.core.Core;
 import ch.awae.moba.core.model.Sector;
-import ch.awae.moba.core.util.Pair;
 import ch.awae.moba.core.util.Utils;
+import ch.awae.utils.functional.T2;
 
 public final class HostFactory {
 
@@ -19,17 +19,17 @@ public final class HostFactory {
         throw new AssertionError("unreachable");
     }
 
-    public static Pair<SPIHost, Host> createHost(Sector sector, SPIChannel channel, String name,
+    public static T2<SPIHost, Host> createHost(Sector sector, SPIChannel channel, String name,
             HostType type) {
         logger.info("host requirement: " + sector + " -- " + type);
         switch (type) {
             case BASIC: {
                 final BlockingHost host = new BlockingHost(sector, channel, name);
-                return new Pair<>(host, host);
+                return new T2<>(host, host);
             }
             case LIGHTS: {
                 final LightsHost host = new LightsHost(sector, channel, name);
-                return new Pair<>(host, host);
+                return new T2<>(host, host);
             }
             default:
                 throw new AssertionError();

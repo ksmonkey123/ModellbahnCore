@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Properties;
 
+import ch.awae.utils.functional.T2;
+
 public final class Props {
 
     private final Properties props;
@@ -23,8 +25,8 @@ public final class Props {
         return Utils.parseInt(this.props.getProperty(key));
     }
 
-    public List<Pair<String, String>> getAll() {
-        ArrayList<Pair<String, String>> list = new ArrayList<>();
+    public List<T2<String, String>> getAll() {
+        ArrayList<T2<String, String>> list = new ArrayList<>();
         for (Object _key : props.keySet()) {
             if (!(_key instanceof String))
                 continue;
@@ -32,7 +34,7 @@ public final class Props {
             String value = props.getProperty(key);
             if (value == null)
                 continue;
-            list.add(Pair.of(key, value));
+            list.add(T2.of(key, value));
         }
         return Collections.unmodifiableList(list);
     }

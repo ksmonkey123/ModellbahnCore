@@ -9,9 +9,9 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import ch.awae.moba.core.Configs;
-import ch.awae.moba.core.util.Pair;
 import ch.awae.moba.core.util.Props;
 import ch.awae.moba.core.util.Utils;
+import ch.awae.utils.functional.T2;
 
 public final class PathProvider {
 
@@ -96,7 +96,7 @@ public final class PathProvider {
     }
 
     private void loadPredefinedPaths() {
-        for (Pair<String, String> entry : path_configuration.getAll()) {
+        for (T2<String, String> entry : path_configuration.getAll()) {
             Path p = createFromProperty(entry._1, entry._2);
             put(entry._1, p);
         }

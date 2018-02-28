@@ -17,9 +17,9 @@ import ch.awae.moba.core.threads.InputProcessor;
 import ch.awae.moba.core.threads.OperatorThread;
 import ch.awae.moba.core.threads.OutputProcessor;
 import ch.awae.moba.core.threads.SPIThread;
-import ch.awae.moba.core.util.Pair;
 import ch.awae.moba.core.util.Registries;
 import ch.awae.moba.core.util.Utils;
+import ch.awae.utils.functional.T2;
 
 /**
  * Manages (almost) everything
@@ -39,7 +39,7 @@ public final class Core {
     }
 
     public void registerHost(SPIChannel channel, Sector sector, String title, HostType type) {
-        Pair<SPIHost, Host> host = HostFactory.createHost(sector, channel, title, type);
+        T2<SPIHost, Host> host = HostFactory.createHost(sector, channel, title, type);
         Utils.getLogger().info("created host of type " + host._2.getClass().getName());
         if (type.input)
             new InputProcessor(host._2, sector);
